@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign - Sensation by Sanu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="images/sbstab-192.png">
+  <link rel="icon" type="image/png" sizes="180x180" href="images/sbstab-180.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="images/sbstab-128.png">
+  <link rel="icon" type="image/png" sizes="64x64" href="images/sbstab-64.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/sbstab-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="images/sbstab-16.png">
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      background-image: url('images/2151839595.webp');
+      background-size: cover;
+      background-position: center;
+      animation: bgMove 60s ease-in-out infinite alternate;
+      overflow: hidden;
+    }
+    @keyframes bgMove {
+      0% { background-position: center; }
+      100% { background-position: left; }
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+    .hero > div {
+      z-index: 1;
+      position: relative;
+    }
+    /* Navbar SBS Logo */
+    .navbar-sbs-logo {
+      width: 44px;
+      height: auto;
+      opacity: 0.9;
+      min-width: 32px;
+      margin-right: 0.4rem;
+    }
+    @media (max-width: 768px) {
+      .navbar-sbs-logo {
+        width: 32px;
+        min-width: 22px;
+        margin-right: 0.2rem;
+      }
+    }
+    /* Account Creation Container */
+    .account-container {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border-radius: 25px;
+      padding: 3rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      max-width: 600px;
+      margin: 2rem auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .account-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(
+        from 0deg,
+        transparent,
+        rgba(255, 255, 255, 0.05),
+        transparent,
+        rgba(255, 255, 255, 0.02),
+        transparent
+      );
+      animation: accountRotate 12s linear infinite;
+      z-index: -1;
+    }
+    @keyframes accountRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Account Header */
+    .account-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .account-title {
+      color: #fff;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 15px rgba(255, 255, 255, 0.3);
+    }
+    .account-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .account-tagline {
+      color: #e6c98a;
+      font-size: 0.9rem;
+      font-style: italic;
+      text-shadow: 0 2px 8px rgba(230, 201, 138, 0.3);
+    }
+    /* Form Styling */
+    .form-label {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-control, .form-select {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      color: rgba(255, 255, 255, 0.9);
+      padding: 1rem 1.2rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+    }
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #e6c98a;
+      box-shadow: 
+        0 0 20px rgba(230, 201, 138, 0.3),
+        0 8px 25px rgba(0, 0, 0, 0.15);
+      color: #fff;
+      transform: translateY(-2px);
+      outline: none;
+    }
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    /* Password Strength Indicator */
+    .password-strength {
+      margin-top: -1rem;
+      margin-bottom: 1rem;
+    }
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      margin-bottom: 0.5rem;
+    }
+    .strength-weak { background: #dc3545; width: 33%; }
+    .strength-medium { background: #ffc107; width: 66%; }
+    .strength-strong { background: #28a745; width: 100%; }
+    .strength-text {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    /* Location Section */
+    .location-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .location-title {
+      color: #e6c98a;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    /* Terms and Conditions */
+    .terms-section {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 2rem 0;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .form-check-input {
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+    }
+    .form-check-input:checked {
+      background: #e6c98a;
+      border-color: #e6c98a;
+    }
+    .form-check-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .form-check-label a {
+      color: #e6c98a;
+      text-decoration: none;
+    }
+    .form-check-label a:hover {
+      text-decoration: underline;
+    }
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(135deg, #e6c98a, #bfa76a);
+      border: none;
+      border-radius: 50px;
+      padding: 1.2rem 3rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #23201c;
+      width: 100%;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 25px rgba(230, 201, 138, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s ease;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(230, 201, 138, 0.4);
+      background: linear-gradient(135deg, #bfa76a, #e6c98a);
+    }
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    /* Loading Animation */
+    .loading-spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(35, 32, 28, 0.3);
+      border-top: 2px solid #23201c;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 0.5rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    /* Success Message */
+    .success-message {
+      background: rgba(40, 167, 69, 0.2);
+      border: 1px solid rgba(40, 167, 69, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #28a745;
+      display: none;
+    }
+    /* Error Message */
+    .error-message {
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      color: #dc3545;
+      display: none;
+    }
+    /* Login Link */
+    .login-link {
+      text-align: center;
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .login-link a {
+      color: #e6c98a;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .login-link a:hover {
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(230, 201, 138, 0.5);
+    }
+    /* Back Button */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 0.8rem 1.5rem;
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #e6c98a;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .account-container {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+      }
+      .account-title {
+        font-size: 2rem;
+      }
+      .form-control, .form-select {
+        padding: 0.9rem 1rem;
+      }
+      .submit-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SBS Animated Watermark Background -->
+  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;">
+    <img src="images/sbs.svg" alt="Sensation by Sanu Watermark" style="width: 100%; height: auto; opacity: 0.1; pointer-events: none;" />
+  </div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #23201c;">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" class="navbar-sbs-logo" />
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Create Account</a></li>
+        </ul>
+        <!-- Cart Icon -->
+        <a href="cart.html" class="ms-3 d-none d-lg-inline" style="color:#fff;">
+          <i class="bi bi-cart3" style="font-size:1.5rem;vertical-align:middle;"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <!-- Hero Section with Account Creation -->
+  <section class="hero d-flex align-items-center justify-content-center">
+    <!-- Back Button -->
+    <a href="index.html" class="back-btn">
+      <i class="bi bi-arrow-left me-2"></i>Back to Home
+    </a>
+    <div class="container">
+      <div class="account-container">
+        <!-- Account Header -->
+        <div class="account-header">
+          <h1 class="account-title">Create Your Account</h1>
+          <p class="account-subtitle">Join the Sensation by Sanu community</p>
+          <p class="account-tagline">Discover your signature scent with exclusive access</p>
+        </div>
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          Account created successfully! Redirecting to login...
+        </div>
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <span id="errorText">Please fix the errors below.</span>
+        </div>
+        <!-- Account Creation Form -->
+        <form id="createAccountForm">
+          <!-- Personal Information -->
+          <div class="row">
+            <div class="col-md-6">
+              <label for="firstName" class="form-label">
+                <i class="bi bi-person"></i> First Name
+              </label>
+              <input type="text" class="form-control" id="firstName" name="firstName" 
+                     placeholder="Enter your first name" required>
+            </div>
+            <div class="col-md-6">
+              <label for="lastName" class="form-label">
+                <i class="bi bi-person"></i> Last Name
+              </label>
+              <input type="text" class="form-control" id="lastName" name="lastName" 
+                     placeholder="Enter your last name" required>
+            </div>
+          </div>
+          <!-- Email -->
+          <label for="email" class="form-label">
+            <i class="bi bi-envelope"></i> Email Address
+          </label>
+          <input type="email" class="form-control" id="email" name="email" 
+                 placeholder="Enter your email address" required>
+          <!-- Phone -->
+          <label for="phone" class="form-label">
+            <i class="bi bi-telephone"></i> Phone Number
+          </label>
+          <input type="tel" class="form-control" id="phone" name="phone" 
+                 placeholder="Enter your phone number" required>
+          <!-- Password -->
+          <label for="password" class="form-label">
+            <i class="bi bi-lock"></i> Password
+          </label>
+          <input type="password" class="form-control" id="password" name="password" 
+                 placeholder="Create a strong password" required>
+          
+          <!-- Password Strength Indicator -->
+          <div class="password-strength">
+            <div id="strengthBar" class="strength-bar"></div>
+            <div id="strengthText" class="strength-text">Password strength will be shown here</div>
+          </div>
+          <!-- Confirm Password -->
+          <label for="confirmPassword" class="form-label">
+            <i class="bi bi-lock-fill"></i> Confirm Password
+          </label>
+          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                 placeholder="Confirm your password" required>
+          <!-- Location Section -->
+          <div class="location-section">
+            <h5 class="location-title">
+              <i class="bi bi-geo-alt"></i> Delivery Location
+            </h5>
+            
+            <!-- Region -->
+            <label for="region" class="form-label">
+              <i class="bi bi-map"></i> Region
+            </label>
+            <select class="form-select" id="region" name="region" required>
+              <option value="">Select your region</option>
+              <option value="Greater Banjul Area">Greater Banjul Area</option>
+              <option value="West Coast Region">West Coast Region</option>
+              <option value="Lower River Region">Lower River Region</option>
+              <option value="Central River Region">Central River Region</option>
+              <option value="Upper River Region">Upper River Region</option>
+              <option value="North Bank Region">North Bank Region</option>
+            </select>
+            <!-- City/Area -->
+            <label for="city" class="form-label">
+              <i class="bi bi-building"></i> City/Area
+            </label>
+            <select class="form-select" id="city" name="city" required>
+              <option value="">Select your city/area</option>
+            </select>
+            <!-- Detailed Address -->
+            <label for="address" class="form-label">
+              <i class="bi bi-house"></i> Detailed Address
+            </label>
+            <textarea class="form-control" id="address" name="address" rows="3" 
+                      placeholder="Enter your full delivery address" required></textarea>
+          </div>
+          <!-- Terms and Conditions -->
+          <div class="terms-section">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" name="agreeTerms" required>
+              <label class="form-check-label" for="agreeTerms">
+                I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
+              </label>
+            </div>
+          </div>
+          <!-- Submit Button -->
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span id="submitText">Create My Account</span>
+          </button>
+        </form>
+        <!-- Login Link -->
+        <div class="login-link">
+          <p style="color: rgba(255, 255, 255, 0.8);">
+            Already have an account? <a href="login.html">Sign in here</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Firebase SDK and Account Creation Logic -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      updateProfile 
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc 
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXfFinXJJf8QjV37tuuOa_8cYzg0Cn3Q4",
+      authDomain: "sensation-by-sanu.firebaseapp.com",
+      projectId: "sensation-by-sanu",
+      storageBucket: "sensation-by-sanu.firebasestorage.app",
+      messagingSenderId: "985250517980",
+      appId: "1:985250517980:web:05011bfb5877ff7c193519",
+      measurementId: "G-VHH6P2L106"
+    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    // Location data for Gambia
+    const locationData = {
+      "Greater Banjul Area": ["Banjul", "Serrekunda", "Kanifing", "Bakau", "Fajara", "Kotu", "Bijilo"],
+      "West Coast Region": ["Brikama", "Gunjur", "Sukuta", "Basse", "Busumbala", "Yundum"],
+      "Lower River Region": ["Soma", "Kaur", "Kuntaur", "Mansa Konko"],
+      "Central River Region": ["Janjanbureh", "Kuntaur", "Basse Santa Su"],
+      "Upper River Region": ["Basse", "Fatoto", "Koina"],
+      "North Bank Region": ["Kerewan", "Farafenni", "Amdalai", "Essau"]
+    };
+    // DOM Elements
+    const form = document.getElementById('createAccountForm');
+    const regionSelect = document.getElementById('region');
+    const citySelect = document.getElementById('city');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const strengthBar = document.getElementById('strengthBar');
+    const strengthText = document.getElementById('strengthText');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const successMessage = document.getElementById('successMessage');
+    const errorMessage = document.getElementById('errorMessage');
+    const errorText = document.getElementById('errorText');
+    // Region change handler
+    regionSelect.addEventListener('change', function() {
+      const selectedRegion = this.value;
+      citySelect.innerHTML = '<option value="">Select your city/area</option>';
+      
+      if (selectedRegion && locationData[selectedRegion]) {
+        locationData[selectedRegion].forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }
+    });
+    // Password strength checker
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      const strength = checkPasswordStrength(password);
+      
+      strengthBar.className = 'strength-bar';
+      if (strength.score >= 3) {
+        strengthBar.classList.add('strength-strong');
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = '#28a745';
+      } else if (strength.score >= 2) {
+        strengthBar.classList.add('strength-medium');
+        strengthText.textContent = 'Medium strength';
+        strengthText.style.color = '#ffc107';
+      } else if (password.length > 0) {
+        strengthBar.classList.add('strength-weak');
+        strengthText.textContent = 'Weak password';
+        strengthText.style.color = '#dc3545';
+      } else {
+        strengthText.textContent = 'Password strength will be shown here';
+        strengthText.style.color = 'rgba(255, 255, 255, 0.7)';
+      }
+    });
+    // Password strength function
+    function checkPasswordStrength(password) {
+      let score = 0;
+      
+      if (password.length >= 8) score++;
+      if (password.match(/[a-z]/)) score++;
+      if (password.match(/[A-Z]/)) score++;
+      if (password.match(/[0-9]/)) score++;
+      if (password.match(/[^A-Za-z0-9]/)) score++;
+      
+      return { score };
+    }
+    // Form validation
+    function validateForm(formData) {
+      const errors = [];
+      
+      if (!formData.firstName.trim()) errors.push('First name is required');
+      if (!formData.lastName.trim()) errors.push('Last name is required');
+      if (!formData.email.trim()) errors.push('Email is required');
+      if (!formData.phone.trim()) errors.push('Phone number is required');
+      if (!formData.password) errors.push('Password is required');
+      if (formData.password !== formData.confirmPassword) errors.push('Passwords do not match');
+      if (!formData.region) errors.push('Region is required');
+      if (!formData.city) errors.push('City/Area is required');
+      if (!formData.address.trim()) errors.push('Address is required');
+      if (!formData.agreeTerms) errors.push('You must agree to the terms and conditions');
+      
+      const passwordStrength = checkPasswordStrength(formData.password);
+      if (passwordStrength.score < 3) errors.push('Password is too weak');
+      
+      return errors;
+    }
+    // Show error message
+    function showError(message) {
+      errorText.textContent = message;
+      errorMessage.style.display = 'block';
+      successMessage.style.display = 'none';
+      setTimeout(() => {
+        errorMessage.style.display = 'none';
+      }, 5000);
+    }
+    // Show success message
+    function showSuccess() {
+      successMessage.style.display = 'block';
+      errorMessage.style.display = 'none';
+    }
+    // Loading state
+    function setLoading(loading) {
+      if (loading) {
+        submitBtn.disabled = true;
+        submitText.innerHTML = '<div class="loading-spinner"></div>Creating Account...';
+      } else {
+        submitBtn.disabled = false;
+        submitText.textContent = 'Create My Account';
+      }
+    }
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(form);
+      const userData = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        password: formData.get('password'),
+        confirmPassword: formData.get('confirmPassword'),
+        region: formData.get('region'),
+        city: formData.get('city'),
+        address: formData.get('address'),
+        agreeTerms: formData.get('agreeTerms')
+      };
+      // Validate form
+      const errors = validateForm(userData);
+      if (errors.length > 0) {
+        showError(errors[0]);
+        return;
+      }
+      setLoading(true);
+      try {
+        // Create user account
+        const userCredential = await createUserWithEmailAndPassword(
+          auth, 
+          userData.email, 
+          userData.password
+        );
+        
+        const user = userCredential.user;
+        // Update user profile
+        await updateProfile(user, {
+          displayName: `${userData.firstName} ${userData.lastName}`
+        });
+        // Save user data to Firestore
+        await setDoc(doc(db, 'users', user.uid), {
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          phone: userData.phone,
+          region: userData.region,
+          city: userData.city,
+          address: userData.address,
+          createdAt: new Date().toISOString(),
+          emailVerified: user.emailVerified
+        });
+        showSuccess();
+        
+        // Redirect to login page after 2 seconds
+        setTimeout(() => {
+          window.location.href = 'login.html';
+        }, 2000);
+      } catch (error) {
+        console.error('Error creating account:', error);
+        
+        let errorMessage = 'Failed to create account. Please try again.';
+        
+        if (error.code === 'auth/email-already-in-use') {
+          errorMessage = 'Email address is already in use. Please use a different

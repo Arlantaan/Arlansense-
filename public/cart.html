@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Cart - Sensation by Sanu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+  <!-- SBS Animated Watermark Background -->
+  <div class="sbs-bg">
+    <img src="images/sbs.svg" alt="Sensation by Sanu Watermark" />
+  </div>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" class="navbar-sbs-logo">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="status.html">Order Status</a></li>
+          <li class="nav-item">
+            <a href="cart.html" class="nav-link position-relative active">
+              <i class="bi bi-cart3"></i> Cart
+              <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.7em;display:none;">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="signup.html" class="nav-link">
+              <i class="bi bi-person-plus"></i> Sign Up
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Cart Section -->
+  <section class="hero text-white d-flex align-items-center justify-content-center">
+    <div class="container">
+      <div class="cart-container">
+        <h2 class="text-center mb-4">
+          <i class="bi bi-cart3 me-2"></i>Your Shopping Cart
+        </h2>
+        
+        <!-- Empty Cart Message -->
+        <div id="cart-empty" class="text-center" style="display: none;">
+          <div class="p-5">
+            <i class="bi bi-cart-x" style="font-size: 4rem; color: #e6c98a;"></i>
+            <h3 class="mt-3">Your cart is empty</h3>
+            <p class="text-muted">Add some fragrances to get started!</p>
+            <a href="index.html#catalog" class="btn btn-custom">
+              <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+
+        <!-- Cart Items -->
+        <div id="cart-container" style="display: none;">
+          <div id="cart-items">
+            <!-- Cart items will be rendered here -->
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top border-light">
+            <div>
+              <h5 class="mb-0">Subtotal:</h5>
+              <h4 id="cart-total" class="text-warning mb-0">D0</h4>
+            </div>
+            <div>
+              <button class="btn btn-outline-custom me-2" onclick="clearCartWithConfirm()">
+                <i class="bi bi-trash me-2"></i>Clear Cart
+              </button>
+              <button class="btn btn-custom btn-lg" id="checkoutBtn" onclick="proceedToCheckout()">
+                <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+              </button>
+            </div>
+          </div>
+          
+          <div class="text-center mt-4">
+            <a href="index.html#catalog" class="btn btn-outline-custom">
+              <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 text-md-start">
+          <img src="images/sbs.svg" alt="SBS Logo" style="width: 24px; height: auto; margin-right: 8px;">
+          <span>© 2025 Sensation by Sanu • All rights reserved</span>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <a href="admin.html" class="text-white text-decoration-none me-3">Admin</a>
+          <a href="#" class="text-white text-decoration-none me-3">Privacy</a>
+          <a href="#" class="text-white text-decoration-none">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/simple-cart.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script>
+    // Initialize cart system
+    document.addEventListener('DOMContentLoaded', function() {
+      updateCartDisplay();
+      
+      // Track page view
+      if (window.analytics) {
+        window.analytics.track('page_view', {
+          page: 'cart',
+          title: 'Shopping Cart'
+        });
+      }
+    });
+
+    // Update cart display
+    function updateCartDisplay() {
+      const cartContainer = document.getElementById('cart-container');
+      const emptyMessage = document.getElementById('cart-empty');
+      
+      if (window.simpleCart) {
+        if (window.simpleCart.isEmpty()) {
+          if (cartContainer) cartContainer.style.display = 'none';
+          if (emptyMessage) emptyMessage.style.display = 'block';
+        } else {
+          if (cartContainer) cartContainer.style.display = 'block';
+          if (emptyMessage) emptyMessage.style.display = 'none';
+          renderCartItems();
+        }
+        window.simpleCart.updateCartDisplay();
+      }
+    }
+
+    // Render cart items
+    function renderCartItems() {
+      const cartItemsContainer = document.getElementById('cart-items');
+      const cartTotalElement = document.getElementById('cart-total');
+      
+      if (!window.simpleCart) return;
+      
+      const items = window.simpleCart.getItems();
+      const total = window.simpleCart.getTotal();
+      
+      if (items.length === 0) {
+        updateCartDisplay();
+        return;
+      }
+      
+      cartItemsContainer.innerHTML = items.map(item => `
+        <div class="cart-item p-3 mb-3">
+          <div class="row align-items-center">
+            <div class="col-md-2">
+              <img src="${item.image || 'https://via.placeholder.com/80x80?text=No+Image'}" 
+                   alt="${item.name}" 
+                   class="img-fluid rounded"
+                   style="width: 80px; height: 80px; object-fit: cover;"
+                   onerror="this.src='https://via.placeholder.com/80x80?text=Error'">
+            </div>
+            <div class="col-md-4">
+              <h5 class="mb-1 text-white">${item.name}</h5>
+              <p class="mb-0 text-muted">Unit Price: D${parseFloat(item.price).toLocaleString()}</p>
+            </div>
+            <div class="col-md-3">
+              <div class="d-flex align-items-center">
+                <button class="btn btn-outline-light btn-sm" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">
+                  <i class="bi bi-dash"></i>
+                </button>
+                <span class="mx-3 text-white">${item.quantity}</span>
+                <button class="btn btn-outline-light btn-sm" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">
+                  <i class="bi bi-plus"></i>
+                </button>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <p class="mb-0 text-warning fw-bold">D${(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
+            </div>
+            <div class="col-md-1">
+              <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart('${item.id}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      
+      cartTotalElement.textContent = `D${total.toLocaleString()}`;
+    }
+
+    // Update item quantity
+    function updateQuantity(itemId, newQuantity) {
+      if (newQuantity <= 0) {
+        removeFromCart(itemId);
+        return;
+      }
+      
+      if (window.simpleCart) {
+        window.simpleCart.updateQuantity(itemId, newQuantity);
+        updateCartDisplay();
+        
+        // Track quantity update
+        if (window.analytics) {
+          window.analytics.track('cart_update', {
+            item_id: itemId,
+            new_quantity: newQuantity
+          });
+        }
+      }
+    }
+
+    // Remove item from cart
+    function removeFromCart(itemId) {
+      if (window.simpleCart) {
+        window.simpleCart.removeItem(itemId);
+        updateCartDisplay();
+        
+        // Track item removal
+        if (window.analytics) {
+          window.analytics.track('remove_from_cart', {
+            item_id: itemId
+          });
+        }
+      }
+    }
+
+    // Clear cart with confirmation
+    function clearCartWithConfirm() {
+      if (confirm('Are you sure you want to clear your cart?')) {
+        if (window.simpleCart) {
+          window.simpleCart.clearCart();
+          updateCartDisplay();
+          
+          // Track cart clear
+          if (window.analytics) {
+            window.analytics.track('cart_clear');
+          }
+        }
+      }
+    }
+
+    // Proceed to checkout
+    function proceedToCheckout() {
+      if (window.simpleCart && !window.simpleCart.isEmpty()) {
+        // Track checkout initiation
+        if (window.analytics) {
+          window.analytics.track('checkout_initiated', {
+            cart_total: window.simpleCart.getTotal(),
+            item_count: window.simpleCart.getItemCount()
+          });
+        }
+        
+        window.location.href = 'checkout.html';
+      } else {
+        alert('Your cart is empty. Please add some items before checkout.');
+      }
+    }
+
+    // Listen for cart updates from other pages
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'sensation_cart') {
+        updateCartDisplay();
+      }
+    });
+
+    // Update cart display when cart changes
+    window.addEventListener('cartUpdated', function() {
+      updateCartDisplay();
+    });
+  </script>
+</body>
+</html>

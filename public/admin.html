@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sensation Admin Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #18130f;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .header-logo {
+      height: 70px;
+      width: auto;
+      vertical-align: middle;
+      margin-right: 18px;
+      margin-top: -10px;
+      margin-bottom: -10px;
+      filter: drop-shadow(0 2px 8px rgba(30,20,10,0.18));
+    }
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      margin-left: 0;
+      background: linear-gradient(90deg, #8B5C2A 0%, #FFD700 100%);
+      color: #fff;
+      padding: 2rem 0 1rem 0;
+      text-align: left;
+      letter-spacing: 2px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      box-shadow: 0 2px 16px rgba(139,92,42,0.15);
+    }
+    .purchase-table {
+      background: #23201c;
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(139,92,42,0.12);
+      margin-top: 2rem;
+    }
+    th {
+      background: #8B5C2A;
+      color: #fff;
+      font-weight: 600;
+    }
+    td {
+      vertical-align: middle;
+    }
+    .status-badge {
+      border-radius: 12px;
+      padding: 0.3em 1em;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+    .status-pending {
+      background: #FFD700;
+      color: #8B5C2A;
+    }
+    .status-completed {
+      background: #2a8b5c;
+      color: #fff;
+    }
+    .status-cancelled {
+      background: #8b2a2a;
+      color: #fff;
+    }
+    .login-form {
+      max-width: 350px;
+      margin: 2rem auto;
+      background: #23201c;
+      padding: 2rem 2rem 1.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(139,92,42,0.15);
+    }
+    .login-form input {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-header">
+    <img src="images/sbs.svg" alt="Sensation by Sanu Logo" class="header-logo me-3" />
+    Sensation Admin Portal
+  </div>
+  <div class="container">
+    <h3 class="mt-4 mb-3">Recent Purchases</h3>
+    <div class="row mb-3">
+      <div class="col-md-3 mb-2">
+        <input type="date" id="filter-date-from" class="form-control" placeholder="From date" />
+      </div>
+      <div class="col-md-3 mb-2">
+        <input type="date" id="filter-date-to" class="form-control" placeholder="To date" />
+      </div>
+      <div class="col-md-4 mb-2">
+        <input type="text" id="search-input" class="form-control" placeholder="Search by name, email, or product" />
+      </div>
+      <div class="col-md-2 mb-2">
+        <button class="btn btn-warning w-100" id="export-csv">Export CSV</button>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-dark table-hover purchase-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Email</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="purchase-list">
+          <tr><td colspan="6" class="text-center">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="loginDiv" class="text-center my-5">
+    <form id="emailLoginForm" class="login-form" autocomplete="on">
+      <h5 class="mb-3">Admin Login</h5>
+      <input type="email" id="emailInput" class="form-control" placeholder="Email" required />
+      <input type="password" id="passwordInput" class="form-control" placeholder="Password" required />
+      <button type="submit" class="btn btn-warning w-100 mb-2">Sign in with Email</button>
+      <div id="emailLoginError" class="text-danger mb-2" style="display:none;"></div>
+      <hr />
+      <button type="button" id="loginBtn" class="btn btn-outline-light w-100">Sign in with Google</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      query,
+      orderBy,
+      limit,
+      onSnapshot
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXfFinXJJf8QjV37tuuOa_8cYzg0Cn3Q4",
+      authDomain: "sensation-by-sanu.firebaseapp.com",
+      projectId: "sensation-by-sanu",
+      storageBucket: "sensation-by-sanu.appspot.com",
+      messagingSenderId: "985250517980",
+      appId: "1:985250517980:web:05011bfb5877ff7c193519",
+      measurementId: "G-VHH6P2L106"
+    };
+
+    const allowedAdmins = [
+      "haddybubacarr@gmail.com",
+      "abdullaalami1@gmail.com"
+    ];
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // UI elements
+    const adminContainer = document.querySelector('.container');
+    const loginDiv = document.getElementById('loginDiv');
+    const emailLoginForm = document.getElementById('emailLoginForm');
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const emailLoginError = document.getElementById('emailLoginError');
+    const googleLoginBtn = document.getElementById('loginBtn');
+    adminContainer.style.display = 'none';
+
+    // Auth state
+    onAuthStateChanged(auth, user => {
+      if (user && allowedAdmins.includes(user.email)) {
+        loginDiv.style.display = 'none';
+        adminContainer.style.display = '';
+        if (!document.getElementById('logoutBtn')) {
+          document.querySelector('.admin-header').innerHTML += `<button id="logoutBtn" class="btn btn-sm btn-outline-light ms-4">Logout</button>`;
+          document.getElementById('logoutBtn').onclick = () => signOut(auth);
+        }
+        startAdmin();
+      } else {
+        loginDiv.style.display = '';
+        adminContainer.style.display = 'none';
+      }
+    });
+
+    // Google login
+    googleLoginBtn.onclick = () => {
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      if (isSafari) {
+        import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js').then(({ signInWithRedirect }) => {
+          signInWithRedirect(auth, provider);
+        });
+      } else {
+        signInWithPopup(auth, provider);
+      }
+    };
+
+    // Email/password login
+    emailLoginForm.onsubmit = async (e) => {
+      e.preventDefault();
+      emailLoginError.style.display = 'none';
+      try {
+        const cred = await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+        if (!allowedAdmins.includes(cred.user.email)) {
+          await signOut(auth);
+          emailLoginError.textContent = 'You are not authorized to access this portal.';
+          emailLoginError.style.display = '';
+        }
+      } catch (err) {
+        emailLoginError.textContent = err.message.replace('Firebase: ', '');
+        emailLoginError.style.display = '';
+      }
+    };
+
+    function startAdmin() {
+      const purchaseList = document.getElementById('purchase-list');
+      const filterFrom = document.getElementById('filter-date-from');
+      const filterTo = document.getElementById('filter-date-to');
+      const searchInput = document.getElementById('search-input');
+      const exportCsvBtn = document.getElementById('export-csv');
+      let allPurchases = [];
+      function renderStatus(status) {
+        if (status === 'completed') return '<span class="status-badge status-completed">Completed</span>';
+        if (status === 'cancelled') return '<span class="status-badge status-cancelled">Cancelled</span>';
+        return '<span class="status-badge status-pending">Pending</span>';
+      }
+      function renderTable(rows) {
+        if (rows.length === 0) {
+          purchaseList.innerHTML = '<tr><td colspan="6" class="text-center">No purchases found.</td></tr>';
+          return;
+        }
+        purchaseList.innerHTML = '';
+        rows.forEach(d => {
+          purchaseList.innerHTML += `
+            <tr>
+              <td>${d.dateStr}</td>
+              <td>${d.name || ''}</td>
+              <td>${d.email || ''}</td>
+              <td>${d.product || ''}</td>
+              <td>${d.amount || ''}</td>
+              <td>${renderStatus(d.status)}</td>
+            </tr>
+          `;
+        });
+      }
+      function filterAndRender() {
+        const from = filterFrom.value;
+        const to = filterTo.value;
+        const search = searchInput.value.toLowerCase();
+        let filtered = allPurchases;
+        if (from) {
+          const fromDate = new Date(from);
+          filtered = filtered.filter(d => d.dateObj && d.dateObj >= fromDate);
+        }
+        if (to) {
+          const toDate = new Date(to);
+          toDate.setHours(23, 59, 59, 999);
+          filtered = filtered.filter(d => d.dateObj && d.dateObj <= toDate);
+        }
+        if (search) {
+          filtered = filtered.filter(d =>
+            (d.name && d.name.toLowerCase().includes(search)) ||
+            (d.email && d.email.toLowerCase().includes(search)) ||
+            (d.product && d.product.toLowerCase().includes(search))
+          );
+        }
+        renderTable(filtered);
+      }
+      function toCSV(rows) {
+        const header = ['Date', 'Customer', 'Email', 'Product', 'Amount', 'Status'];
+        const csv = [header.join(',')];
+        rows.forEach(d => {
+          csv.push([
+            `"${d.dateStr}"`,
+            `"${d.name || ''}"`,
+            `"${d.email || ''}"`,
+            `"${d.product || ''}"`,
+            `"${d.amount || ''}"`,
+            `"${d.status || ''}"`
+          ].join(','));
+        });
+        return csv.join('\n');
+      }
+      filterFrom.addEventListener('change', filterAndRender);
+      filterTo.addEventListener('change', filterAndRender);
+      searchInput.addEventListener('input', filterAndRender);
+      exportCsvBtn.addEventListener('click', () => {
+        const csv = toCSV(allPurchases);
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'purchases.csv';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+      // Listen to latest 200 orders ordered by 'created' descending
+      const ordersCol = collection(db, 'orders');
+      const ordersQuery = query(ordersCol, orderBy('created', 'desc'), limit(200));
+      onSnapshot(ordersQuery, (snapshot) => {
+        allPurchases = [];
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          const dateObj = d.created ? new Date(d.created) : null;
+          const product = d.cart ? d.cart.map(i => `${i.name} x${i.qty}`).join('; ') : '';
+          const amount = d.subtotal ? 'D' + d.subtotal.toLocaleString() : '';
+          allPurchases.push({
+            ...d,
+            product,
+            amount,
+            status: d.status || 'pending',
+            dateObj,
+            dateStr: dateObj ? dateObj.toLocaleString() : ''
+          });
+        });
+        filterAndRender();
+      });
+    }
+  </script>
+</body>
+</html>
