@@ -191,6 +191,7 @@
               <th>Date</th>
               <th>Customer</th>
               <th>Email</th>
+              <th>Phone</th>
               <th>Country</th>
               <th>Product</th>
               <th>Amount</th>
@@ -198,7 +199,7 @@
             </tr>
           </thead>
           <tbody id="purchase-list">
-            <tr><td colspan="7" class="text-center">Loading...</td></tr>
+            <tr><td colspan="8" class="text-center">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -429,7 +430,7 @@
       function renderTable(rows) {
         console.log(`Admin: Rendering table with ${rows.length} rows`);
         if (rows.length === 0) {
-          purchaseList.innerHTML = '<tr><td colspan="7" class="text-center">No purchases found.</td></tr>';
+          purchaseList.innerHTML = '<tr><td colspan="8" class="text-center">No purchases found.</td></tr>';
           return;
         }
         purchaseList.innerHTML = '';
@@ -455,6 +456,7 @@
               <td>${d.dateStr}</td>
               <td>${d.name || 'No name'}</td>
               <td>${d.email || 'No email'}</td>
+              <td><a href="tel:${d.phone || 'No phone'}" class="text-warning text-decoration-none">${d.phone || 'No phone'}</a></td>
               <td>${countryFlag} ${(d.country || 'Unknown').charAt(0).toUpperCase() + (d.country || 'unknown').slice(1).replace('-', ' ')}</td>
               <td>${d.product || 'No products'}</td>
               <td>${d.amount || 'No amount'}</td>
@@ -482,19 +484,22 @@
           filtered = filtered.filter(d =>
             (d.name && d.name.toLowerCase().includes(search)) ||
             (d.email && d.email.toLowerCase().includes(search)) ||
+            (d.phone && d.phone.toLowerCase().includes(search)) ||
             (d.product && d.product.toLowerCase().includes(search))
           );
         }
         renderTable(filtered);
       }
       function toCSV(rows) {
-        const header = ['Date', 'Customer', 'Email', 'Product', 'Amount', 'Status'];
+        const header = ['Date', 'Customer', 'Email', 'Phone', 'Country', 'Product', 'Amount', 'Status'];
         const csv = [header.join(',')];
         rows.forEach(d => {
           csv.push([
             `"${d.dateStr}"`,
             `"${d.name || ''}"`,
             `"${d.email || ''}"`,
+            `"${d.phone || ''}"`,
+            `"${d.country || ''}"`,
             `"${d.product || ''}"`,
             `"${d.amount || ''}"`,
             `"${d.status || ''}"`
