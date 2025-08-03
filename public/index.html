@@ -7,6 +7,7 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
   <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
   <link rel="icon" type="image/png" sizes="192x192" href="images/sbstab-192.png">
   <link rel="icon" type="image/png" sizes="180x180" href="images/sbstab-180.png">
@@ -264,6 +265,8 @@
         display: none !important;
       }
     }
+
+
   </style>
 </head>
 <body>
@@ -272,10 +275,10 @@
     <img src="images/sbs.svg" alt="Sensation by Sanu Watermark" />
   </div>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #23201c;" >
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
     <div class="container">
-      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="#">
-        <img src="images/sbs.svg" alt="SBS Logo" class="navbar-sbs-logo" />
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
         Sensation by Sanu
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -283,29 +286,17 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#catalog">Shop</a></li>
-          <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-            <li class="nav-item"><a class="nav-link" href="create-account.html">Sign In</a></li> <!-- ADD THIS LINE -->
-          <!-- Mobile floating cart icon (inside navbar, right below Contact) -->
-          <li class="nav-item d-block d-lg-none" style="position:relative;">
-            <a href="cart.html" class="floating-cart-mobile-inner" style="color:#fff;">
-              <i class="bi bi-cart3" style="font-size:2.2rem;vertical-align:middle;"></i>
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none; font-size:0.7rem;">0</span>
+          </a></li>
         </ul>
-  <!-- Mobile floating cart icon (inside navbar, right below Contact) -->
-  <li class="nav-item d-block d-lg-none" style="position:relative;">
-    <a href="cart.html" class="floating-cart-mobile-inner" style="color:#fff;">
-      <i class="bi bi-cart3" style="font-size:2.2rem;vertical-align:middle;"></i>
-    </a>
-  </li>
-</ul>
-        <!-- Cart Icon in navbar (desktop only) -->
-        <a href="cart.html" class="ms-3 cart-navbar-icon d-none d-lg-inline" style="color:#fff;">
-          <i class="bi bi-cart3" style="font-size:1.5rem;vertical-align:middle;"></i>
-        </a>
       </div>
     </div>
   </nav>
@@ -345,7 +336,7 @@
             </div>
             <p class="text-muted small mb-2">A fruity-floral embrace with a golden glow of warmth and sophistication</p>
             <p class="fw-bold">5000 GMD</p>
-            <button class="btn btn-dark w-100" onclick="addToCart({name: 'Soleil', price: 5000, img: 'images/grace.webp'})">Add to Cart</button>
+                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'soleil', name: 'Soleil', price: 5000, image: 'images/grace.webp'})">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -363,7 +354,7 @@
             </div>
             <p class="text-muted small mb-2">Deep, magnetic, and utterly sensual. A timeless evening scent</p>
             <p class="fw-bold">5000 GMD</p>
-            <button class="btn btn-dark w-100" onclick="addToCart({name: 'Nuit', price: 5000, img: 'images/blackbottle.webp'})">Add to Cart</button>
+                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'nuit', name: 'Nuit', price: 5000, image: 'images/blackbottle.webp'})">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -381,7 +372,7 @@
             </div>
             <p class="text-muted small mb-2">A soft floral with a bold undertone — confident, youthful, unforgettable</p>
             <p class="fw-bold">500 GMD</p>
-            <button class="btn btn-dark w-100" onclick="addToCart({name: 'Blush', price: 500, img: 'images/blushbottle.webp'})">Add to Cart</button>
+                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'blush', name: 'Blush', price: 500, image: 'images/blushbottle.webp'})">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -397,7 +388,7 @@
             </div>
             <p class="text-muted small mb-2">An oil-based scent crafted for lasting allure — rich, mysterious, and seductive</p>
             <p class="fw-bold">500 GMD</p>
-            <button class="btn btn-dark w-100" onclick="addToCart({name: 'Noir', price: 500, img: 'images/perfume_oil2.webp'})">Add to Cart</button>
+                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'noir', name: 'Noir', price: 500, image: 'images/perfume_oil2.webp'})">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -432,13 +423,11 @@
     </div>
   </section>
 
-<footer class="bg-black text-white text-center py-3" style="background-color: #23201c;">
-  <p class="mb-0 d-inline-block me-3">
-    © 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech
-  </p>
-  <a href="track.html" class="btn btn-warning btn-sm" style="vertical-align: middle;">
-    Track Your Order
-  </a>
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-4">
+  <div class="container">
+    <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+  </div>
 </footer>
 
 
@@ -451,22 +440,55 @@
   <script src="js/cart.js"></script>
   <script src="js/payment.js"></script>
   <script src="js/analytics.js"></script>
+  <!-- Shared utility and animation scripts -->
+  <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
   <script>
-    // Initialize Vanta.js background
-    VANTA.WAVES({
-      el: ".hero",
-      mouseControls: true,
-      touchControls: true,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.0,
-      scaleMobile: 1.0,
-      color: 0x8B5C2A,
-      shininess: 50.0,
-      waveHeight: 20.0,
-      waveSpeed: 0.7,
-      zoom: 0.85
-    });
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: ".hero",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+    
+    // Cart debugging function
+    window.debugCart = function() {
+      console.log('=== CART DEBUG ===');
+      console.log('1. CartManager exists:', typeof window.cartManager);
+      console.log('2. localStorage cart:', localStorage.getItem('sensation_cart'));
+      console.log('3. addToCart function:', typeof window.addToCart);
+      
+      if (window.cartManager) {
+        console.log('4. CartManager cart:', cartManager.cart);
+        console.log('5. Cart length:', cartManager.cart.length);
+        console.log('6. Is empty:', cartManager.isEmpty());
+      }
+      
+      // Test direct add
+      if (window.addToCart) {
+        console.log('7. Testing addToCart...');
+        try {
+          addToCart({id: 'test', name: 'Debug Test', price: 100, image: 'test.jpg'});
+          console.log('8. Add successful');
+        } catch (e) {
+          console.error('8. Add failed:', e);
+        }
+      }
+    };
 
     // Enhanced navigation with analytics
     document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
@@ -490,42 +512,8 @@
       });
     });
 
-    // Enhanced Add to Cart with validation and feedback
-    function addToCart(product) {
-      try {
-        // Validate product data
-        if (!product || !product.name || !product.price) {
-          throw new Error('Invalid product data');
-        }
-
-        // Add to cart using enhanced cart manager
-        const success = cartManager.addItem({
-          id: product.id || `product-${Date.now()}`,
-          name: product.name,
-          price: parseFloat(product.price),
-          image: product.img || product.image,
-          category: 'perfume'
-        });
-
-        if (success) {
-          // Track add to cart event
-          if (window.analytics) {
-            window.analytics.track('add_to_cart', {
-              product_id: product.id,
-              product_name: product.name,
-              price: product.price,
-              currency: 'GMD'
-            });
-          }
-        }
-
-        return success;
-      } catch (error) {
-        console.error('Error adding to cart:', error);
-        cartManager.showNotification(error.message, 'error');
-        return false;
-      }
-    }
+         // Use CartManager for add to cart (provided globally by cart.js)
+         // window.addToCart(product) is now available globally
 
     // Enhanced mobile haptics
     document.body.addEventListener('touchstart', function(e) {

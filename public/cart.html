@@ -7,21 +7,132 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
-  <!-- Bootstrap Icons CDN -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/animations.css">
+   <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+   <!-- Bootstrap Icons CDN -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .hero {
+      height: 100vh;
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+    }
+
+    .cart-container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cart-item {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-custom {
+      background: linear-gradient(135deg, #e6c98a, #bfa76a);
+      border: none;
+      color: #23201c;
+      font-weight: 600;
+      border-radius: 25px;
+      padding: 12px 30px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(230, 201, 138, 0.4);
+      background: linear-gradient(135deg, #bfa76a, #e6c98a);
+    }
+
+    .btn-outline-custom {
+      background: transparent;
+      border: 2px solid #e6c98a;
+      color: #e6c98a;
+      border-radius: 25px;
+      padding: 10px 25px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+      background: #e6c98a;
+      color: #23201c;
+      transform: translateY(-2px);
+    }
+
+    .navbar-sbs-logo {
+      width: 44px;
+      height: auto;
+      opacity: 0.9;
+      min-width: 32px;
+      margin-right: 0.4rem;
+    }
+
+    /* Floating animation for cart items */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cart-item {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .cart-item:nth-child(2) { animation-delay: 1s; }
+    .cart-item:nth-child(3) { animation-delay: 2s; }
+    .cart-item:nth-child(4) { animation-delay: 3s; }
+
+    /* Glowing effect for total */
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 5px #e6c98a; }
+      50% { text-shadow: 0 0 20px #e6c98a, 0 0 30px #e6c98a; }
+    }
+
+    #cart-total {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .cart-container {
+        margin: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .hero {
+        height: auto;
+        min-height: 100vh;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- SBS Animated Watermark Background -->
-  <div class="sbs-bg">
-    <img src="images/sbs.svg" alt="Sensation by Sanu Watermark" />
-  </div>
+  
   
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="index.html">
-        <img src="images/sbs.svg" alt="SBS Logo" class="navbar-sbs-logo">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
         Sensation by Sanu
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -31,20 +142,14 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="status.html">Order Status</a></li>
-          <li class="nav-item">
-            <a href="cart.html" class="nav-link position-relative active">
-              <i class="bi bi-cart3"></i> Cart
-              <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.7em;display:none;">0</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="signup.html" class="nav-link">
-              <i class="bi bi-person-plus"></i> Sign Up
-            </a>
-          </li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative active" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none; font-size:0.7rem;">0</span>
+          </a></li>
         </ul>
       </div>
     </div>
@@ -82,7 +187,7 @@
               <h4 id="cart-total" class="text-warning mb-0">D0</h4>
             </div>
             <div>
-              <button class="btn btn-outline-custom me-2" onclick="clearCartWithConfirm()">
+              <button class="btn btn-outline-custom me-2" onclick="if(confirm('Are you sure you want to clear your cart?')) { cartManager.clearCart(); }">
                 <i class="bi bi-trash me-2"></i>Clear Cart
               </button>
               <button class="btn btn-custom btn-lg" id="checkoutBtn" onclick="proceedToCheckout()">
@@ -102,31 +207,65 @@
   </section>
 
   <!-- Footer -->
-  <footer class="bg-dark text-white text-center py-3">
+  <footer class="bg-dark text-white text-center py-4">
     <div class="container">
-      <div class="row">
-        <div class="col-md-6 text-md-start">
-          <img src="images/sbs.svg" alt="SBS Logo" style="width: 24px; height: auto; margin-right: 8px;">
-          <span>© 2025 Sensation by Sanu • All rights reserved</span>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <a href="admin.html" class="text-white text-decoration-none me-3">Admin</a>
-          <a href="#" class="text-white text-decoration-none me-3">Privacy</a>
-          <a href="#" class="text-white text-decoration-none">Terms</a>
-        </div>
-      </div>
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
     </div>
   </footer>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/simple-cart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cart.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
   <script>
+    // Cart debugging for cart page
+    window.debugCartPage = function() {
+      console.log('=== CART PAGE DEBUG ===');
+      console.log('1. CartManager exists:', typeof window.cartManager);
+      console.log('2. cart-items element:', document.getElementById('cart-items'));
+      console.log('3. cart-total element:', document.getElementById('cart-total'));
+      console.log('4. cart-empty element:', document.getElementById('cart-empty'));
+      
+      if (window.cartManager) {
+        console.log('5. CartManager cart:', cartManager.cart);
+        console.log('6. Cart length:', cartManager.cart.length);
+        console.log('7. Force render cart page...');
+        cartManager.renderCartPage();
+      }
+    };
+    
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: ".hero",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+
     // Initialize cart system
     document.addEventListener('DOMContentLoaded', function() {
-      updateCartDisplay();
+      // Use the CartManager system that was working
+      if (window.cartManager) {
+        cartManager.updateCartDisplay();
+      }
       
       // Track page view
       if (window.analytics) {
@@ -137,146 +276,25 @@
       }
     });
 
-    // Update cart display
-    function updateCartDisplay() {
-      const cartContainer = document.getElementById('cart-container');
-      const emptyMessage = document.getElementById('cart-empty');
-      
-      if (window.simpleCart) {
-        if (window.simpleCart.isEmpty()) {
-          if (cartContainer) cartContainer.style.display = 'none';
-          if (emptyMessage) emptyMessage.style.display = 'block';
-        } else {
-          if (cartContainer) cartContainer.style.display = 'block';
-          if (emptyMessage) emptyMessage.style.display = 'none';
-          renderCartItems();
-        }
-        window.simpleCart.updateCartDisplay();
-      }
-    }
+         // Cart display is now handled by CartManager in cart.js
 
-    // Render cart items
-    function renderCartItems() {
-      const cartItemsContainer = document.getElementById('cart-items');
-      const cartTotalElement = document.getElementById('cart-total');
-      
-      if (!window.simpleCart) return;
-      
-      const items = window.simpleCart.getItems();
-      const total = window.simpleCart.getTotal();
-      
-      if (items.length === 0) {
-        updateCartDisplay();
-        return;
-      }
-      
-      cartItemsContainer.innerHTML = items.map(item => `
-        <div class="cart-item p-3 mb-3">
-          <div class="row align-items-center">
-            <div class="col-md-2">
-              <img src="${item.image || 'https://via.placeholder.com/80x80?text=No+Image'}" 
-                   alt="${item.name}" 
-                   class="img-fluid rounded"
-                   style="width: 80px; height: 80px; object-fit: cover;"
-                   onerror="this.src='https://via.placeholder.com/80x80?text=Error'">
-            </div>
-            <div class="col-md-4">
-              <h5 class="mb-1 text-white">${item.name}</h5>
-              <p class="mb-0 text-muted">Unit Price: D${parseFloat(item.price).toLocaleString()}</p>
-            </div>
-            <div class="col-md-3">
-              <div class="d-flex align-items-center">
-                <button class="btn btn-outline-light btn-sm" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">
-                  <i class="bi bi-dash"></i>
-                </button>
-                <span class="mx-3 text-white">${item.quantity}</span>
-                <button class="btn btn-outline-light btn-sm" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">
-                  <i class="bi bi-plus"></i>
-                </button>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <p class="mb-0 text-warning fw-bold">D${(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
-            </div>
-            <div class="col-md-1">
-              <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart('${item.id}')">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('');
-      
-      cartTotalElement.textContent = `D${total.toLocaleString()}`;
-    }
+         // Cart rendering is now handled by CartManager.renderCartPage() in cart.js
 
-    // Update item quantity
-    function updateQuantity(itemId, newQuantity) {
-      if (newQuantity <= 0) {
-        removeFromCart(itemId);
-        return;
-      }
-      
-      if (window.simpleCart) {
-        window.simpleCart.updateQuantity(itemId, newQuantity);
-        updateCartDisplay();
-        
-        // Track quantity update
-        if (window.analytics) {
-          window.analytics.track('cart_update', {
-            item_id: itemId,
-            new_quantity: newQuantity
-          });
-        }
-      }
-    }
+         // Cart quantity and removal functions are now provided globally by CartManager:
+         // - window.updateCartQuantity(productId, quantity) 
+         // - window.removeFromCart(productId)
+         // - window.clearCart()
 
-    // Remove item from cart
-    function removeFromCart(itemId) {
-      if (window.simpleCart) {
-        window.simpleCart.removeItem(itemId);
-        updateCartDisplay();
-        
-        // Track item removal
-        if (window.analytics) {
-          window.analytics.track('remove_from_cart', {
-            item_id: itemId
-          });
-        }
-      }
-    }
-
-    // Clear cart with confirmation
-    function clearCartWithConfirm() {
-      if (confirm('Are you sure you want to clear your cart?')) {
-        if (window.simpleCart) {
-          window.simpleCart.clearCart();
-          updateCartDisplay();
-          
-          // Track cart clear
-          if (window.analytics) {
-            window.analytics.track('cart_clear');
-          }
-        }
-      }
-    }
-
-    // Proceed to checkout
-    function proceedToCheckout() {
-      if (window.simpleCart && !window.simpleCart.isEmpty()) {
-        // Track checkout initiation
-        if (window.analytics) {
-          window.analytics.track('checkout_initiated', {
-            cart_total: window.simpleCart.getTotal(),
-            item_count: window.simpleCart.getItemCount()
-          });
-        }
-        
-        window.location.href = 'checkout.html';
-      } else {
-        alert('Your cart is empty. Please add some items before checkout.');
-      }
-    }
+         // Proceed to checkout
+     function proceedToCheckout() {
+       const cart = JSON.parse(localStorage.getItem('sensation_cart')) || [];
+       
+       if (cart.length > 0) {
+         window.location.href = 'checkout.html';
+       } else {
+         alert('Your cart is empty. Please add some items before checkout.');
+       }
+     }
 
     // Listen for cart updates from other pages
     window.addEventListener('storage', function(e) {

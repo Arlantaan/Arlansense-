@@ -3,16 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign - Sensation by Sanu</title>
+  <title>Sign Up - Sensation by Sanu</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
-  <link rel="icon" type="image/png" sizes="192x192" href="images/sbstab-192.png">
-  <link rel="icon" type="image/png" sizes="180x180" href="images/sbstab-180.png">
-  <link rel="icon" type="image/png" sizes="128x128" href="images/sbstab-128.png">
-  <link rel="icon" type="image/png" sizes="64x64" href="images/sbstab-64.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="images/sbstab-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="images/sbstab-16.png">
   <!-- Bootstrap Icons CDN -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <style>
@@ -20,352 +15,212 @@
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f9f9f9;
-    }
-    .hero {
       min-height: 100vh;
-      position: relative;
-      background-image: url('images/2151839595.webp');
-      background-size: cover;
-      background-position: center;
-      animation: bgMove 60s ease-in-out infinite alternate;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
-    @keyframes bgMove {
-      0% { background-position: center; }
-      100% { background-position: left; }
-    }
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
+    
+    /* Vanta.js background container */
+    .vanta-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 0;
-    }
-    .hero > div {
-      z-index: 1;
-      position: relative;
-    }
-    /* Navbar SBS Logo */
-    .navbar-sbs-logo {
-      width: 44px;
-      height: auto;
-      opacity: 0.9;
-      min-width: 32px;
-      margin-right: 0.4rem;
-    }
-    @media (max-width: 768px) {
-      .navbar-sbs-logo {
-        width: 32px;
-        min-width: 22px;
-        margin-right: 0.2rem;
-      }
-    }
-    /* Account Creation Container */
-    .account-container {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      border-radius: 25px;
-      padding: 3rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      max-width: 600px;
-      margin: 2rem auto;
-      position: relative;
-      overflow: hidden;
-    }
-    .account-container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: conic-gradient(
-        from 0deg,
-        transparent,
-        rgba(255, 255, 255, 0.05),
-        transparent,
-        rgba(255, 255, 255, 0.02),
-        transparent
-      );
-      animation: accountRotate 12s linear infinite;
       z-index: -1;
     }
-    @keyframes accountRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    /* Account Header */
-    .account-header {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-    .account-title {
-      color: #fff;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-      text-shadow: 0 2px 15px rgba(255, 255, 255, 0.3);
-    }
-    .account-subtitle {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-    .account-tagline {
-      color: #e6c98a;
-      font-size: 0.9rem;
-      font-style: italic;
-      text-shadow: 0 2px 8px rgba(230, 201, 138, 0.3);
-    }
-    /* Form Styling */
-    .form-label {
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 600;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
+    
+    .main-content {
+      flex: 1;
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: center;
+      padding: 2rem 0;
     }
-    .form-control, .form-select {
-      background: rgba(255, 255, 255, 0.1);
+    
+    .auth-container {
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      border-radius: 15px;
-      color: rgba(255, 255, 255, 0.9);
-      padding: 1rem 1.2rem;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      margin-bottom: 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
+      margin: 2rem;
+      position: relative;
     }
-    .form-control:focus, .form-select:focus {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: #e6c98a;
-      box-shadow: 
-        0 0 20px rgba(230, 201, 138, 0.3),
-        0 8px 25px rgba(0, 0, 0, 0.15);
-      color: #fff;
-      transform: translateY(-2px);
-      outline: none;
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
     }
-    .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6);
-    }
-    /* Password Strength Indicator */
-    .password-strength {
-      margin-top: -1rem;
-      margin-bottom: 1rem;
-    }
-    .strength-bar {
-      height: 4px;
-      border-radius: 2px;
-      transition: all 0.3s ease;
+    
+    .auth-header h2 {
+      color: #23201c;
+      font-weight: bold;
       margin-bottom: 0.5rem;
     }
-    .strength-weak { background: #dc3545; width: 33%; }
-    .strength-medium { background: #ffc107; width: 66%; }
-    .strength-strong { background: #28a745; width: 100%; }
-    .strength-text {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.7);
+    
+    .auth-header p {
+      color: #6c757d;
+      margin-bottom: 0;
     }
-    /* Location Section */
-    .location-section {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 15px;
-      padding: 1.5rem;
-      margin: 2rem 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    .form-floating label {
+      color: #6c757d;
     }
-    .location-title {
-      color: #e6c98a;
-      font-size: 1.2rem;
-      font-weight: 600;
+    
+    .form-control {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: #e6c98a;
+      box-shadow: 0 0 0 0.2rem rgba(230, 201, 138, 0.25);
+    }
+    
+    .btn-auth {
+      background: linear-gradient(135deg, #e6c98a, #d4b06a);
+      border: none;
+      color: #23201c;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      width: 100%;
       margin-bottom: 1rem;
+    }
+    
+    .btn-auth:hover {
+      background: linear-gradient(135deg, #d4b06a, #e6c98a);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 176, 106, 0.4);
+    }
+    
+    .btn-google {
+      background: #fff;
+      border: 2px solid #e9ecef;
+      color: #333;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      width: 100%;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
     }
-    /* Terms and Conditions */
-    .terms-section {
-      background: rgba(255, 255, 255, 0.03);
-      border-radius: 12px;
-      padding: 1.2rem;
-      margin: 2rem 0;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    
+    .btn-google:hover {
+      background: #f8f9fa;
+      border-color: #dee2e6;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     }
-    .form-check {
+    
+    .divider {
       display: flex;
       align-items: center;
-      gap: 0.8rem;
+      margin: 1.5rem 0;
+      color: #6c757d;
     }
-    .form-check-input {
-      width: 20px;
-      height: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 4px;
-    }
-    .form-check-input:checked {
-      background: #e6c98a;
-      border-color: #e6c98a;
-    }
-    .form-check-label {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-    .form-check-label a {
-      color: #e6c98a;
-      text-decoration: none;
-    }
-    .form-check-label a:hover {
-      text-decoration: underline;
-    }
-    /* Submit Button */
-    .submit-btn {
-      background: linear-gradient(135deg, #e6c98a, #bfa76a);
-      border: none;
-      border-radius: 50px;
-      padding: 1.2rem 3rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      color: #23201c;
-      width: 100%;
-      transition: all 0.4s ease;
-      box-shadow: 0 8px 25px rgba(230, 201, 138, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-    .submit-btn::before {
+    
+    .divider::before,
+    .divider::after {
       content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.6s ease;
+      flex: 1;
+      height: 1px;
+      background: #e9ecef;
     }
-    .submit-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 35px rgba(230, 201, 138, 0.4);
-      background: linear-gradient(135deg, #bfa76a, #e6c98a);
+    
+    .divider span {
+      padding: 0 1rem;
+      background: rgba(255, 255, 255, 0.95);
     }
-    .submit-btn:hover::before {
-      left: 100%;
-    }
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    /* Loading Animation */
-    .loading-spinner {
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(35, 32, 28, 0.3);
-      border-top: 2px solid #23201c;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 0.5rem;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    /* Success Message */
-    .success-message {
-      background: rgba(40, 167, 69, 0.2);
-      border: 1px solid rgba(40, 167, 69, 0.3);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      color: #28a745;
-      display: none;
-    }
-    /* Error Message */
-    .error-message {
-      background: rgba(220, 53, 69, 0.2);
-      border: 1px solid rgba(220, 53, 69, 0.3);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      color: #dc3545;
-      display: none;
-    }
-    /* Login Link */
-    .login-link {
+    
+    .auth-toggle {
       text-align: center;
       margin-top: 2rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #6c757d;
     }
-    .login-link a {
+    
+    .auth-toggle a {
       color: #e6c98a;
       text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s ease;
+      font-weight: bold;
     }
-    .login-link a:hover {
-      color: #fff;
-      text-shadow: 0 2px 8px rgba(230, 201, 138, 0.5);
+    
+    .auth-toggle a:hover {
+      color: #d4b06a;
     }
-    /* Back Button */
-    .back-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(255, 255, 255, 0.1);
+    
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    
+    .user-dashboard {
+      display: none;
+    }
+    
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50px;
-      padding: 0.8rem 1.5rem;
-      color: #fff;
-      text-decoration: none;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-history {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .order-item {
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
       transition: all 0.3s ease;
-      z-index: 10;
     }
-    .back-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      color: #e6c98a;
+    
+    .order-item:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .account-container {
-        padding: 2rem 1.5rem;
-        margin: 1rem;
-      }
-      .account-title {
-        font-size: 2rem;
-      }
-      .form-control, .form-select {
-        padding: 0.9rem 1rem;
-      }
-      .submit-btn {
-        padding: 1rem 2rem;
-        font-size: 1rem;
-      }
+    
+    .status-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-processing { background: #ffeaa7; color: #b8860b; }
+    .status-shipped { background: #cce5ff; color: #004085; }
+    .status-delivered { background: #d4edda; color: #155724; }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
     }
   </style>
 </head>
 <body>
-  <!-- SBS Animated Watermark Background -->
-  <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;">
-    <img src="images/sbs.svg" alt="Sensation by Sanu Watermark" style="width: 100%; height: auto; opacity: 0.1; pointer-events: none;" />
-  </div>
+  <!-- Vanta.js Background -->
+  <div class="vanta-container" id="vanta-background"></div>
+  
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #23201c;">
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
     <div class="container">
       <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
-        <img src="images/sbs.svg" alt="SBS Logo" class="navbar-sbs-logo" />
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
         Sensation by Sanu
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -375,347 +230,489 @@
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
-          <li class="nav-item"><a class="nav-link" href="index.html#contact">Contact</a></li>
-          <li class="nav-item"><a class="nav-link active" href="#">Create Account</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link active" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
         </ul>
-        <!-- Cart Icon -->
-        <a href="cart.html" class="ms-3 d-none d-lg-inline" style="color:#fff;">
-          <i class="bi bi-cart3" style="font-size:1.5rem;vertical-align:middle;"></i>
-        </a>
       </div>
     </div>
   </nav>
-  <!-- Hero Section with Account Creation -->
-  <section class="hero d-flex align-items-center justify-content-center">
-    <!-- Back Button -->
-    <a href="index.html" class="back-btn">
-      <i class="bi bi-arrow-left me-2"></i>Back to Home
-    </a>
-    <div class="container">
-      <div class="account-container">
-        <!-- Account Header -->
-        <div class="account-header">
-          <h1 class="account-title">Create Your Account</h1>
-          <p class="account-subtitle">Join the Sensation by Sanu community</p>
-          <p class="account-tagline">Discover your signature scent with exclusive access</p>
+
+  <div class="main-content">
+    <!-- Authentication Forms -->
+    <div class="auth-container" id="authContainer">
+      <!-- Sign Up Form -->
+      <div id="signupForm">
+        <div class="auth-header">
+          <h2>Create Account</h2>
+          <p>Join Sensation by Sanu for easier order tracking</p>
         </div>
-        <!-- Success Message -->
-        <div id="successMessage" class="success-message">
-          <i class="bi bi-check-circle-fill me-2"></i>
-          Account created successfully! Redirecting to login...
-        </div>
-        <!-- Error Message -->
-        <div id="errorMessage" class="error-message">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          <span id="errorText">Please fix the errors below.</span>
-        </div>
-        <!-- Account Creation Form -->
-        <form id="createAccountForm">
-          <!-- Personal Information -->
-          <div class="row">
-            <div class="col-md-6">
-              <label for="firstName" class="form-label">
-                <i class="bi bi-person"></i> First Name
-              </label>
-              <input type="text" class="form-control" id="firstName" name="firstName" 
-                     placeholder="Enter your first name" required>
-            </div>
-            <div class="col-md-6">
-              <label for="lastName" class="form-label">
-                <i class="bi bi-person"></i> Last Name
-              </label>
-              <input type="text" class="form-control" id="lastName" name="lastName" 
-                     placeholder="Enter your last name" required>
-            </div>
+
+        <div id="authAlert" class="alert" style="display: none;"></div>
+
+        <form id="signupFormElement">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+            <label for="signupName">Full Name</label>
           </div>
-          <!-- Email -->
-          <label for="email" class="form-label">
-            <i class="bi bi-envelope"></i> Email Address
-          </label>
-          <input type="email" class="form-control" id="email" name="email" 
-                 placeholder="Enter your email address" required>
-          <!-- Phone -->
-          <label for="phone" class="form-label">
-            <i class="bi bi-telephone"></i> Phone Number
-          </label>
-          <input type="tel" class="form-control" id="phone" name="phone" 
-                 placeholder="Enter your phone number" required>
-          <!-- Password -->
-          <label for="password" class="form-label">
-            <i class="bi bi-lock"></i> Password
-          </label>
-          <input type="password" class="form-control" id="password" name="password" 
-                 placeholder="Create a strong password" required>
           
-          <!-- Password Strength Indicator -->
-          <div class="password-strength">
-            <div id="strengthBar" class="strength-bar"></div>
-            <div id="strengthText" class="strength-text">Password strength will be shown here</div>
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="signupEmail" placeholder="Email Address" required>
+            <label for="signupEmail">Email Address</label>
           </div>
-          <!-- Confirm Password -->
-          <label for="confirmPassword" class="form-label">
-            <i class="bi bi-lock-fill"></i> Confirm Password
-          </label>
-          <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
-                 placeholder="Confirm your password" required>
-          <!-- Location Section -->
-          <div class="location-section">
-            <h5 class="location-title">
-              <i class="bi bi-geo-alt"></i> Delivery Location
-            </h5>
-            
-            <!-- Region -->
-            <label for="region" class="form-label">
-              <i class="bi bi-map"></i> Region
-            </label>
-            <select class="form-select" id="region" name="region" required>
-              <option value="">Select your region</option>
-              <option value="Greater Banjul Area">Greater Banjul Area</option>
-              <option value="West Coast Region">West Coast Region</option>
-              <option value="Lower River Region">Lower River Region</option>
-              <option value="Central River Region">Central River Region</option>
-              <option value="Upper River Region">Upper River Region</option>
-              <option value="North Bank Region">North Bank Region</option>
-            </select>
-            <!-- City/Area -->
-            <label for="city" class="form-label">
-              <i class="bi bi-building"></i> City/Area
-            </label>
-            <select class="form-select" id="city" name="city" required>
-              <option value="">Select your city/area</option>
-            </select>
-            <!-- Detailed Address -->
-            <label for="address" class="form-label">
-              <i class="bi bi-house"></i> Detailed Address
-            </label>
-            <textarea class="form-control" id="address" name="address" rows="3" 
-                      placeholder="Enter your full delivery address" required></textarea>
+          
+          <div class="form-floating mb-3">
+            <input type="tel" class="form-control" id="signupPhone" placeholder="Phone Number">
+            <label for="signupPhone">Phone Number (Optional)</label>
           </div>
-          <!-- Terms and Conditions -->
-          <div class="terms-section">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="agreeTerms" name="agreeTerms" required>
-              <label class="form-check-label" for="agreeTerms">
-                I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a>
-              </label>
-            </div>
+          
+          <div class="form-floating mb-4">
+            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required minlength="6">
+            <label for="signupPassword">Password (min 6 characters)</label>
           </div>
-          <!-- Submit Button -->
-          <button type="submit" class="submit-btn" id="submitBtn">
-            <span id="submitText">Create My Account</span>
+          
+          <button type="submit" class="btn btn-auth">
+            <i class="bi bi-person-plus me-2"></i>Create Account
           </button>
         </form>
-        <!-- Login Link -->
-        <div class="login-link">
-          <p style="color: rgba(255, 255, 255, 0.8);">
-            Already have an account? <a href="login.html">Sign in here</a>
-          </p>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <button class="btn btn-google" id="googleSignupBtn">
+          <i class="bi bi-google"></i>
+          Continue with Google
+        </button>
+
+        <div class="auth-toggle">
+          Already have an account? <a href="#" id="showLoginBtn">Sign In</a>
+        </div>
+      </div>
+
+      <!-- Sign In Form -->
+      <div id="loginForm" style="display: none;">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your account</p>
+        </div>
+
+        <div id="loginAlert" class="alert" style="display: none;"></div>
+
+        <form id="loginFormElement">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="loginEmail" placeholder="Email Address" required>
+            <label for="loginEmail">Email Address</label>
+          </div>
+          
+          <div class="form-floating mb-4">
+            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+            <label for="loginPassword">Password</label>
+          </div>
+          
+          <button type="submit" class="btn btn-auth">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <button class="btn btn-google" id="googleLoginBtn">
+          <i class="bi bi-google"></i>
+          Continue with Google
+        </button>
+
+        <div class="auth-toggle">
+          Don't have an account? <a href="#" id="showSignupBtn">Create Account</a>
         </div>
       </div>
     </div>
-  </section>
-  <!-- Bootstrap JS -->
+
+    <!-- User Dashboard -->
+    <div class="container user-dashboard" id="userDashboard">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- Welcome Card -->
+          <div class="dashboard-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h3>Welcome back, <span id="userName">User</span>!</h3>
+                <p class="text-muted mb-0">Email: <span id="userEmail">user@example.com</span></p>
+              </div>
+              <button class="btn btn-outline-danger" id="logoutBtn">
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="dashboard-card">
+            <h5 class="mb-3">Quick Actions</h5>
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <a href="index.html#catalog" class="btn btn-outline-primary w-100">
+                  <i class="bi bi-shop me-2"></i>Shop Fragrances
+                </a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="track.html" class="btn btn-outline-success w-100">
+                  <i class="bi bi-geo-alt me-2"></i>Track Orders
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order History -->
+          <div class="dashboard-card">
+            <h5 class="mb-3">Your Order History</h5>
+            <div class="loading-spinner" id="ordersLoading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Loading your orders...</p>
+            </div>
+            <div class="order-history" id="orderHistory" style="display: none;">
+              <!-- Orders will be loaded here -->
+            </div>
+            <div id="noOrders" style="display: none;">
+              <div class="text-center text-muted py-4">
+                <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.5;"></i>
+                <h6 class="mt-3">No orders yet</h6>
+                <p>Start shopping to see your orders here!</p>
+                <a href="index.html#catalog" class="btn btn-auth">Browse Fragrances</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Firebase SDK and Account Creation Logic -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
+  
+  <script>
+    // Initialize Vanta.js background
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('#vanta-background', 'waves');
+    } else {
+      VANTA.WAVES({
+        el: "#vanta-background",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
+
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
     import { 
       getAuth, 
       createUserWithEmailAndPassword, 
-      updateProfile 
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+      signInWithEmailAndPassword,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut,
+      onAuthStateChanged,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
     import { 
       getFirestore, 
       doc, 
-      setDoc 
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    const firebaseConfig = {
-      apiKey: "AIzaSyAXfFinXJJf8QjV37tuuOa_8cYzg0Cn3Q4",
-      authDomain: "sensation-by-sanu.firebaseapp.com",
-      projectId: "sensation-by-sanu",
-      storageBucket: "sensation-by-sanu.firebasestorage.app",
-      messagingSenderId: "985250517980",
-      appId: "1:985250517980:web:05011bfb5877ff7c193519",
-      measurementId: "G-VHH6P2L106"
-    };
-    const app = initializeApp(firebaseConfig);
+      setDoc, 
+      getDoc, 
+      collection, 
+      query, 
+      where, 
+      orderBy, 
+      getDocs 
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    // Initialize Firebase
+    const app = initializeApp(CONFIG.firebase);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    // Location data for Gambia
-    const locationData = {
-      "Greater Banjul Area": ["Banjul", "Serrekunda", "Kanifing", "Bakau", "Fajara", "Kotu", "Bijilo"],
-      "West Coast Region": ["Brikama", "Gunjur", "Sukuta", "Basse", "Busumbala", "Yundum"],
-      "Lower River Region": ["Soma", "Kaur", "Kuntaur", "Mansa Konko"],
-      "Central River Region": ["Janjanbureh", "Kuntaur", "Basse Santa Su"],
-      "Upper River Region": ["Basse", "Fatoto", "Koina"],
-      "North Bank Region": ["Kerewan", "Farafenni", "Amdalai", "Essau"]
-    };
-    // DOM Elements
-    const form = document.getElementById('createAccountForm');
-    const regionSelect = document.getElementById('region');
-    const citySelect = document.getElementById('city');
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const strengthBar = document.getElementById('strengthBar');
-    const strengthText = document.getElementById('strengthText');
-    const submitBtn = document.getElementById('submitBtn');
-    const submitText = document.getElementById('submitText');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const errorText = document.getElementById('errorText');
-    // Region change handler
-    regionSelect.addEventListener('change', function() {
-      const selectedRegion = this.value;
-      citySelect.innerHTML = '<option value="">Select your city/area</option>';
-      
-      if (selectedRegion && locationData[selectedRegion]) {
-        locationData[selectedRegion].forEach(city => {
-          const option = document.createElement('option');
-          option.value = city;
-          option.textContent = city;
-          citySelect.appendChild(option);
-        });
-      }
+    const provider = new GoogleAuthProvider();
+
+    // DOM elements
+    const authContainer = document.getElementById('authContainer');
+    const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
+    const userDashboard = document.getElementById('userDashboard');
+    const signupFormElement = document.getElementById('signupFormElement');
+    const loginFormElement = document.getElementById('loginFormElement');
+
+    // Toggle between forms
+    document.getElementById('showLoginBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      signupForm.style.display = 'none';
+      loginForm.style.display = 'block';
     });
-    // Password strength checker
-    passwordInput.addEventListener('input', function() {
-      const password = this.value;
-      const strength = checkPasswordStrength(password);
-      
-      strengthBar.className = 'strength-bar';
-      if (strength.score >= 3) {
-        strengthBar.classList.add('strength-strong');
-        strengthText.textContent = 'Strong password';
-        strengthText.style.color = '#28a745';
-      } else if (strength.score >= 2) {
-        strengthBar.classList.add('strength-medium');
-        strengthText.textContent = 'Medium strength';
-        strengthText.style.color = '#ffc107';
-      } else if (password.length > 0) {
-        strengthBar.classList.add('strength-weak');
-        strengthText.textContent = 'Weak password';
-        strengthText.style.color = '#dc3545';
-      } else {
-        strengthText.textContent = 'Password strength will be shown here';
-        strengthText.style.color = 'rgba(255, 255, 255, 0.7)';
-      }
+
+    document.getElementById('showSignupBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
     });
-    // Password strength function
-    function checkPasswordStrength(password) {
-      let score = 0;
-      
-      if (password.length >= 8) score++;
-      if (password.match(/[a-z]/)) score++;
-      if (password.match(/[A-Z]/)) score++;
-      if (password.match(/[0-9]/)) score++;
-      if (password.match(/[^A-Za-z0-9]/)) score++;
-      
-      return { score };
-    }
-    // Form validation
-    function validateForm(formData) {
-      const errors = [];
-      
-      if (!formData.firstName.trim()) errors.push('First name is required');
-      if (!formData.lastName.trim()) errors.push('Last name is required');
-      if (!formData.email.trim()) errors.push('Email is required');
-      if (!formData.phone.trim()) errors.push('Phone number is required');
-      if (!formData.password) errors.push('Password is required');
-      if (formData.password !== formData.confirmPassword) errors.push('Passwords do not match');
-      if (!formData.region) errors.push('Region is required');
-      if (!formData.city) errors.push('City/Area is required');
-      if (!formData.address.trim()) errors.push('Address is required');
-      if (!formData.agreeTerms) errors.push('You must agree to the terms and conditions');
-      
-      const passwordStrength = checkPasswordStrength(formData.password);
-      if (passwordStrength.score < 3) errors.push('Password is too weak');
-      
-      return errors;
-    }
-    // Show error message
-    function showError(message) {
-      errorText.textContent = message;
-      errorMessage.style.display = 'block';
-      successMessage.style.display = 'none';
-      setTimeout(() => {
-        errorMessage.style.display = 'none';
-      }, 5000);
-    }
-    // Show success message
-    function showSuccess() {
-      successMessage.style.display = 'block';
-      errorMessage.style.display = 'none';
-    }
-    // Loading state
-    function setLoading(loading) {
-      if (loading) {
-        submitBtn.disabled = true;
-        submitText.innerHTML = '<div class="loading-spinner"></div>Creating Account...';
-      } else {
-        submitBtn.disabled = false;
-        submitText.textContent = 'Create My Account';
-      }
-    }
-    // Form submission
-    form.addEventListener('submit', async (e) => {
+
+    // Handle signup
+    signupFormElement.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const formData = new FormData(form);
-      const userData = {
-        firstName: formData.get('firstName'),
-        lastName: formData.get('lastName'),
-        email: formData.get('email'),
-        phone: formData.get('phone'),
-        password: formData.get('password'),
-        confirmPassword: formData.get('confirmPassword'),
-        region: formData.get('region'),
-        city: formData.get('city'),
-        address: formData.get('address'),
-        agreeTerms: formData.get('agreeTerms')
-      };
-      // Validate form
-      const errors = validateForm(userData);
-      if (errors.length > 0) {
-        showError(errors[0]);
-        return;
-      }
-      setLoading(true);
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const phone = document.getElementById('signupPhone').value;
+      const password = document.getElementById('signupPassword').value;
+
       try {
-        // Create user account
-        const userCredential = await createUserWithEmailAndPassword(
-          auth, 
-          userData.email, 
-          userData.password
-        );
+        showAlert('authAlert', 'Creating your account...', 'info');
         
+        // Create user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        // Update user profile
-        await updateProfile(user, {
-          displayName: `${userData.firstName} ${userData.lastName}`
-        });
-        // Save user data to Firestore
+
+        // Update profile
+        await updateProfile(user, { displayName: name });
+
+        // Save additional user data
         await setDoc(doc(db, 'users', user.uid), {
-          firstName: userData.firstName,
-          lastName: userData.lastName,
-          email: userData.email,
-          phone: userData.phone,
-          region: userData.region,
-          city: userData.city,
-          address: userData.address,
-          createdAt: new Date().toISOString(),
-          emailVerified: user.emailVerified
+          name: name,
+          email: email,
+          phone: phone || '',
+          createdAt: new Date(),
+          lastLogin: new Date()
         });
-        showSuccess();
-        
-        // Redirect to login page after 2 seconds
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 2000);
+
+        showAlert('authAlert', 'Account created successfully!', 'success');
       } catch (error) {
-        console.error('Error creating account:', error);
+        showAlert('authAlert', error.message, 'danger');
+      }
+    });
+
+    // Handle login
+    loginFormElement.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        showAlert('loginAlert', 'Signing in...', 'info');
+        await signInWithEmailAndPassword(auth, email, password);
+        showAlert('loginAlert', 'Signed in successfully!', 'success');
+      } catch (error) {
+        showAlert('loginAlert', error.message, 'danger');
+      }
+    });
+
+    // Handle Google signup/login
+    document.getElementById('googleSignupBtn').addEventListener('click', handleGoogleAuth);
+    document.getElementById('googleLoginBtn').addEventListener('click', handleGoogleAuth);
+
+    async function handleGoogleAuth() {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Check if user document exists, create if not
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, 'users', user.uid), {
+            name: user.displayName || 'User',
+            email: user.email,
+            phone: '',
+            createdAt: new Date(),
+            lastLogin: new Date()
+          });
+        } else {
+          // Update last login
+          await setDoc(doc(db, 'users', user.uid), {
+            lastLogin: new Date()
+          }, { merge: true });
+        }
+      } catch (error) {
+        showAlert('authAlert', error.message, 'danger');
+      }
+    }
+
+    // Handle logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    });
+
+    // Auth state listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in
+        authContainer.style.display = 'none';
+        userDashboard.style.display = 'block';
         
-        let errorMessage = 'Failed to create account. Please try again.';
+        // Update UI with user info
+        document.getElementById('userName').textContent = user.displayName || 'User';
+        document.getElementById('userEmail').textContent = user.email;
         
-        if (error.code === 'auth/email-already-in-use') {
-          errorMessage = 'Email address is already in use. Please use a different
+        // Update navbar with user name
+        if (window.SharedUtils) {
+          window.SharedUtils.updateNavbarUserName(user.displayName || user.email);
+        }
+        
+        // Store user info in localStorage for other pages
+        localStorage.setItem('sensation_user', JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid
+        }));
+        
+        // Load user orders
+        await loadUserOrders(user.email);
+      } else {
+        // User is signed out
+        authContainer.style.display = 'block';
+        userDashboard.style.display = 'none';
+        
+        // Update navbar back to "Account"
+        if (window.SharedUtils) {
+          window.SharedUtils.updateNavbarUserName(null);
+        }
+        
+        // Remove user info from localStorage
+        localStorage.removeItem('sensation_user');
+      }
+    });
+
+    // Load user orders
+    async function loadUserOrders(userEmail) {
+      const ordersLoading = document.getElementById('ordersLoading');
+      const orderHistory = document.getElementById('orderHistory');
+      const noOrders = document.getElementById('noOrders');
+
+      try {
+        ordersLoading.style.display = 'block';
+        orderHistory.style.display = 'none';
+        noOrders.style.display = 'none';
+
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, where('email', '==', userEmail), orderBy('created', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          ordersLoading.style.display = 'none';
+          noOrders.style.display = 'block';
+        } else {
+          const orders = [];
+          snapshot.forEach(doc => {
+            orders.push({ id: doc.id, ...doc.data() });
+          });
+
+          displayOrders(orders);
+          ordersLoading.style.display = 'none';
+          orderHistory.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        ordersLoading.style.display = 'none';
+        noOrders.style.display = 'block';
+      }
+    }
+
+    // Display orders
+    function displayOrders(orders) {
+      const orderHistory = document.getElementById('orderHistory');
+      
+      orderHistory.innerHTML = orders.map(order => `
+        <div class="order-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="mb-1">Order #${order.orderId}</h6>
+              <p class="text-muted mb-2">${formatDate(order.created)}</p>
+              <div class="mb-2">
+                ${order.cart?.map(item => `
+                  <small class="text-muted d-block">${item.name} x${item.qty}</small>
+                `).join('') || 'No items'}
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="status-badge status-${order.status || 'pending'}">
+                ${getStatusText(order.status)}
+              </span>
+              <div class="mt-2">
+                <strong>D${order.subtotal?.toLocaleString() || '0'}</strong>
+              </div>
+              <div class="mt-2">
+                <a href="track.html" class="btn btn-sm btn-outline-primary">Track</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Helper functions
+    function showAlert(elementId, message, type) {
+      const alert = document.getElementById(elementId);
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      alert.style.display = 'block';
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          alert.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return 'N/A';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric'
+      });
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        'pending': 'Pending',
+        'processing': 'Processing',
+        'shipped': 'Shipped',
+        'delivered': 'Delivered',
+        'cancelled': 'Cancelled'
+      };
+      return statusMap[status] || 'Pending';
+    }
+  </script>
+</body>
+</html>

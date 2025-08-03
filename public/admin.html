@@ -5,11 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sensation Admin Portal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <style>
+    /* Vanta.js background container */
+    .vanta-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
     body {
-      background: #18130f;
       color: #fff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
     }
     .header-logo {
       height: 70px;
@@ -26,7 +39,8 @@
       justify-content: flex-start;
       gap: 18px;
       margin-left: 0;
-      background: linear-gradient(90deg, #8B5C2A 0%, #FFD700 100%);
+      background: rgba(139, 92, 42, 0.9);
+      backdrop-filter: blur(10px);
       color: #fff;
       padding: 2rem 0 1rem 0;
       text-align: left;
@@ -34,9 +48,11 @@
       font-size: 2.2rem;
       font-weight: bold;
       box-shadow: 0 2px 16px rgba(139,92,42,0.15);
+      position: relative;
     }
     .purchase-table {
-      background: #23201c;
+      background: rgba(35, 32, 28, 0.9);
+      backdrop-filter: blur(10px);
       border-radius: 18px;
       box-shadow: 0 4px 32px rgba(139,92,42,0.12);
       margin-top: 2rem;
@@ -59,13 +75,40 @@
       background: #FFD700;
       color: #8B5C2A;
     }
-    .status-completed {
-      background: #2a8b5c;
+    .status-processing {
+      background: #17a2b8;
+      color: #fff;
+    }
+    .status-shipped {
+      background: #007bff;
+      color: #fff;
+    }
+    .status-delivered {
+      background: #28a745;
       color: #fff;
     }
     .status-cancelled {
-      background: #8b2a2a;
+      background: #dc3545;
       color: #fff;
+    }
+    .status-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .status-dropdown {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 12px;
+      margin-bottom: 5px;
+      min-width: 120px;
+    }
+    .status-dropdown option {
+      background: #333;
+      color: white;
     }
     .login-form {
       max-width: 350px;
@@ -81,9 +124,39 @@
   </style>
 </head>
 <body>
+  <!-- Vanta.js Background -->
+  <div class="vanta-container" id="vanta-background"></div>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu - Admin
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link active" href="admin.html">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
   <div class="admin-header">
     <img src="images/sbs.svg" alt="Sensation by Sanu Logo" class="header-logo me-3" />
-    Sensation Admin Portal
+    Admin Portal
   </div>
   <div class="container">
     <h3 class="mt-4 mb-3">Recent Purchases</h3>
@@ -119,6 +192,14 @@
       </table>
     </div>
   </div>
+  
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4 mt-5">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+  
   <div id="loginDiv" class="text-center my-5">
     <form id="emailLoginForm" class="login-form" autocomplete="on">
       <h5 class="mb-3">Admin Login</h5>
@@ -132,15 +213,18 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
     import {
       getFirestore,
       collection,
       query,
       orderBy,
       limit,
-      onSnapshot
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+      onSnapshot,
+      doc,
+      updateDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
     import {
       getAuth,
       onAuthStateChanged,
@@ -148,16 +232,16 @@
       GoogleAuthProvider,
       signOut,
       signInWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyAXfFinXJJf8QjV37tuuOa_8cYzg0Cn3Q4",
-      authDomain: "sensation-by-sanu.firebaseapp.com",
-      projectId: "sensation-by-sanu",
-      storageBucket: "sensation-by-sanu.appspot.com",
-      messagingSenderId: "985250517980",
-      appId: "1:985250517980:web:05011bfb5877ff7c193519",
-      measurementId: "G-VHH6P2L106"
+      apiKey: "AIzaSyBIFg1ZFGZ2k34Bc8hhhLKSf9ArnesiNhg",
+      authDomain: "newsense-27a7a.firebaseapp.com",
+      projectId: "newsense-27a7a",
+      storageBucket: "newsense-27a7a.firebasestorage.app",
+      messagingSenderId: "348185741664",
+      appId: "1:348185741664:web:a2ff7676deec0cecaa3605",
+      measurementId: "G-SZ18TF0YHW"
     };
 
     const allowedAdmins = [
@@ -232,29 +316,62 @@
       const searchInput = document.getElementById('search-input');
       const exportCsvBtn = document.getElementById('export-csv');
       let allPurchases = [];
-      function renderStatus(status) {
-        if (status === 'completed') return '<span class="status-badge status-completed">Completed</span>';
-        if (status === 'cancelled') return '<span class="status-badge status-cancelled">Cancelled</span>';
-        return '<span class="status-badge status-pending">Pending</span>';
+      function renderStatus(status, orderId, docId) {
+        const statusOptions = [
+          { value: 'pending', label: 'Pending', class: 'status-pending' },
+          { value: 'processing', label: 'Processing', class: 'status-processing' },
+          { value: 'shipped', label: 'Shipped', class: 'status-shipped' },
+          { value: 'delivered', label: 'Delivered', class: 'status-delivered' },
+          { value: 'cancelled', label: 'Cancelled', class: 'status-cancelled' }
+        ];
+        
+        const currentStatus = status || 'pending';
+        
+        return `
+          <div class="status-control">
+            <select class="form-select form-select-sm status-dropdown" 
+                    data-order-id="${orderId}" 
+                    data-doc-id="${docId}"
+                    onchange="updateOrderStatus(this)">
+              ${statusOptions.map(option => `
+                <option value="${option.value}" 
+                        ${option.value === currentStatus ? 'selected' : ''}>
+                  ${option.label}
+                </option>
+              `).join('')}
+            </select>
+            <span class="status-badge ${statusOptions.find(s => s.value === currentStatus)?.class}">
+              ${statusOptions.find(s => s.value === currentStatus)?.label}
+            </span>
+          </div>
+        `;
       }
       function renderTable(rows) {
+        console.log(`Admin: Rendering table with ${rows.length} rows`);
         if (rows.length === 0) {
           purchaseList.innerHTML = '<tr><td colspan="6" class="text-center">No purchases found.</td></tr>';
           return;
         }
         purchaseList.innerHTML = '';
-        rows.forEach(d => {
+        rows.forEach((d, index) => {
+          console.log(`Admin: Rendering row ${index}:`, {
+            orderId: d.orderId,
+            name: d.name,
+            email: d.email,
+            status: d.status
+          });
           purchaseList.innerHTML += `
             <tr>
               <td>${d.dateStr}</td>
-              <td>${d.name || ''}</td>
-              <td>${d.email || ''}</td>
-              <td>${d.product || ''}</td>
-              <td>${d.amount || ''}</td>
-              <td>${renderStatus(d.status)}</td>
+              <td>${d.name || 'No name'}</td>
+              <td>${d.email || 'No email'}</td>
+              <td>${d.product || 'No products'}</td>
+              <td>${d.amount || 'No amount'}</td>
+              <td>${renderStatus(d.status, d.orderId, d.docId)}</td>
             </tr>
           `;
         });
+        console.log('Admin: Table rendered successfully');
       }
       function filterAndRender() {
         const from = filterFrom.value;
@@ -309,24 +426,151 @@
       });
       // Listen to latest 200 orders ordered by 'created' descending
       const ordersCol = collection(db, 'orders');
-      const ordersQuery = query(ordersCol, orderBy('created', 'desc'), limit(200));
+      
+      // Try with orderBy first, fall back to unordered if it fails
+      let ordersQuery;
+      try {
+        ordersQuery = query(ordersCol, orderBy('created', 'desc'), limit(200));
+      } catch (error) {
+        console.warn('OrderBy failed, trying without ordering:', error);
+        ordersQuery = query(ordersCol, limit(200));
+      }
+      
       onSnapshot(ordersQuery, (snapshot) => {
+        console.log(`Admin: Received ${snapshot.size} orders from Firestore`);
         allPurchases = [];
+        
         snapshot.forEach(doc => {
           const d = doc.data();
-          const dateObj = d.created ? new Date(d.created) : null;
+          console.log('Order data:', doc.id, d);
+          
+          // Handle different timestamp formats
+          let dateObj = null;
+          if (d.created) {
+            if (d.created.toDate) {
+              dateObj = d.created.toDate(); // Firestore timestamp
+            } else if (typeof d.created === 'string') {
+              dateObj = new Date(d.created); // ISO string
+            } else {
+              dateObj = new Date(d.created); // Fallback
+            }
+          }
+          
           const product = d.cart ? d.cart.map(i => `${i.name} x${i.qty}`).join('; ') : '';
           const amount = d.subtotal ? 'D' + d.subtotal.toLocaleString() : '';
+          
           allPurchases.push({
             ...d,
+            docId: doc.id,  // Add document ID for updates
             product,
             amount,
             status: d.status || 'pending',
             dateObj,
-            dateStr: dateObj ? dateObj.toLocaleString() : ''
+            dateStr: dateObj ? dateObj.toLocaleString() : 'No date'
           });
         });
+        
+        // Sort manually if orderBy failed
+        allPurchases.sort((a, b) => {
+          if (!a.dateObj && !b.dateObj) return 0;
+          if (!a.dateObj) return 1;
+          if (!b.dateObj) return -1;
+          return b.dateObj - a.dateObj; // Newest first
+        });
+        
+        console.log(`Admin: Processed ${allPurchases.length} orders`);
         filterAndRender();
+      }, (error) => {
+        console.error('Admin: Error listening to orders:', error);
+        // Try a simpler query without orderBy
+        const simpleQuery = query(ordersCol, limit(200));
+        onSnapshot(simpleQuery, (snapshot) => {
+          console.log(`Admin: Fallback query received ${snapshot.size} orders`);
+          allPurchases = [];
+          snapshot.forEach(doc => {
+            const d = doc.data();
+            allPurchases.push({
+              ...d,
+              docId: doc.id,
+              product: d.cart ? d.cart.map(i => `${i.name} x${i.qty}`).join('; ') : '',
+              amount: d.subtotal ? 'D' + d.subtotal.toLocaleString() : '',
+              status: d.status || 'pending',
+              dateObj: null,
+              dateStr: 'No date'
+            });
+          });
+          filterAndRender();
+        });
+      });
+      
+      // Update order status function
+      window.updateOrderStatus = async function(selectElement) {
+        const newStatus = selectElement.value;
+        const orderId = selectElement.dataset.orderId;
+        const docId = selectElement.dataset.docId;
+        
+        try {
+          // Update in Firestore
+          const orderRef = doc(db, 'orders', docId);
+          await updateDoc(orderRef, {
+            status: newStatus,
+            updated: serverTimestamp(),
+            [`statusHistory.${newStatus}`]: serverTimestamp()
+          });
+          
+          console.log(`Order ${orderId} status updated to: ${newStatus}`);
+          
+          // Update the visual badge
+          const statusBadge = selectElement.parentElement.querySelector('.status-badge');
+          const statusOptions = [
+            { value: 'pending', label: 'Pending', class: 'status-pending' },
+            { value: 'processing', label: 'Processing', class: 'status-processing' },
+            { value: 'shipped', label: 'Shipped', class: 'status-shipped' },
+            { value: 'delivered', label: 'Delivered', class: 'status-delivered' },
+            { value: 'cancelled', label: 'Cancelled', class: 'status-cancelled' }
+          ];
+          
+          const statusOption = statusOptions.find(s => s.value === newStatus);
+          if (statusBadge && statusOption) {
+            statusBadge.className = `status-badge ${statusOption.class}`;
+            statusBadge.textContent = statusOption.label;
+          }
+          
+        } catch (error) {
+          console.error('Error updating order status:', error);
+          alert('Failed to update order status. Please try again.');
+          // Revert dropdown to previous value
+          selectElement.value = selectElement.dataset.previousValue || 'pending';
+        }
+      };
+    }
+  </script>
+  
+  <!-- Vanta.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('#vanta-background', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: "#vanta-background",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
       });
     }
   </script>

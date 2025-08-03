@@ -5,23 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Checkout - Sensation by Sanu</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/animations.css">
   <style>
     body.hero {
       min-height: 100vh;
-      background-image: url('images/2151839595.jpg');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
+      position: relative;
+      overflow: hidden;
     }
     .checkout-content {
       position: relative;
       z-index: 1;
       margin-top: 40px;
     }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    .btn {
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
   </style>
 </head>
 <body class="hero">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
   <div class="checkout-content container">
     <h2 class="text-center mb-4">Checkout</h2>
     <div class="row justify-content-center">
@@ -47,6 +88,7 @@
               <label for="address" class="form-label">Delivery Address</label>
               <textarea class="form-control" id="address" rows="2" required></textarea>
             </div>
+            
             <div id="checkoutMsg" class="text-danger small mb-2"></div>
             <div class="text-end">
               <button type="submit" class="btn btn-dark btn-lg">Place Order</button>
@@ -71,29 +113,107 @@
     <p class="mt-2">Processing your payment...</p>
   </div>
 
-  <script src="https://js.stripe.com/v3/"></script>
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/cart.js"></script>
-  <script src="js/payment.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script>
+    // Test if CONFIG loads
+    console.log('After loading config.js, CONFIG is:', typeof CONFIG);
+    if (typeof CONFIG === 'undefined') {
+      console.error('CONFIG still not defined after loading config.js');
+    } else {
+      console.log('CONFIG loaded successfully:', CONFIG);
+    }
+  </script>
   <script src="js/analytics.js"></script>
+  <script src="js/animations.js"></script>
+  
+  <script>
+    // Initialize Vanta.js background
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('body.hero', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: "body.hero",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
   <script type="module">
+    // Add error handling for debugging
+    window.addEventListener('error', (e) => {
+      console.error('JavaScript Error:', e.error);
+      alert('JavaScript Error: ' + e.message);
+    });
+
+    console.log('Starting checkout initialization...');
+    
+    // Backup Firebase config in case config.js fails to load
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyBIFg1ZFGZ2k34Bc8hhhLKSf9ArnesiNhg",
+      authDomain: "newsense-27a7a.firebaseapp.com",
+      projectId: "newsense-27a7a",
+      storageBucket: "newsense-27a7a.firebasestorage.app",
+      messagingSenderId: "348185741664",
+      appId: "1:348185741664:web:a2ff7676deec0cecaa3605",
+      measurementId: "G-SZ18TF0YHW"
+    };
+    
+    // Check if CONFIG is available, use backup if not
+    let firebaseConfig;
+    if (typeof CONFIG === 'undefined') {
+      console.error('CONFIG is not defined! Using backup configuration.');
+      firebaseConfig = FIREBASE_CONFIG;
+    } else {
+      console.log('CONFIG found:', CONFIG);
+      firebaseConfig = CONFIG.firebase;
+    }
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
-    // Initialize Firebase with config
-    const app = initializeApp(CONFIG.firebase);
-    const db = getFirestore(app);
+    let app, db;
+    
+    try {
+      // Initialize Firebase
+      console.log('Initializing Firebase with config:', firebaseConfig);
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log('Firebase initialized successfully');
+      console.log('Database instance:', db);
+    } catch (error) {
+      console.error('Firebase initialization error:', error);
+      alert('Firebase initialization failed: ' + error.message);
+    }
 
-    // Initialize payment system
-    const paymentSystem = new PaymentSystem();
-    let paymentInitialized = false;
 
-    // Get cart from enhanced cart manager
-    const cart = cartManager.getCart();
-    const subtotal = cartManager.getTotal();
+
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('sensation_cart')) || [];
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
     const orderSummary = document.getElementById('orderSummary');
-    if (cartManager.isEmpty()) {
+    if (cart.length === 0) {
       orderSummary.innerHTML = '<div class="alert alert-warning">Your cart is empty.</div>';
       document.getElementById('checkoutForm').style.display = 'none';
     } else {
@@ -107,21 +227,6 @@
           <div class="fw-bold">D${(item.price * item.quantity).toLocaleString()}</div>
         </div>
       `).join('') + `<hr><div class="text-end fw-bold">Subtotal: D${subtotal.toLocaleString()}</div>`;
-      
-      // Initialize payment after order summary is displayed
-      initializePayment();
-    }
-
-    // Initialize payment system
-    async function initializePayment() {
-      try {
-        PaymentUI.hideError();
-        await paymentSystem.initializePayment(subtotal, 'gmd');
-        paymentInitialized = true;
-      } catch (error) {
-        console.error('Payment initialization failed:', error);
-        PaymentUI.showError('Payment system unavailable. Please contact support.');
-      }
     }
 
     // Enhanced form validation
@@ -154,27 +259,36 @@
     const checkoutForm = document.getElementById('checkoutForm');
     const checkoutMsg = document.getElementById('checkoutMsg');
     
-    checkoutForm && checkoutForm.addEventListener('submit', async e => {
-      e.preventDefault();
+    console.log('Checkout form element:', checkoutForm);
+    console.log('Checkout message element:', checkoutMsg);
+    
+    if (!checkoutForm) {
+      console.error('Checkout form not found!');
+      alert('Error: Checkout form not found on page');
+    } else {
+      console.log('Adding submit event listener to form...');
       
-      try {
-        // Validate form
-        const formData = validateForm();
+      checkoutForm.addEventListener('submit', async e => {
+        console.log('Form submit event triggered!');
+        e.preventDefault();
+        
+        console.log('Form submission prevented, starting validation...');
+        
+        try {
+          // Validate form
+          console.log('Starting form validation...');
+          const formData = validateForm();
+          console.log('Form validation passed:', formData);
         
         // Show loading state
-        PaymentUI.showLoading();
-        PaymentUI.hideError();
+        checkoutMsg.innerHTML = '<span class="text-info">Processing your order...</span>';
 
-        // Process payment first
-        if (paymentInitialized) {
-          const paymentResult = await paymentSystem.processPayment();
-          if (!paymentResult.success) {
-            throw new Error('Payment failed. Please try again.');
-          }
-        }
-
+        // Generate order ID
+        const orderId = 'SBS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        
         // Create order data
         const orderData = {
+          orderId: orderId,
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -187,42 +301,85 @@
           })),
           subtotal: subtotal,
           status: 'pending',
-          paymentStatus: paymentInitialized ? 'paid' : 'pending',
-          createdAt: new Date(),
-          customerId: window.analytics ? window.analytics.userId : null
+          paymentStatus: 'pending',
+          createdAt: new Date().toISOString()
         };
 
-        // Save order to Firebase
-        const docRef = await addDoc(collection(db, 'orders'), orderData);
+        // Save order to Firestore
+        try {
+          console.log('Attempting to save order to Firestore...');
+          console.log('Database instance check:', db);
+          console.log('Order data to save:', {
+            orderId: orderData.orderId,
+            name: formData.name,
+            email: formData.email,
+            cart: cart,
+            subtotal: subtotal
+          });
+          
+          const orderRef = await addDoc(collection(db, "orders"), {
+            orderId: orderData.orderId,
+            name: formData.name,  // Admin expects 'name' not 'customerName'
+            email: formData.email,  // Admin expects 'email' not 'customerEmail'
+            phone: formData.phone,
+            address: formData.address,
+            cart: cart.map(item => ({  // Admin expects 'cart' not 'items'
+              name: item.name,
+              price: item.price,
+              qty: item.quantity,  // Admin expects 'qty' not 'quantity'
+              image: item.image
+            })),
+            subtotal: subtotal,
+            status: 'pending',
+            paymentStatus: 'pending',
+            created: serverTimestamp(),  // Admin expects 'created' not 'createdAt'
+            updated: serverTimestamp()
+          });
+          
+          console.log('✅ Order saved to Firestore successfully with ID:', orderRef.id);
+          alert('✅ Order saved successfully! ID: ' + orderRef.id);
+          console.log('Order data saved:', {
+            orderId: orderData.orderId,
+            name: formData.name,
+            email: formData.email,
+            cart: cart.map(item => ({ name: item.name, qty: item.quantity })),
+            subtotal: subtotal
+          });
+        } catch (firestoreError) {
+          console.error('Error saving to Firestore:', firestoreError);
+          // Fallback to localStorage if Firestore fails
+          const orders = JSON.parse(localStorage.getItem('sensation_orders') || '[]');
+          orders.push(orderData);
+          localStorage.setItem('sensation_orders', JSON.stringify(orders));
+        }
         
         // Clear cart
-        cartManager.clearCart();
+        localStorage.removeItem('sensation_cart');
         
         // Track purchase
         if (window.analytics) {
-          window.analytics.trackPurchase({
-            orderId: docRef.id,
+          window.analytics.track('purchase', {
+            orderId: orderData.orderId,
             subtotal: subtotal,
             cart: cart
           });
         }
 
         // Show success message
-        PaymentUI.hideLoading();
         checkoutMsg.innerHTML = '<span class="text-success">Thank you! Your order has been placed successfully.</span>';
         
         // Redirect to success page
         setTimeout(() => {
-          window.location.href = `payment-success.html?order=${docRef.id}`;
+          window.location.href = `payment-success.html?order=${orderData.orderId}`;
         }, 1500);
         
       } catch (error) {
         console.error('Error placing order:', error);
-        PaymentUI.hideLoading();
-        PaymentUI.showError(error.message || 'Error placing order. Please try again.');
         checkoutMsg.innerHTML = `<span class="text-danger">${error.message || 'Order failed. Please try again.'}</span>`;
+        alert('❌ Order failed: ' + error.message);
       }
-    });
+      });
+    }
   </script>
 </body>
 </html>

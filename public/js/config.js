@@ -2,13 +2,13 @@
 const CONFIG = {
   // Firebase Configuration
   firebase: {
-    apiKey: process.env.FIREBASE_API_KEY || "AIzaSyAXfFinXJJf8QjV37tuuOa_8cYzg0Cn3Q4",
-    authDomain: "sensation-by-sanu.firebaseapp.com",
-    projectId: "sensation-by-sanu",
-    storageBucket: "sensation-by-sanu.appspot.com",
-    messagingSenderId: "985250517980",
-    appId: "1:985250517980:web:05011bfb5877ff7c193519",
-    measurementId: "G-VHH6P2L106"
+    apiKey: "AIzaSyBIFg1ZFGZ2k34Bc8hhhLKSf9ArnesiNhg",
+    authDomain: "newsense-27a7a.firebaseapp.com",
+    projectId: "newsense-27a7a",
+    storageBucket: "newsense-27a7a.firebasestorage.app",
+    messagingSenderId: "348185741664",
+    appId: "1:348185741664:web:a2ff7676deec0cecaa3605",
+    measurementId: "G-SZ18TF0YHW"
   },
   
   // Business Configuration
@@ -22,7 +22,7 @@ const CONFIG = {
   
   // Payment Configuration (Stripe)
   payment: {
-    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || "pk_test_your_stripe_key_here",
+    publishableKey: "pk_test_your_stripe_key_here",
     currency: "gmd"
   },
   

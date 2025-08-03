@@ -2,8 +2,8 @@
 class CartManager {
   constructor() {
     this.cart = this.loadCart();
-    this.maxItems = CONFIG.security.maxCartItems;
-    this.maxQuantity = CONFIG.security.maxQuantityPerItem;
+    this.maxItems = (CONFIG && CONFIG.security && CONFIG.security.maxCartItems) || 20;
+    this.maxQuantity = (CONFIG && CONFIG.security && CONFIG.security.maxQuantityPerItem) || 10;
     this.init();
   }
 
@@ -129,8 +129,8 @@ class CartManager {
   }
 
   updateCartDisplay() {
-    // Update cart icon badge
-    const cartBadge = document.getElementById('cart-badge');
+    // Update cart icon badge (try both possible IDs)
+    const cartBadge = document.getElementById('cart-badge') || document.getElementById('cart-count');
     if (cartBadge) {
       const count = this.getItemCount();
       cartBadge.textContent = count;
@@ -145,6 +145,7 @@ class CartManager {
 
   renderCartPage() {
     const cartContainer = document.getElementById('cart-items');
+    const cartWrapper = document.getElementById('cart-container');
     const totalElement = document.getElementById('cart-total');
     const emptyMessage = document.getElementById('cart-empty');
 
@@ -153,33 +154,46 @@ class CartManager {
     if (this.isEmpty()) {
       cartContainer.innerHTML = '';
       if (emptyMessage) emptyMessage.style.display = 'block';
+      if (cartWrapper) cartWrapper.style.display = 'none';
       if (totalElement) totalElement.textContent = 'D0';
       return;
     }
 
     if (emptyMessage) emptyMessage.style.display = 'none';
+    if (cartWrapper) cartWrapper.style.display = 'block';
 
     cartContainer.innerHTML = this.cart.map(item => `
-      <div class="cart-item" data-id="${item.id}">
-        <div class="cart-item-image">
-          <img src="${item.image}" alt="${item.name}" onerror="this.src='images/fallback.png'">
-        </div>
-        <div class="cart-item-details">
-          <h5>${this.escapeHtml(item.name)}</h5>
-          <p class="text-muted">D${item.price.toLocaleString()}</p>
-        </div>
-        <div class="cart-item-quantity">
-          <button class="btn btn-sm btn-outline-secondary" onclick="cartManager.updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
-          <span class="mx-2">${item.quantity}</span>
-          <button class="btn btn-sm btn-outline-secondary" onclick="cartManager.updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-        </div>
-        <div class="cart-item-total">
-          <strong>D${(item.price * item.quantity).toLocaleString()}</strong>
-        </div>
-        <div class="cart-item-actions">
-          <button class="btn btn-sm btn-danger" onclick="cartManager.removeItem('${item.id}')">
-            <i class="bi bi-trash"></i>
-          </button>
+      <div class="cart-item p-3 mb-3" data-id="${item.id}">
+        <div class="row align-items-center">
+          <div class="col-md-2">
+            <img src="${item.image}" alt="${this.escapeHtml(item.name)}" 
+                 class="img-fluid rounded"
+                 style="width: 80px; height: 80px; object-fit: cover;"
+                 onerror="this.src='https://via.placeholder.com/80x80?text=Error'">
+          </div>
+          <div class="col-md-4">
+            <h5 class="mb-1 text-white">${this.escapeHtml(item.name)}</h5>
+            <p class="mb-0 text-muted">Unit Price: D${parseFloat(item.price).toLocaleString()}</p>
+          </div>
+          <div class="col-md-3">
+            <div class="d-flex align-items-center">
+              <button class="btn btn-outline-light btn-sm" onclick="cartManager.updateQuantity('${item.id}', ${item.quantity - 1})">
+                <i class="bi bi-dash"></i>
+              </button>
+              <span class="mx-3 text-white">${item.quantity}</span>
+              <button class="btn btn-outline-light btn-sm" onclick="cartManager.updateQuantity('${item.id}', ${item.quantity + 1})">
+                <i class="bi bi-plus"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-2">
+            <p class="mb-0 text-warning fw-bold">D${(parseFloat(item.price) * item.quantity).toLocaleString()}</p>
+          </div>
+          <div class="col-md-1">
+            <button class="btn btn-outline-danger btn-sm" onclick="cartManager.removeItem('${item.id}')">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
         </div>
       </div>
     `).join('');
