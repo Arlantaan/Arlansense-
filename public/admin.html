@@ -191,13 +191,14 @@
               <th>Date</th>
               <th>Customer</th>
               <th>Email</th>
+              <th>Country</th>
               <th>Product</th>
               <th>Amount</th>
               <th>Status</th>
             </tr>
           </thead>
           <tbody id="purchase-list">
-            <tr><td colspan="6" class="text-center">Loading...</td></tr>
+            <tr><td colspan="7" class="text-center">Loading...</td></tr>
           </tbody>
         </table>
       </div>
@@ -383,8 +384,16 @@
       const searchInput = document.getElementById('search-input');
       const exportCsvBtn = document.getElementById('export-csv');
       let allPurchases = [];
-      function renderStatus(status, orderId, docId) {
-        const statusOptions = [
+      function renderStatus(status, orderId, docId, requiresShipping = false) {
+        // Different status options based on shipping requirements
+        const localStatusOptions = [
+          { value: 'pending', label: 'Pending', class: 'status-pending' },
+          { value: 'processing', label: 'Processing', class: 'status-processing' },
+          { value: 'delivered', label: 'Delivered', class: 'status-delivered' },
+          { value: 'cancelled', label: 'Cancelled', class: 'status-cancelled' }
+        ];
+        
+        const internationalStatusOptions = [
           { value: 'pending', label: 'Pending', class: 'status-pending' },
           { value: 'processing', label: 'Processing', class: 'status-processing' },
           { value: 'shipped', label: 'Shipped', class: 'status-shipped' },
@@ -392,13 +401,17 @@
           { value: 'cancelled', label: 'Cancelled', class: 'status-cancelled' }
         ];
         
+        const statusOptions = requiresShipping ? internationalStatusOptions : localStatusOptions;
         const currentStatus = status || 'pending';
+        const shippingIcon = requiresShipping ? '<i class="bi bi-airplane me-1"></i>' : '<i class="bi bi-truck me-1"></i>';
         
         return `
           <div class="status-control">
+            ${shippingIcon}
             <select class="form-select form-select-sm status-dropdown" 
                     data-order-id="${orderId}" 
                     data-doc-id="${docId}"
+                    data-requires-shipping="${requiresShipping}"
                     onchange="updateOrderStatus(this)">
               ${statusOptions.map(option => `
                 <option value="${option.value}" 
@@ -416,7 +429,7 @@
       function renderTable(rows) {
         console.log(`Admin: Rendering table with ${rows.length} rows`);
         if (rows.length === 0) {
-          purchaseList.innerHTML = '<tr><td colspan="6" class="text-center">No purchases found.</td></tr>';
+          purchaseList.innerHTML = '<tr><td colspan="7" class="text-center">No purchases found.</td></tr>';
           return;
         }
         purchaseList.innerHTML = '';
@@ -427,14 +440,25 @@
             email: d.email,
             status: d.status
           });
+          const countryFlag = d.country === 'gambia' ? '🇬🇲' : 
+                            d.country === 'senegal' ? '🇸🇳' :
+                            d.country === 'guinea-bissau' ? '🇬🇼' :
+                            d.country === 'guinea' ? '🇬🇳' :
+                            d.country === 'mali' ? '🇲🇱' :
+                            d.country === 'mauritania' ? '🇲🇷' :
+                            d.country === 'europe' ? '🇪🇺' :
+                            d.country === 'north-america' ? '🇺🇸' :
+                            d.country?.includes('africa') ? '🌍' : '🌎';
+          
           purchaseList.innerHTML += `
             <tr>
               <td>${d.dateStr}</td>
               <td>${d.name || 'No name'}</td>
               <td>${d.email || 'No email'}</td>
+              <td>${countryFlag} ${(d.country || 'Unknown').charAt(0).toUpperCase() + (d.country || 'unknown').slice(1).replace('-', ' ')}</td>
               <td>${d.product || 'No products'}</td>
               <td>${d.amount || 'No amount'}</td>
-              <td>${renderStatus(d.status, d.orderId, d.docId)}</td>
+              <td>${renderStatus(d.status, d.orderId, d.docId, d.requiresShipping)}</td>
             </tr>
           `;
         });

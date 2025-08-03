@@ -809,20 +809,35 @@
       }, 3000);
     }
 
-    // Helper functions for animated progress
-    function getProgressPercentage(status) {
-      const progressMap = {
-        'pending': 25,
-        'processing': 50,
-        'shipped': 75,
-        'delivered': 100,
-        'cancelled': 25
-      };
-      return progressMap[status] || 25;
+    // Helper functions for animated progress with shipping logic
+    function getProgressPercentage(status, requiresShipping = false) {
+      if (requiresShipping) {
+        // International shipping: 4 stages
+        const progressMap = {
+          'pending': 25,
+          'processing': 50,
+          'shipped': 75,
+          'delivered': 100,
+          'cancelled': 25
+        };
+        return progressMap[status] || 25;
+      } else {
+        // Local delivery: 3 stages (no shipping)
+        const progressMap = {
+          'pending': 33,
+          'processing': 67,
+          'delivered': 100,
+          'cancelled': 33
+        };
+        return progressMap[status] || 33;
+      }
     }
     
-    function getStageIconClass(currentStatus, stage) {
-      const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+    function getStageIconClass(currentStatus, stage, requiresShipping = false) {
+      const statusOrder = requiresShipping ? 
+        ['pending', 'processing', 'shipped', 'delivered'] : 
+        ['pending', 'processing', 'delivered'];
+      
       const currentIndex = statusOrder.indexOf(currentStatus);
       const stageIndex = statusOrder.indexOf(stage);
       
@@ -831,8 +846,11 @@
       return 'pending';
     }
     
-    function getStageTime(currentStatus, stage) {
-      const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+    function getStageTime(currentStatus, stage, requiresShipping = false) {
+      const statusOrder = requiresShipping ? 
+        ['pending', 'processing', 'shipped', 'delivered'] : 
+        ['pending', 'processing', 'delivered'];
+      
       const currentIndex = statusOrder.indexOf(currentStatus);
       const stageIndex = statusOrder.indexOf(stage);
       
@@ -840,9 +858,9 @@
         return '✓ Completed';
       } else if (stageIndex === currentIndex) {
         const messages = {
-          'processing': '⚙️ In progress...',
-          'shipped': '🚚 En route...',
-          'delivered': '🎉 Delivered!'
+          'processing': requiresShipping ? '⚙️ Preparing shipment...' : '⚙️ Preparing order...',
+          'shipped': '✈️ In transit...',
+          'delivered': requiresShipping ? '📦 Delivered!' : '🚚 Delivered!'
         };
         return messages[stage] || 'Active';
       } else {
