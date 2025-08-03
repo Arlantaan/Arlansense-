@@ -116,27 +116,23 @@ const SharedUtils = {
 
   // Check and update user login status
   checkUserLoginStatus: function() {
-    // Check if user is logged in (this will work when Firebase Auth is available)
-    if (typeof firebase !== 'undefined' && firebase.auth) {
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          this.updateNavbarUserName(user.displayName || user.email);
-        } else {
-          this.updateNavbarUserName(null);
-        }
-      });
-    } else {
-      // Fallback: check localStorage for user data
-      const userData = localStorage.getItem('sensation_user');
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          this.updateNavbarUserName(user.name || user.email);
-        } catch (error) {
-          this.updateNavbarUserName(null);
-        }
+    // Check localStorage for user data (primary method)
+    const userData = localStorage.getItem('sensation_user');
+    if (userData) {
+      try {
+        const user = JSON.parse(userData);
+        this.updateNavbarUserName(user.name || user.email);
+        console.log('User found in localStorage:', user);
+        return;
+      } catch (error) {
+        console.error('Error parsing user data from localStorage:', error);
+        localStorage.removeItem('sensation_user');
       }
     }
+    
+    // No user data found, show default "Account"
+    this.updateNavbarUserName(null);
+    console.log('No user data found, showing default Account link');
   }
 };
 

@@ -13,7 +13,7 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       position: relative;
-      overflow: hidden;
+      overflow-x: hidden; /* Only hide horizontal overflow */
     }
     .checkout-content {
       position: relative;
@@ -33,6 +33,214 @@
     .btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Mobile Responsive Design */
+    @media (max-width: 768px) {
+      body.hero {
+        min-height: auto; /* Allow content to determine height */
+        overflow-x: hidden;
+        overflow-y: auto; /* Ensure vertical scrolling */
+        padding-bottom: 2rem; /* Add bottom padding */
+      }
+      
+      .checkout-content {
+        margin-top: 20px;
+        padding: 0 0.5rem;
+        margin-bottom: 2rem; /* Ensure content doesn't touch bottom */
+      }
+      
+      .card {
+        margin: 0.5rem;
+        padding: 1rem;
+        border-radius: 15px;
+      }
+      
+      .card-header {
+        padding: 1rem;
+        border-radius: 15px 15px 0 0 !important;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      /* Order Summary Mobile Improvements - Target actual structure */
+      #orderSummary .d-flex.align-items-center {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+      }
+      
+      #orderSummary img {
+        width: 60px !important;
+        height: 60px !important;
+        margin: 0 auto 0.75rem auto !important;
+        border-radius: 8px;
+      }
+      
+      #orderSummary .flex-grow-1 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.75rem;
+      }
+      
+      #orderSummary .flex-grow-1 strong {
+        font-size: 1.1rem;
+        color: #fff;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      
+      #orderSummary .text-muted {
+        font-size: 1rem;
+        color: #e6c98a !important;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      
+      #orderSummary .text-secondary {
+        font-size: 0.9rem;
+        color: #ccc !important;
+      }
+      
+      #orderSummary .fw-bold {
+        font-size: 1.2rem;
+        color: #e6c98a !important;
+        font-weight: bold;
+      }
+      
+      /* Form Field Improvements */
+      .form-control {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #e6c98a;
+        box-shadow: 0 0 0 0.2rem rgba(230, 201, 138, 0.25);
+      }
+      
+      .form-label {
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+      
+      /* Button Improvements */
+      .btn-primary, .btn-dark, .btn-lg {
+        width: 100% !important;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #e6c98a, #bfa76a) !important;
+        border: none !important;
+        color: #23201c !important;
+        margin-top: 1rem;
+      }
+      
+      .btn-primary:hover, .btn-dark:hover, .btn-lg:hover {
+        background: linear-gradient(135deg, #bfa76a, #e6c98a) !important;
+        color: #23201c !important;
+      }
+      
+      .text-end {
+        text-align: center !important;
+      }
+      
+      .btn-outline-secondary {
+        width: 100% !important;
+        padding: 0.875rem;
+        margin-top: 1rem;
+        border-radius: 12px;
+      }
+      
+      /* Subtotal Display */
+      .subtotal-display {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 1.5rem 0;
+        border: 2px solid rgba(230, 201, 138, 0.3);
+      }
+      
+      .subtotal-display h4 {
+        color: #e6c98a;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-shadow: 0 2px 10px rgba(230, 201, 138, 0.3);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body.hero {
+        padding-top: 1rem;
+        padding-bottom: 3rem; /* More bottom padding for small screens */
+      }
+      
+      .checkout-content {
+        margin-top: 10px;
+        padding: 0 0.25rem;
+        margin-bottom: 3rem;
+      }
+      
+      .card {
+        margin: 0.25rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+      }
+      
+      .card-header {
+        padding: 0.75rem;
+        font-size: 1.1rem;
+      }
+      
+      .card-body {
+        padding: 0.75rem;
+      }
+      
+      .order-summary-item {
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .order-summary-item img {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .form-control {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+      }
+      
+      .btn-primary {
+        padding: 0.875rem;
+        font-size: 1rem;
+      }
+      
+      .subtotal-display {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      
+      .subtotal-display h4 {
+        font-size: 1.6rem;
+      }
     }
   </style>
 </head>

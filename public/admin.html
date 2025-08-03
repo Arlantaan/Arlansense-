@@ -23,6 +23,8 @@
       margin: 0;
       padding: 0;
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     .header-logo {
       height: 70px;
@@ -121,6 +123,12 @@
     .login-form input {
       margin-bottom: 1rem;
     }
+    
+    /* Ensure proper show/hide logic */
+    #loginDiv.hidden, #adminContent.hidden {
+      display: none !important;
+      visibility: hidden !important;
+    }
   </style>
 </head>
 <body>
@@ -154,55 +162,52 @@
     </div>
   </nav>
   
-  <div class="admin-header">
-    <img src="images/sbs.svg" alt="Sensation by Sanu Logo" class="header-logo me-3" />
-    Admin Portal
-  </div>
-  <div class="container">
-    <h3 class="mt-4 mb-3">Recent Purchases</h3>
-    <div class="row mb-3">
-      <div class="col-md-3 mb-2">
-        <input type="date" id="filter-date-from" class="form-control" placeholder="From date" />
-      </div>
-      <div class="col-md-3 mb-2">
-        <input type="date" id="filter-date-to" class="form-control" placeholder="To date" />
-      </div>
-      <div class="col-md-4 mb-2">
-        <input type="text" id="search-input" class="form-control" placeholder="Search by name, email, or product" />
-      </div>
-      <div class="col-md-2 mb-2">
-        <button class="btn btn-warning w-100" id="export-csv">Export CSV</button>
-      </div>
+  <!-- Main Content -->
+  <div id="adminContent" class="flex-grow-1">
+    <div class="admin-header">
+      <img src="images/sbs.svg" alt="Sensation by Sanu Logo" class="header-logo me-3" />
+      Admin Portal
     </div>
-    <div class="table-responsive">
-      <table class="table table-dark table-hover purchase-table">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Customer</th>
-            <th>Email</th>
-            <th>Product</th>
-            <th>Amount</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody id="purchase-list">
-          <tr><td colspan="6" class="text-center">Loading...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  
-  <!-- Footer -->
-  <footer class="bg-dark text-white text-center py-4 mt-5">
     <div class="container">
-      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+      <h3 class="mt-4 mb-3">Recent Purchases</h3>
+      <div class="row mb-3">
+        <div class="col-md-3 mb-2">
+          <input type="date" id="filter-date-from" class="form-control" placeholder="From date" />
+        </div>
+        <div class="col-md-3 mb-2">
+          <input type="date" id="filter-date-to" class="form-control" placeholder="To date" />
+        </div>
+        <div class="col-md-4 mb-2">
+          <input type="text" id="search-input" class="form-control" placeholder="Search by name, email, or product" />
+        </div>
+        <div class="col-md-2 mb-2">
+          <button class="btn btn-warning w-100" id="export-csv">Export CSV</button>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-dark table-hover purchase-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Email</th>
+              <th>Product</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="purchase-list">
+            <tr><td colspan="6" class="text-center">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </footer>
+  </div>
   
-  <div id="loginDiv" class="text-center my-5">
+  <!-- Login Section -->
+  <div id="loginDiv" class="flex-grow-1 d-flex align-items-center justify-content-center">
     <form id="emailLoginForm" class="login-form" autocomplete="on">
-      <h5 class="mb-3">Admin Login</h5>
+      <h5 class="mb-3 text-center">Admin Login</h5>
       <input type="email" id="emailInput" class="form-control" placeholder="Email" required />
       <input type="password" id="passwordInput" class="form-control" placeholder="Password" required />
       <button type="submit" class="btn btn-warning w-100 mb-2">Sign in with Email</button>
@@ -211,6 +216,13 @@
       <button type="button" id="loginBtn" class="btn btn-outline-light w-100">Sign in with Google</button>
     </form>
   </div>
+  
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
@@ -253,9 +265,17 @@
     const db = getFirestore(app);
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
+    
+    // Configure Google provider
+    provider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
+    console.log('Firebase initialized for admin page');
+    console.log('Auth domain:', firebaseConfig.authDomain);
 
     // UI elements
-    const adminContainer = document.querySelector('.container');
+    const adminContainer = document.getElementById('adminContent');
     const loginDiv = document.getElementById('loginDiv');
     const emailLoginForm = document.getElementById('emailLoginForm');
     const emailInput = document.getElementById('emailInput');
@@ -267,28 +287,75 @@
     // Auth state
     onAuthStateChanged(auth, user => {
       if (user && allowedAdmins.includes(user.email)) {
+        console.log('Admin logged in, hiding login form');
+        // Completely hide login form
+        loginDiv.classList.add('hidden');
         loginDiv.style.display = 'none';
-        adminContainer.style.display = '';
+        // Show admin content
+        adminContainer.style.display = 'block';
+        adminContainer.classList.remove('hidden');
+        
         if (!document.getElementById('logoutBtn')) {
           document.querySelector('.admin-header').innerHTML += `<button id="logoutBtn" class="btn btn-sm btn-outline-light ms-4">Logout</button>`;
           document.getElementById('logoutBtn').onclick = () => signOut(auth);
         }
         startAdmin();
       } else {
-        loginDiv.style.display = '';
+        console.log('Admin not logged in, showing login form');
+        // Show login form
+        loginDiv.classList.remove('hidden');
+        loginDiv.style.display = 'flex';
+        // Hide admin content
         adminContainer.style.display = 'none';
+        adminContainer.classList.add('hidden');
       }
     });
 
     // Google login
-    googleLoginBtn.onclick = () => {
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      if (isSafari) {
-        import('https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js').then(({ signInWithRedirect }) => {
-          signInWithRedirect(auth, provider);
-        });
-      } else {
-        signInWithPopup(auth, provider);
+    googleLoginBtn.onclick = async () => {
+      try {
+        console.log('Google login button clicked');
+        emailLoginError.style.display = 'none';
+        
+        // Check if popup is supported
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        
+        if (isSafari || isIOS) {
+          // For Safari/iOS, try popup first, fallback to redirect
+          try {
+            const result = await signInWithPopup(auth, provider);
+            console.log('Google login successful:', result.user.email);
+          } catch (popupError) {
+            console.log('Popup failed, trying redirect:', popupError);
+            // Import redirect method from same version
+            const { signInWithRedirect } = await import('https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js');
+            await signInWithRedirect(auth, provider);
+          }
+        } else {
+          // For other browsers, use popup
+          const result = await signInWithPopup(auth, provider);
+          console.log('Google login successful:', result.user.email);
+        }
+      } catch (error) {
+        console.error('Google login error:', error);
+        
+        // Provide helpful error messages
+        let errorMessage = 'Google login failed: ';
+        if (error.code === 'auth/popup-closed-by-user') {
+          errorMessage = 'Login cancelled. Please try again.';
+        } else if (error.code === 'auth/popup-blocked') {
+          errorMessage = 'Popup blocked. Please allow popups for this site and try again.';
+        } else if (error.code === 'auth/unauthorized-domain') {
+          errorMessage = 'This domain is not authorized for Google Sign-in. Please contact the administrator.';
+        } else if (error.code === 'auth/operation-not-allowed') {
+          errorMessage = 'Google Sign-in is not enabled. Please contact the administrator.';
+        } else {
+          errorMessage += error.message;
+        }
+        
+        emailLoginError.textContent = errorMessage;
+        emailLoginError.style.display = '';
       }
     };
 
