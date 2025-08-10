@@ -464,6 +464,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/shared-utils.js"></script>
+  <script src="js/location-utils.js"></script>
   <script src="js/animations.js"></script>
   <script>
     // Initialize Vanta.js background using shared function
@@ -614,12 +615,12 @@
                   <div class="stage-time" id="stage-time-processing-${order.id}">${getStageTime(status, 'processing')}</div>
                 </div>
                 
-                <div class="progress-stage">
-                  <div class="stage-icon ${getStageIconClass(status, 'shipped')}" id="stage-icon-shipped-${order.id}">
+                <div class="progress-stage ${order.deliveryType === 'local' ? 'd-none' : ''}" data-shipping-step>
+                  <div class="stage-icon ${getStageIconClass(status, 'shipped', order.deliveryType !== 'local')}" id="stage-icon-shipped-${order.id}">
                     <i class="bi bi-truck"></i>
                   </div>
                   <div class="stage-label">Shipped</div>
-                  <div class="stage-time" id="stage-time-shipped-${order.id}">${getStageTime(status, 'shipped')}</div>
+                  <div class="stage-time" id="stage-time-shipped-${order.id}">${getStageTime(status, 'shipped', order.deliveryType !== 'local')}</div>
                 </div>
                 
                 <div class="progress-stage">
@@ -658,14 +659,14 @@
                 </div>
               </div>
               
-              <!-- Step 3: Shipped -->
-              <div class="progress-step ${getStepClass(status, 'shipped')}" id="step-shipped-${order.id}">
+              <!-- Step 3: Shipped (Hidden for local delivery) -->
+              <div class="progress-step ${getStepClass(status, 'shipped')} ${order.deliveryType === 'local' ? 'd-none' : ''}" id="step-shipped-${order.id}" data-shipping-step>
                 <div class="step-icon ${getStepClass(status, 'shipped')}">
                   <i class="bi bi-truck"></i>
                 </div>
                 <div class="step-content">
                   <h6>Shipped</h6>
-                  <p>${getStepMessage(status, 'shipped')}</p>
+                  <p>${getStepMessage(status, 'shipped', order.deliveryType !== 'local')}</p>
                 </div>
               </div>
               
@@ -675,8 +676,8 @@
                   <i class="bi bi-house-check-fill"></i>
                 </div>
                 <div class="step-content">
-                  <h6>Delivered</h6>
-                  <p>${getStepMessage(status, 'delivered')}</p>
+                  <h6>${order.deliveryType === 'local' ? 'Delivered/Picked Up' : 'Delivered'}</h6>
+                  <p>${getStepMessage(status, 'delivered', order.deliveryType !== 'local')}</p>
                 </div>
               </div>
             </div>
@@ -879,18 +880,23 @@
       return 'pending';
     }
     
-    function getStepMessage(currentStatus, stepStatus) {
-      const statusOrder = ['pending', 'processing', 'shipped', 'delivered'];
+    function getStepMessage(currentStatus, stepStatus, requiresShipping = true) {
+      const statusOrder = requiresShipping ? 
+        ['pending', 'processing', 'shipped', 'delivered'] : 
+        ['pending', 'processing', 'delivered'];
       const currentIndex = statusOrder.indexOf(currentStatus);
       const stepIndex = statusOrder.indexOf(stepStatus);
       
       if (stepIndex < currentIndex) {
         return 'Completed';
       } else if (stepIndex === currentIndex) {
-        const messages = {
+        const messages = requiresShipping ? {
           'processing': 'Your fragrance is being prepared and packaged',
           'shipped': 'Your order is on its way to you',
           'delivered': 'Your order has been delivered!'
+        } : {
+          'processing': 'Your fragrance is being prepared for pickup/delivery',
+          'delivered': 'Your order is ready! Available for pickup or local delivery'
         };
         return messages[stepStatus] || 'In progress';
       } else {

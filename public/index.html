@@ -72,6 +72,8 @@
       border: none;
       border-radius: 16px;
       transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
 
     .card:hover {
@@ -83,6 +85,250 @@
       object-fit: contain;
       padding: 10px;
       background: #fff;
+    }
+
+    /* Product card alignment system */
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      padding: 1.25rem;
+    }
+
+    .card-title {
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem !important;
+    }
+
+    .card-text-tagline {
+      min-height: 1.5rem;
+      margin-bottom: 1rem !important;
+    }
+
+    .fragrance-pyramid {
+      min-height: 3rem;
+      margin-bottom: 1rem !important;
+    }
+
+    .card-description {
+      min-height: 3.5rem;
+      margin-bottom: 1rem !important;
+    }
+
+    .card-price {
+      margin-bottom: 1rem !important;
+      margin-top: auto;
+    }
+
+    .card-button {
+      margin-top: auto;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    /* Enhanced Add to Cart Button Effects */
+    .btn-add-to-cart {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+      border: none !important;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-add-to-cart:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      background-color: #1a1a1a !important;
+    }
+
+    .btn-add-to-cart:active {
+      transform: translateY(0);
+      transition: all 0.1s ease;
+    }
+
+    /* Button States */
+    .btn-add-to-cart.loading {
+      background-color: #6c757d !important;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-add-to-cart.success {
+      background-color: #28a745 !important;
+      transform: scale(1.05);
+      animation: successPulse 0.6s ease;
+    }
+
+    @keyframes successPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1.05); }
+    }
+
+    /* Ripple Effect */
+    .btn-add-to-cart::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+      z-index: 1;
+    }
+
+    .btn-add-to-cart.ripple::before {
+      width: 300px;
+      height: 300px;
+      animation: rippleAnimation 0.6s ease-out;
+    }
+
+    @keyframes rippleAnimation {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+      }
+      100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+
+    /* Button Text and Icon Transitions */
+    .btn-text {
+      position: relative;
+      z-index: 2;
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-to-cart.loading .btn-text {
+      opacity: 0.7;
+    }
+
+    .btn-add-to-cart.success .btn-text {
+      color: white !important;
+    }
+
+    /* Loading Spinner */
+    .btn-spinner {
+      display: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+
+    .btn-add-to-cart.loading .btn-spinner {
+      display: inline-block;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Success Icon */
+    .btn-success-icon {
+      display: none;
+      margin-right: 8px;
+      animation: checkBounce 0.5s ease;
+    }
+
+    .btn-add-to-cart.success .btn-success-icon {
+      display: inline-block;
+    }
+
+    @keyframes checkBounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Cart Icon Float Animation */
+    .cart-float-animation {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      animation: floatToCart 1.2s cubic-bezier(0.23, 1, 0.320, 1) forwards;
+      opacity: 1;
+    }
+
+    @keyframes floatToCart {
+      0% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.2);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.5) translateY(-100px);
+      }
+    }
+
+    /* Responsive card alignment adjustments */
+    @media (max-width: 767px) {
+      .card-title {
+        min-height: 2rem;
+      }
+      .card-text-tagline {
+        min-height: 1.2rem;
+      }
+      .fragrance-pyramid {
+        min-height: 2.5rem;
+      }
+      .card-description {
+        min-height: 3rem;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 991px) {
+      .card-title {
+        min-height: 3rem;
+      }
+      .card-text-tagline {
+        min-height: 1.5rem;
+      }
+      .fragrance-pyramid {
+        min-height: 3.5rem;
+      }
+      .card-description {
+        min-height: 4rem;
+      }
+    }
+
+    @media (min-width: 992px) {
+      .card-title {
+        min-height: 2.5rem;
+      }
+      .card-text-tagline {
+        min-height: 1.5rem;
+      }
+      .fragrance-pyramid {
+        min-height: 3rem;
+      }
+      .card-description {
+        min-height: 3.5rem;
+      }
     }
 
     .btn {
@@ -148,6 +394,70 @@
       0% { transform: translateY(0); }
       50% { transform: translateY(-10px); }
       100% { transform: translateY(0); }
+    }
+
+    /* Desktop-specific optimizations for hero and button */
+    @media (min-width: 769px) {
+      .hero-headline {
+        max-width: 100%;
+        padding: 0 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .hero-headline h1 {
+        margin-bottom: 2.5rem;
+        position: relative;
+        z-index: 4;
+        text-align: center;
+      }
+      
+      .hero-headline .btn-lg {
+        font-size: 1.25rem;
+        padding: 0.75rem 3rem;
+        min-width: 280px;
+        display: block;
+        text-decoration: none;
+        box-shadow: 0 4px 16px rgba(191, 167, 106, 0.4);
+        transition: all 0.3s ease;
+        margin: 0 auto;
+        text-align: center;
+      }
+      
+      .hero-headline .btn-lg:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(191, 167, 106, 0.6);
+      }
+      
+      .hero-headline .btn-lg:active {
+        transform: translateY(0);
+      }
+      
+      /* Ensure proper z-indexing for desktop */
+      .hero {
+        position: relative;
+        overflow: visible;
+      }
+    }
+
+    /* Extra wide screen optimization */
+    @media (min-width: 1200px) {
+      .hero-headline {
+        max-width: 1000px;
+      }
+      
+      .hero-headline h1 {
+        font-size: 4rem;
+        margin-bottom: 3rem;
+      }
+      
+      .hero-headline .btn-lg {
+        font-size: 1.4rem;
+        padding: 1rem 4rem;
+        min-width: 320px;
+      }
     }
 
     /* Responsive adjustments for mobile */
@@ -357,9 +667,9 @@
   <!-- Hero Section -->
   <section class="hero text-white text-center d-flex align-items-center justify-content-center position-relative" style="min-height: 90vh;">
     <!-- Removed floating SBS logo from hero section -->
-    <div class="position-absolute top-50 start-50 translate-middle w-100 hero-headline" style="z-index:3;">
-      <h1 class="display-3 fw-bold mb-3" style="color: #000000; text-shadow: 0 2px 12px #00000099;">Unveil the Art of Scent</h1>
-      <a href="#catalog" class="btn btn-lg btn-warning px-5 py-2 fw-semibold" style="background: linear-gradient(90deg,#e6c98a,#bfa76a); color: #23201c; border: none; box-shadow: 0 2px 8px #bfa76a55;">Explore the Collection</a>
+    <div class="position-absolute top-50 start-50 translate-middle w-100 hero-headline" style="z-index:3; max-width: 1200px;">
+      <h1 class="display-3 fw-bold mb-4" style="color: #000000; text-shadow: 0 2px 12px #00000099;">Unveil the Art of Scent</h1>
+      <a href="#catalog" class="btn btn-lg btn-warning px-5 py-2 fw-semibold" style="background: linear-gradient(90deg,#e6c98a,#bfa76a); color: #23201c; border: none; box-shadow: 0 2px 8px #bfa76a55; font-weight: 600; letter-spacing: 0.5px;">Explore the Collection</a>
     </div>
   </section>
 
@@ -382,15 +692,20 @@
         <div class="card h-100">
           <img src="images/grace.webp" class="card-img-top" alt="Soleil Perfume" style="height:300px;object-fit:contain;">
           <div class="card-body">
-            <h5 class="card-title">Soleil <span class="badge bg-warning text-dark ms-2">Bestseller</span></h5>
-            <p class="card-text small mb-1"><em>not just a scent, she’s a moment.</em></p>
-            <div class="fragrance-pyramid mb-2">
+            <h5 class="card-title">Soleil</h5>
+            <p class="card-text-tagline card-text small"><em>not just a scent, she's a moment.</em></p>
+            <div class="fragrance-pyramid">
               <div><strong>Top Notes:</strong> Pear, Strawberry, Vanilla</div>
-              <div><strong>Base Notes:</strong> Patchouli, Sandalwood, Tonka Bean</div>
             </div>
-            <p class="text-muted small mb-2">A fruity-floral embrace with a golden glow of warmth and sophistication</p>
-            <p class="fw-bold">5000 GMD</p>
-                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'soleil', name: 'Soleil', price: 5000, image: 'images/grace.webp'})">Add to Cart</button>
+            <p class="card-description text-muted small">A fruity-floral embrace with a golden glow of warmth and sophistication</p>
+            <p class="card-price fw-bold">5000 GMD</p>
+            <button class="card-button btn btn-dark btn-add-to-cart w-100" onclick="enhancedAddToCart(this, {id: 'soleil', name: 'Soleil', price: 5000, image: 'images/grace.webp'})">
+              <div class="btn-spinner"></div>
+              <i class="btn-success-icon bi bi-check-circle-fill"></i>
+              <span class="btn-text">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -401,14 +716,19 @@
           <img src="images/blackbottle.webp" class="card-img-top" alt="Nuit Perfume" style="height:300px;object-fit:contain;">
           <div class="card-body">
             <h5 class="card-title">Nuit <span class="badge bg-secondary ms-2"></span></h5>
-            <p class="card-text small mb-1"><em>a presence felt in silence.</em></p>
-            <div class="fragrance-pyramid mb-2">
+            <p class="card-text-tagline card-text small"><em>a presence felt in silence.</em></p>
+            <div class="fragrance-pyramid">
               <div><strong>Top Notes:</strong> Bergamot, Juniperberry, Clary Sage, Mandarin</div>
-              <div><strong>Base Notes:</strong> Amber, Vetiver</div>
             </div>
-            <p class="text-muted small mb-2">Deep, magnetic, and utterly sensual. A timeless evening scent</p>
-            <p class="fw-bold">5000 GMD</p>
-                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'nuit', name: 'Nuit', price: 5000, image: 'images/blackbottle.webp'})">Add to Cart</button>
+            <p class="card-description text-muted small">Deep, magnetic, and utterly sensual. A timeless evening scent</p>
+            <p class="card-price fw-bold">5000 GMD</p>
+            <button class="card-button btn btn-dark btn-add-to-cart w-100" onclick="enhancedAddToCart(this, {id: 'nuit', name: 'Nuit', price: 5000, image: 'images/blackbottle.webp'})">
+              <div class="btn-spinner"></div>
+              <i class="btn-success-icon bi bi-check-circle-fill"></i>
+              <span class="btn-text">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -416,17 +736,22 @@
       <!-- Product 3 -->
       <div class="col-md-6 col-lg-3">
         <div class="card h-100">
-          <img src="images/perfume_oil.webp" class="card-img-top" alt="Blush Perfume" style="height:300px;object-fit:contain;">
+          <img src="images/blush.webp" class="card-img-top" alt="Blush Perfume" style="height:300px;object-fit:contain;">
           <div class="card-body">
-            <h5 class="card-title">Blush <span class="badge bg-pink text-white ms-2">New</span></h5>
-            <p class="card-text small mb-1"><em>grace with a whisper of wild.</em></p>
-            <div class="fragrance-pyramid mb-2">
-              <div><strong>Top Notes:</strong> Pink Pepper, Raspberry, Bergamot</div>
-              <div><strong>Base Notes:</strong> Musk, Cedarwood, Iris</div>
+            <h5 class="card-title">Blush</h5>
+            <p class="card-text-tagline card-text small">&nbsp;</p>
+            <div class="fragrance-pyramid">
+              &nbsp;
             </div>
-            <p class="text-muted small mb-2">A soft floral with a bold undertone — confident, youthful, unforgettable</p>
-            <p class="fw-bold">500 GMD</p>
-                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'blush', name: 'Blush', price: 500, image: 'images/blushbottle.webp'})">Add to Cart</button>
+            <p class="card-description text-muted small">A soft floral with a bold undertone — confident, youthful, unforgettable</p>
+            <p class="card-price fw-bold">500 GMD</p>
+            <button class="card-button btn btn-dark btn-add-to-cart w-100" onclick="enhancedAddToCart(this, {id: 'blush', name: 'Blush', price: 500, image: 'images/blush.webp'})">
+              <div class="btn-spinner"></div>
+              <i class="btn-success-icon bi bi-check-circle-fill"></i>
+              <span class="btn-text">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -436,13 +761,20 @@
         <div class="card h-100">
           <img src="images/perfume_oil2.webp" class="card-img-top" alt="Sugar Kiss" style="height:300px;object-fit:contain;">
           <div class="card-body">
-            <h5 class="card-title">Noir <span class="badge bg-dark text-white ms-2">Intense</span></h5>
-            <p class="card-text small mb-1"><em>depth in every drop.</em></p>
-            <div class="fragrance-pyramid mb-2">
+            <h5 class="card-title">Sensation Oil</h5>
+            <p class="card-text-tagline card-text small"><em>depth in every drop.</em></p>
+            <div class="fragrance-pyramid">
+              &nbsp;
             </div>
-            <p class="text-muted small mb-2">An oil-based scent crafted for lasting allure — rich, mysterious, and seductive</p>
-            <p class="fw-bold">500 GMD</p>
-                            <button class="btn btn-dark w-100" onclick="addToCart({id: 'noir', name: 'Noir', price: 500, image: 'images/perfume_oil2.webp'})">Add to Cart</button>
+            <p class="card-description text-muted small">An oil-based scent crafted for lasting allure — rich, mysterious, and seductive</p>
+            <p class="card-price fw-bold">500 GMD</p>
+            <button class="card-button btn btn-dark btn-add-to-cart w-100" onclick="enhancedAddToCart(this, {id: 'sensation-oil', name: 'Sensation Oil', price: 500, image: 'images/perfume_oil2.webp'})">
+              <div class="btn-spinner"></div>
+              <i class="btn-success-icon bi bi-check-circle-fill"></i>
+              <span class="btn-text">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -457,20 +789,27 @@
       <h2 class="text-center mb-4">Contact Us</h2>
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <form>
+          <form id="contactForm" onsubmit="submitContactForm(event)">
             <div class="mb-3">
-              <label for="name" class="form-label">Your Name</label>
-              <input type="text" id="name" class="form-control" placeholder="Enter full name" />
+              <label for="contactName" class="form-label">Your Name</label>
+              <input type="text" id="contactName" name="name" class="form-control" placeholder="Enter full name" required />
             </div>
             <div class="mb-3">
-              <label for="email" class="form-label">Your Email</label>
-              <input type="email" id="email" class="form-control" placeholder="example@gmail.com" />
+              <label for="contactEmail" class="form-label">Your Email</label>
+              <input type="email" id="contactEmail" name="email" class="form-control" placeholder="example@gmail.com" required />
             </div>
             <div class="mb-3">
-              <label for="message" class="form-label">Message</label>
-              <textarea id="message" class="form-control" rows="4" placeholder="How can we help?"></textarea>
+              <label for="contactMessage" class="form-label">Message</label>
+              <textarea id="contactMessage" name="message" class="form-control" rows="4" placeholder="How can we help?" required></textarea>
             </div>
-            <button type="submit" class="btn btn-outline-light">Send Message</button>
+            <button type="submit" class="btn btn-outline-light" id="contactSubmitBtn">
+              <span class="btn-text">
+                <i class="bi bi-send me-2"></i>Send Message
+              </span>
+              <span class="btn-spinner d-none">
+                <i class="bi bi-arrow-clockwise spin"></i> Sending...
+              </span>
+            </button>
           </form>
         </div>
       </div>
@@ -497,27 +836,132 @@
   <!-- Shared utility and animation scripts -->
   <script src="js/shared-utils.js"></script>
   <script src="js/animations.js"></script>
-  <script>
-    // Initialize Vanta.js background using shared function
-    if (window.AnimationUtils) {
-      window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
-    } else {
-      // Fallback to direct initialization
-      VANTA.WAVES({
-        el: ".hero",
-        mouseControls: true,
-        touchControls: true,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        color: 0x8B5C2A,
-        shininess: 50.0,
-        waveHeight: 20.0,
-        waveSpeed: 0.7,
-        zoom: 0.85
-      });
-    }
+  <script src="script.js"></script>
+  
+  <!-- Firebase for Contact Form -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+      <script>
+      // Firebase configuration for contact form
+      const firebaseConfig = {
+        apiKey: "AIzaSyBIFg1ZFGZ2k34Bc8hhhLKSf9ArnesiNhg",
+        authDomain: "newsense-27a7a.firebaseapp.com",
+        projectId: "newsense-27a7a",
+        storageBucket: "newsense-27a7a.firebasestorage.app",
+        messagingSenderId: "348185741664",
+        appId: "1:348185741664:web:a2ff7676deec0cecaa3605",
+        measurementId: "G-SZ18TF0YHW"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+
+      // Contact form submission function
+      async function submitContactForm(event) {
+        event.preventDefault();
+        
+        const submitBtn = document.getElementById('contactSubmitBtn');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const btnSpinner = submitBtn.querySelector('.btn-spinner');
+        
+        // Show loading state
+        btnText.classList.add('d-none');
+        btnSpinner.classList.remove('d-none');
+        submitBtn.disabled = true;
+        
+        try {
+          const formData = new FormData(event.target);
+          const contactData = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            message: formData.get('message'),
+            status: 'new',
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            dateStr: new Date().toLocaleDateString(),
+            timeStr: new Date().toLocaleTimeString()
+          };
+          
+          // Save to Firestore
+          await db.collection('contacts').add(contactData);
+          
+          // Show success message
+          showContactNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+          
+          // Reset form
+          event.target.reset();
+          
+        } catch (error) {
+          console.error('Error submitting contact form:', error);
+          showContactNotification('Failed to send message. Please try again.', 'error');
+        } finally {
+          // Reset button state
+          btnText.classList.remove('d-none');
+          btnSpinner.classList.add('d-none');
+          submitBtn.disabled = false;
+        }
+      }
+
+      // Show contact notification
+      function showContactNotification(message, type) {
+        const notification = document.createElement('div');
+        notification.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${type === 'success' ? '#28a745' : '#dc3545'};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10000;
+            animation: slideInRight 0.4s ease;
+            font-weight: 500;
+            max-width: 400px;
+          ">
+            <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
+            ${message}
+          </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove after 5 seconds
+        setTimeout(() => {
+          notification.style.animation = 'slideOutRight 0.4s ease forwards';
+          setTimeout(() => {
+            if (document.body.contains(notification)) {
+              document.body.removeChild(notification);
+            }
+          }, 400);
+        }, 5000);
+      }
+
+      // Initialize Vanta.js background using shared function
+      if (window.AnimationUtils) {
+        window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
+      } else {
+        // Fallback to direct initialization
+        VANTA.WAVES({
+          el: ".hero",
+          mouseControls: true,
+          touchControls: true,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.0,
+          scaleMobile: 1.0,
+          color: 0x8B5C2A,
+          shininess: 50.0,
+          waveHeight: 20.0,
+          waveSpeed: 0.7,
+          zoom: 0.85
+        });
+      }
+    
+    // Initialize Cart Manager
+    window.cartManager = new CartManager();
+    console.log('Cart Manager initialized:', window.cartManager);
     
     // Cart debugging function
     window.debugCart = function() {
@@ -566,6 +1010,182 @@
       });
     });
 
+         // Enhanced Add to Cart Function with Visual Effects
+         window.enhancedAddToCart = function(buttonElement, product) {
+           // Prevent multiple clicks
+           if (buttonElement.classList.contains('loading') || buttonElement.classList.contains('success')) {
+             return;
+           }
+
+           // Add ripple effect
+           buttonElement.classList.add('ripple');
+           setTimeout(() => buttonElement.classList.remove('ripple'), 600);
+
+           // Show loading state
+           buttonElement.classList.add('loading');
+           buttonElement.disabled = true;
+
+           // Haptic feedback for mobile
+           if (navigator.vibrate) {
+             navigator.vibrate(50);
+           }
+
+           // Simulate processing time and add to cart
+           setTimeout(() => {
+             try {
+               console.log('Adding product to cart:', product);
+               console.log('Cart manager available:', !!window.cartManager);
+               console.log('Add to cart function available:', !!window.addToCart);
+               
+               // Call the actual add to cart function
+               const success = window.addToCart ? window.addToCart(product) : addToCart(product);
+               console.log('Add to cart result:', success);
+               
+               if (success) {
+                 // Show success state
+                 buttonElement.classList.remove('loading');
+                 buttonElement.classList.add('success');
+                 
+                 // Create floating cart icon animation
+                 createFloatingCartIcon(buttonElement, product);
+                 
+                 // Show success notification
+                 showAddToCartNotification(product.name);
+                 
+                 // Reset button after success animation
+                 setTimeout(() => {
+                   buttonElement.classList.remove('success');
+                   buttonElement.disabled = false;
+                 }, 2000);
+               } else {
+                 // Handle error
+                 buttonElement.classList.remove('loading');
+                 buttonElement.disabled = false;
+                 showErrorNotification('Failed to add item to cart');
+               }
+             } catch (error) {
+               console.error('Error adding to cart:', error);
+               buttonElement.classList.remove('loading');
+               buttonElement.disabled = false;
+               showErrorNotification('Error adding item to cart');
+             }
+           }, 800); // Simulate loading time
+         };
+
+         // Create floating cart icon animation
+         function createFloatingCartIcon(buttonElement, product) {
+           const buttonRect = buttonElement.getBoundingClientRect();
+           const cartIcon = document.querySelector('.navbar .bi-cart3') || document.querySelector('[href="cart.html"]');
+           
+           if (cartIcon) {
+             const cartRect = cartIcon.getBoundingClientRect();
+             
+             // Create floating icon
+             const floatingIcon = document.createElement('div');
+             floatingIcon.innerHTML = '<i class="bi bi-cart-plus" style="font-size: 2rem; color: #28a745;"></i>';
+             floatingIcon.className = 'cart-float-animation';
+             floatingIcon.style.left = buttonRect.left + 'px';
+             floatingIcon.style.top = buttonRect.top + 'px';
+             
+             document.body.appendChild(floatingIcon);
+             
+             // Animate towards cart
+             setTimeout(() => {
+               floatingIcon.style.left = cartRect.left + 'px';
+               floatingIcon.style.top = cartRect.top + 'px';
+             }, 100);
+             
+             // Remove after animation
+             setTimeout(() => {
+               document.body.removeChild(floatingIcon);
+             }, 1200);
+           }
+         }
+
+         // Show success notification
+         function showAddToCartNotification(productName) {
+           // Create notification element
+           const notification = document.createElement('div');
+           notification.innerHTML = `
+             <div style="
+               position: fixed;
+               top: 20px;
+               right: 20px;
+               background: #28a745;
+               color: white;
+               padding: 1rem 1.5rem;
+               border-radius: 8px;
+               box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+               z-index: 10000;
+               animation: slideInRight 0.4s ease;
+               font-weight: 500;
+             ">
+               <i class="bi bi-check-circle-fill me-2"></i>
+               ${productName} added to cart!
+             </div>
+           `;
+           
+           document.body.appendChild(notification);
+           
+           // Remove after 3 seconds
+           setTimeout(() => {
+             notification.style.animation = 'slideOutRight 0.4s ease forwards';
+             setTimeout(() => {
+               if (document.body.contains(notification)) {
+                 document.body.removeChild(notification);
+               }
+             }, 400);
+           }, 3000);
+         }
+
+         // Show error notification
+         function showErrorNotification(message) {
+           const notification = document.createElement('div');
+           notification.innerHTML = `
+             <div style="
+               position: fixed;
+               top: 20px;
+               right: 20px;
+               background: #dc3545;
+               color: white;
+               padding: 1rem 1.5rem;
+               border-radius: 8px;
+               box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+               z-index: 10000;
+               animation: slideInRight 0.4s ease;
+               font-weight: 500;
+             ">
+               <i class="bi bi-exclamation-triangle-fill me-2"></i>
+               ${message}
+             </div>
+           `;
+           
+           document.body.appendChild(notification);
+           
+           setTimeout(() => {
+             notification.style.animation = 'slideOutRight 0.4s ease forwards';
+             setTimeout(() => {
+               if (document.body.contains(notification)) {
+                 document.body.removeChild(notification);
+               }
+             }, 400);
+           }, 3000);
+         }
+
+         // Add notification animations to styles
+         const notificationStyles = document.createElement('style');
+         notificationStyles.textContent = `
+           @keyframes slideInRight {
+             from { transform: translateX(100%); opacity: 0; }
+             to { transform: translateX(0); opacity: 1; }
+           }
+           @keyframes slideOutRight {
+             from { transform: translateX(0); opacity: 1; }
+             to { transform: translateX(100%); opacity: 0; }
+           }
+         `;
+         document.head.appendChild(notificationStyles);
+
          // Use CartManager for add to cart (provided globally by cart.js)
          // window.addToCart(product) is now available globally
 
@@ -601,7 +1221,7 @@
       const criticalImages = [
         'images/grace.webp',
         'images/blackbottle.webp',
-        'images/perfume_oil.webp',
+        'images/blush.webp',
         'images/perfume_oil2.webp'
       ];
 
@@ -626,6 +1246,5 @@
     });
   </script>
 </body>
-</html>
 </html>
 

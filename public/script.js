@@ -1,239 +1,322 @@
 /**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
+ * Main JavaScript for Sensation by Sanu Website
+ * Client-side functionality for product display, interactions, and UI
  */
 
-const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const {onDocumentWritten} = require("firebase-functions/v2/firestore");
-const logger = require("firebase-functions/logger");
-const admin = require('firebase-admin');
-const nodemailer = require('nodemailer');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// Global variables
+let currentProducts = [];
+let currentCategory = 'all';
+let isCartOpen = false;
 
-// Initialize Firebase Admin
-admin.initializeApp();
+// Product data - this would typically come from a database
+const products = [
+  {
+    id: 1,
+    name: "Grace",
+    price: 250,
+    image: "images/grace.webp",
+    category: "perfume",
+    description: "Elegant floral fragrance with notes of jasmine and rose"
+  },
+  {
+    id: 2,
+    name: "Black Bottle",
+    price: 300,
+    image: "images/blackbottle.webp",
+    category: "perfume",
+    description: "Mysterious oriental scent with amber and vanilla"
+  },
+  {
+    id: 3,
+    name: "Blush",
+    price: 200,
+    image: "images/blush.webp",
+    category: "perfume",
+    description: "Soft, romantic fragrance perfect for everyday wear"
+  },
+  {
+    id: 4,
+    name: "Perfume Oil",
+    price: 180,
+    image: "images/perfume_oil2.webp",
+    category: "oil",
+    description: "Concentrated essential oil blend for long-lasting scent"
+  }
+];
 
-// Set global options for cost control
-setGlobalOptions({ 
-  maxInstances: 10,
-  timeoutSeconds: 540,
-  memory: '256MiB'
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Sensation by Sanu website loaded');
+  initializeWebsite();
 });
 
-// Email Configuration
-const emailConfig = {
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER || 'abdullaalami1@gmail.com',
-    pass: process.env.GMAIL_APP_PASSWORD || 'test@123'
+function initializeWebsite() {
+  // Set up event listeners
+  setupEventListeners();
+  
+  // Load initial products
+  displayProducts();
+  
+  // Initialize cart
+  if (window.cartManager) {
+    window.cartManager.init();
   }
-};
-
-const mailTransport = nodemailer.createTransport(emailConfig);
-
-// Email Templates
-const emailTemplates = {
-  orderConfirmation: (order) => ({
-    subject: `Order Confirmed - ${order.orderId}`,
-    html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: linear-gradient(90deg, #8B5C2A 0%, #FFD700 100%); padding: 20px; text-align: center;">
-          <h1 style="color: white; margin: 0;">Sensation by Sanu</h1>
-        </div>
-        <div style="padding: 20px;">
-          <h2>Order Confirmation</h2>
-          <p>Dear ${order.name},</p>
-          <p>Thank you for your order! We're excited to prepare your fragrances.</p>
-          
-          <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3>Order Details</h3>
-            <p><strong>Order ID:</strong> ${order.orderId}</p>
-            <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>
-            <p><strong>Total:</strong> D${order.subtotal.toLocaleString()}</p>
-          </div>
-          
-          <div style="margin: 20px 0;">
-            <h3>Items Ordered</h3>
-            ${order.cart.map(item => `
-              <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee;">
-                <span>${item.name} x${item.qty}</span>
-                <span>D${(item.price * item.qty).toLocaleString()}</span>
-              </div>
-            `).join('')}
-          </div>
-          
-          <div style="background: #e6c98a; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3>Delivery Information</h3>
-            <p><strong>Address:</strong> ${order.address}</p>
-            <p><strong>Phone:</strong> ${order.phone}</p>
-          </div>
-          
-          <p>We'll notify you when your order ships. Track your order at:</p>
-          <a href="${process.env.WEBSITE_URL}/track.html?order=${order.orderId}" 
-             style="background: #8B5C2A; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
-            Track Order
-          </a>
-          
-          <p style="margin-top: 30px;">Thank you for choosing Sensation by Sanu!</p>
-        </div>
-      </div>
-    `
-  }),
   
-  adminNotification: (order) => ({
-    subject: `New Order #${order.orderId} - ${order.name}`,
-    html: `
-      <div style="font-family: Arial, sans-serif;">
-        <h2>New Order Received</h2>
-        <p><strong>Order ID:</strong> ${order.orderId}</p>
-        <p><strong>Customer:</strong> ${order.name}</p>
-        <p><strong>Email:</strong> ${order.email}</p>
-        <p><strong>Phone:</strong> ${order.phone}</p>
-        <p><strong>Total:</strong> D${order.subtotal.toLocaleString()}</p>
-        <p><strong>Items:</strong></p>
-        <ul>
-          ${order.cart.map(item => `<li>${item.name} x${item.qty} - D${(item.price * item.qty).toLocaleString()}</li>`).join('')}
-        </ul>
-        <p><strong>Address:</strong> ${order.address}</p>
-      </div>
-    `
-  })
-};
+  // Set up smooth scrolling
+  setupSmoothScrolling();
+  
+  // Initialize animations
+  initializeAnimations();
+}
 
-// Order Processing Function
-exports.processNewOrder = onDocumentWritten('orders/{orderId}', async (event) => {
-  const order = event.data.after.data();
-  const orderId = event.params.orderId;
+function setupEventListeners() {
+  // Category filter buttons
+  const categoryButtons = document.querySelectorAll('.category-filter');
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const category = this.dataset.category;
+      filterProducts(category);
+      
+      // Update active button state
+      categoryButtons.forEach(btn => btn.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
   
-  if (!order) return null;
-  
-  try {
-    // Add order ID to document
-    await event.data.after.ref.update({
-      orderId: orderId,
-      createdAt: admin.firestore.FieldValue.serverTimestamp()
+  // Search functionality
+  const searchInput = document.querySelector('#search-input');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      searchProducts(this.value);
     });
-    
-    // Send customer confirmation email
-    const customerEmail = emailTemplates.orderConfirmation({
-      ...order,
-      orderId: orderId
-    });
-    
-    await mailTransport.sendMail({
-      from: `Sensation by Sanu <${emailConfig.auth.user}>`,
-      to: order.email,
-      ...customerEmail
-    });
-    
-    // Send admin notification
-    const adminEmail = emailTemplates.adminNotification({
-      ...order,
-      orderId: orderId
-    });
-    
-    await mailTransport.sendMail({
-      from: `Sensation Orders <${emailConfig.auth.user}>`,
-      to: emailConfig.auth.user,
-      ...adminEmail
-    });
-    
-    // Update inventory
-    await updateInventory(order.cart);
-    
-    logger.info(`Order ${orderId} processed successfully`);
-    return null;
-  } catch (error) {
-    logger.error(`Error processing order ${orderId}:`, error);
-    throw error;
   }
-});
-
-// Inventory Management
-async function updateInventory(cart) {
-  const db = admin.firestore();
   
-  for (const item of cart) {
-    const productRef = db.collection('inventory').doc(item.name);
-    const productDoc = await productRef.get();
-    
-    if (productDoc.exists) {
-      const currentStock = productDoc.data().stock || 0;
-      await productRef.update({
-        stock: Math.max(0, currentStock - item.qty),
-        lastUpdated: admin.firestore.FieldValue.serverTimestamp()
-      });
-    }
+  // Mobile menu toggle
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+  }
+  
+  // Back to top button
+  const backToTopBtn = document.querySelector('.back-to-top');
+  if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', scrollToTop);
   }
 }
 
-// Payment Processing Functions
-exports.createPaymentIntent = onRequest(async (req, res) => {
-  try {
-    const { amount, currency = 'gmd', metadata = {} } = req.body;
-    
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
-      currency: currency,
-      metadata: metadata,
-      automatic_payment_methods: {
-        enabled: true,
-      },
-    });
-    
-    res.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    logger.error('Payment intent creation failed:', error);
-    res.status(500).json({ error: error.message });
+function displayProducts(category = 'all') {
+  const productsContainer = document.querySelector('#products-container');
+  if (!productsContainer) return;
+  
+  let filteredProducts = products;
+  if (category !== 'all') {
+    filteredProducts = products.filter(product => product.category === category);
   }
-});
+  
+  currentProducts = filteredProducts;
+  
+  const productsHTML = filteredProducts.map(product => `
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card h-100 product-card" data-product-id="${product.id}">
+        <img src="${product.image}" class="card-img-top" alt="${product.name}" loading="lazy">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">${product.name}</h5>
+          <p class="card-text text-muted">${product.description}</p>
+          <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="h5 text-primary mb-0">D${product.price}</span>
+              <span class="badge bg-secondary">${product.category}</span>
+              </div>
+            <button class="btn btn-primary w-100 add-to-cart-btn" 
+                    onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+              <i class="bi bi-cart-plus me-2"></i>Add to Cart
+            </button>
+          </div>
+        </div>
+      </div>
+      </div>
+  `).join('');
+  
+  productsContainer.innerHTML = productsHTML;
+  
+  // Add animation to new cards
+  animateProductCards();
+}
 
-exports.verifyPayment = onRequest(async (req, res) => {
-  try {
-    const { paymentIntentId } = req.params;
-    
-    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    
-    res.json({ 
-      success: paymentIntent.status === 'succeeded',
-      status: paymentIntent.status 
-    });
-  } catch (error) {
-    logger.error('Payment verification failed:', error);
-    res.status(500).json({ error: error.message });
+function filterProducts(category) {
+  currentCategory = category;
+  displayProducts(category);
+  
+  // Smooth scroll to products section
+  const productsSection = document.querySelector('#products');
+  if (productsSection) {
+    productsSection.scrollIntoView({ behavior: 'smooth' });
   }
-});
+}
 
-// Analytics Function
-exports.trackEvent = onRequest(async (req, res) => {
-  try {
-    const { event, data } = req.body;
-    
-    await admin.firestore().collection('analytics').add({
-      event,
-      data,
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
-      userAgent: req.headers['user-agent'],
-      ip: req.ip
-    });
-    
-    res.json({ success: true });
-  } catch (error) {
-    logger.error('Analytics tracking failed:', error);
-    res.status(500).json({ error: error.message });
+function searchProducts(query) {
+  if (!query.trim()) {
+    displayProducts(currentCategory);
+    return;
   }
-});
+  
+  const searchResults = products.filter(product => 
+    product.name.toLowerCase().includes(query.toLowerCase()) ||
+    product.description.toLowerCase().includes(query.toLowerCase()) ||
+    product.category.toLowerCase().includes(query.toLowerCase())
+  );
+  
+  const productsContainer = document.querySelector('#products-container');
+  if (!productsContainer) return;
+  
+  if (searchResults.length === 0) {
+    productsContainer.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <i class="bi bi-search display-1 text-muted"></i>
+        <h3 class="mt-3">No products found</h3>
+        <p class="text-muted">Try adjusting your search terms</p>
+      </div>
+    `;
+  } else {
+    const productsHTML = searchResults.map(product => `
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card h-100 product-card" data-product-id="${product.id}">
+          <img src="${product.image}" class="card-img-top" alt="${product.name}" loading="lazy">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">${product.name}</h5>
+            <p class="card-text text-muted">${product.description}</p>
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="h5 text-primary mb-0">D${product.price}</span>
+                <span class="badge bg-secondary">${product.category}</span>
+              </div>
+              <button class="btn btn-primary w-100 add-to-cart-btn" 
+                      onclick="addToCart(${JSON.stringify(product).replace(/"/g, '&quot;')})">
+                <i class="bi bi-cart-plus me-2"></i>Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    productsContainer.innerHTML = productsHTML;
+    animateProductCards();
+  }
+}
 
-// Health Check
-exports.healthCheck = onRequest((req, res) => {
-  res.json({ 
-    status: 'healthy', 
-    timestamp: new Date().toISOString(),
-    version: '1.0.0'
+function addToCart(product) {
+  if (window.cartManager) {
+    try {
+      window.cartManager.addItem(product);
+      showNotification(`${product.name} added to cart!`, 'success');
+      return true; // Return true on success
+  } catch (error) {
+      showNotification(error.message, 'error');
+      return false; // Return false on error
+    }
+  } else {
+    // Fallback if cart manager isn't loaded
+    showNotification('Cart system not available', 'error');
+    return false; // Return false if cart manager not available
+  }
+}
+
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `alert alert-${type === 'error' ? 'danger' : type} notification`;
+  notification.innerHTML = `
+    <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
+    ${message}
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Animate in
+  setTimeout(() => notification.classList.add('show'), 100);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
+}
+
+function setupSmoothScrolling() {
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
   });
-});
+}
+
+function initializeAnimations() {
+  // Intersection Observer for scroll animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate-in');
+      }
+    });
+  }, observerOptions);
+  
+  // Observe elements for animation
+  document.querySelectorAll('.animate-on-scroll').forEach(el => {
+    observer.observe(el);
+  });
+}
+
+function animateProductCards() {
+  const cards = document.querySelectorAll('.product-card');
+  cards.forEach((card, index) => {
+    card.style.animationDelay = `${index * 0.1}s`;
+    card.classList.add('animate-in');
+  });
+}
+
+function toggleMobileMenu() {
+  const mobileMenu = document.querySelector('.mobile-menu');
+  if (mobileMenu) {
+    mobileMenu.classList.toggle('show');
+  }
+}
+
+function scrollToTop() {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  });
+}
+
+// Global functions for external use
+window.addToCart = addToCart;
+window.filterProducts = filterProducts;
+window.searchProducts = searchProducts;
+
+// Export for testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    products,
+    displayProducts,
+    filterProducts,
+    searchProducts,
+    addToCart
+  };
+}

@@ -22,24 +22,24 @@
     .hero {
       min-height: 100vh;
       position: relative;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #23201c 0%, #3d3530 50%, #23201c 100%);
       overflow-x: hidden; /* Only hide horizontal overflow */
     }
 
     .cart-container {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(230, 201, 138, 0.1);
       backdrop-filter: blur(20px);
       border-radius: 20px;
       padding: 2rem;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(230, 201, 138, 0.3);
     }
 
     .cart-item {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(230, 201, 138, 0.08);
       backdrop-filter: blur(10px);
       border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(230, 201, 138, 0.2);
       transition: all 0.3s ease;
     }
 
@@ -370,8 +370,80 @@
       if (window.cartManager) {
         console.log('5. CartManager cart:', cartManager.cart);
         console.log('6. Cart length:', cartManager.cart.length);
+        
+        // Debug each item's image property specifically
+        cartManager.cart.forEach((item, index) => {
+          console.log(`Item ${index + 1}:`, {
+            name: item.name,
+            image: item.image,
+            img: item.img,
+            allProperties: item
+          });
+        });
+        
         console.log('7. Force render cart page...');
         cartManager.renderCartPage();
+      }
+    };
+
+    // Auto-debug when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        console.log('=== AUTO CART DEBUG ===');
+        if (window.cartManager) {
+          console.log('Cart contents:', window.cartManager.cart);
+          window.cartManager.cart.forEach(item => {
+            console.log(`${item.name}: image = "${item.image}"`);
+          });
+        }
+      }, 1000);
+    });
+
+    // Test image accessibility
+    window.testBlushImage = function() {
+      const testImg = new Image();
+      testImg.onload = function() {
+        console.log('✅ blush.webp loaded successfully');
+      };
+      testImg.onerror = function() {
+        console.log('❌ blush.webp failed to load');
+      };
+      testImg.src = 'images/blush.webp';
+      console.log('Testing image: images/blush.webp');
+    };
+
+    // Auto-test image when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        window.testBlushImage();
+      }, 500);
+    });
+
+    // Debugging: Force clear cart and add fresh Blush item
+    window.testBlushAddToCart = function() {
+      console.log('=== TESTING BLUSH ADD TO CART ===');
+      
+      // Clear cart first
+      if (window.cartManager) {
+        window.cartManager.clearCart();
+        console.log('Cart cleared');
+        
+        // Add Blush with explicit image path
+        const blushProduct = {
+          id: 'blush',
+          name: 'Blush',
+          price: 500,
+          image: 'images/blush.webp'
+        };
+        
+        console.log('Adding Blush product:', blushProduct);
+        window.cartManager.addItem(blushProduct);
+        
+        // Check what was actually stored
+        setTimeout(() => {
+          console.log('Cart after adding Blush:', window.cartManager.cart);
+          window.cartManager.renderCartPage();
+        }, 100);
       }
     };
     
@@ -379,7 +451,7 @@
     if (window.AnimationUtils) {
       window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
     } else {
-      // Fallback to direct initialization
+      // Fallback to direct initialization  
       VANTA.WAVES({
         el: ".hero",
         mouseControls: true,
@@ -388,11 +460,12 @@
         minWidth: 200.00,
         scale: 1.0,
         scaleMobile: 1.0,
-        color: 0x8B5C2A,
+        color: 0x8B5C2A, // Brand gold color
         shininess: 50.0,
-        waveHeight: 20.0,
-        waveSpeed: 0.7,
-        zoom: 0.85
+        waveHeight: 15.0,
+        waveSpeed: 0.5,
+        zoom: 0.75,
+        backgroundAlpha: 0.8
       });
     }
 

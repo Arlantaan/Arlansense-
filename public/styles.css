@@ -1,9 +1,9 @@
 /* Super Slick Wave Dashboard - Complete Redesign */
 :root {
-    --wave-1: #667eea;
-    --wave-2: #764ba2;
-    --wave-3: #f093fb;
-    --wave-4: #f5576c;
+    --wave-1: #23201c;
+    --wave-2: #3d3530;
+    --wave-3: #e6c98a;
+    --wave-4: #bfa76a;
     --glass-light: rgba(255, 255, 255, 0.1);
     --glass-medium: rgba(255, 255, 255, 0.2);
     --glass-strong: rgba(255, 255, 255, 0.3);
@@ -15,7 +15,7 @@
 }
 body {
     font-family: 'Inter', 'Segoe UI', sans-serif;
-    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+    background: linear-gradient(45deg, #23201c, #3d3530, #e6c98a, #bfa76a);
     background-size: 400% 400%;
     animation: gradientWave 15s ease infinite;
     min-height: 100vh;
@@ -205,16 +205,16 @@ body::after {
     --end-color: #0575e6;
 }
 .card.bg-warning {
-    --start-color: #f093fb;
-    --end-color: #f5576c;
+    --start-color: #e6c98a;
+    --end-color: #bfa76a;
 }
 .card.bg-info {
     --start-color: #4facfe;
     --end-color: #00f2fe;
 }
 .card.bg-primary {
-    --start-color: #667eea;
-    --end-color: #764ba2;
+    --start-color: #23201c;
+    --end-color: #3d3530;
 }
 @keyframes morphGradient {
     0% { background-position: 0% 50%; }
@@ -346,7 +346,7 @@ body::after {
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
 }
 .btn-primary {
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #23201c, #3d3530);
     color: white;
 }
 .btn-success {
@@ -354,7 +354,7 @@ body::after {
     color: white;
 }
 .btn-warning {
-    background: linear-gradient(135deg, #f093fb, #f5576c);
+    background: linear-gradient(135deg, #e6c98a, #bfa76a);
     color: white;
 }
 /* Floating Status Badges */
@@ -546,7 +546,7 @@ html {
 }
 /* Additional Utility Classes */
 .text-wave {
-    background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+    background: linear-gradient(45deg, #23201c, #3d3530, #e6c98a);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;

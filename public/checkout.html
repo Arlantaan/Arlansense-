@@ -10,7 +10,7 @@
   <style>
     body.hero {
       min-height: 100vh;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #23201c 0%, #3d3530 50%, #23201c 100%);
       color: white;
       position: relative;
       overflow-x: hidden; /* Only hide horizontal overflow */
@@ -360,6 +360,7 @@
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
   <script src="js/config.js"></script>
   <script src="js/shared-utils.js"></script>
+  <script src="js/location-utils.js"></script>
   <script>
     // Test if CONFIG loads
     console.log('After loading config.js, CONFIG is:', typeof CONFIG);
@@ -1091,6 +1092,26 @@
       detectLocationAndSetDefaults();
     }
     
+    // Location-based order processing
+    window.locationManager.onLocationDetected((isGambia, location) => {
+      console.log('🌍 Location detected in checkout:', { isGambia, location });
+      
+      // Apply location-based UI changes
+      window.orderFlowManager.applyLocationBasedUI(isGambia);
+      
+      // Store location info for order
+      window.orderLocation = { isGambia, location };
+      
+      // Update order processing flow
+      if (isGambia) {
+        console.log('🇬🇲 Local delivery mode activated');
+        document.body.classList.add('local-delivery');
+      } else {
+        console.log('🌍 International shipping mode activated');
+        document.body.classList.add('international-shipping');
+      }
+    });
+
     // Call initialization when page loads
     document.addEventListener('DOMContentLoaded', initializeCheckout);
     
@@ -1383,10 +1404,10 @@
             })),
             subtotal: subtotal,
             status: 'pending',
+            location: window.orderLocation || { isGambia: false },
+            deliveryType: window.orderLocation?.isGambia ? 'local' : 'international',
+            requiresShipping: !window.orderLocation?.isGambia,
             paymentStatus: 'pending',
-            requiresShipping: requiresShipping,  // Shipping needed flag
-            isInternational: requiresShipping,   // International order flag
-            deliveryType: requiresShipping ? 'international' : 'local',  // Delivery type
             created: serverTimestamp(),  // Admin expects 'created' not 'createdAt'
             updated: serverTimestamp()
           });

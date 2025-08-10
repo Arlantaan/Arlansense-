@@ -1,0 +1,11 @@
+backups\
+node_modules\
+.git\
+*.log
+*.tmp
+*.cache
+.DS_Store
+Thumbs.db
+*.zip
+*.rar
+*.7z

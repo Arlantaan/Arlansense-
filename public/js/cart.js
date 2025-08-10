@@ -8,6 +8,7 @@ class CartManager {
   }
 
   init() {
+    this.fixCartImages(); // Fix any existing cart items with wrong images
     this.updateCartDisplay();
     this.setupEventListeners();
     this.trackCartAnalytics();
@@ -34,13 +35,17 @@ class CartManager {
   }
 
   addItem(product) {
+    console.log('CartManager.addItem called with:', product);
+    
     // Validate product data
     if (!this.validateProduct(product)) {
+      console.error('Product validation failed:', product);
       throw new Error('Invalid product data');
     }
 
     // Check cart limits
     if (this.cart.length >= this.maxItems) {
+      console.error('Cart limit reached:', this.cart.length, '>=', this.maxItems);
       throw new Error(`Cart limit reached (${this.maxItems} items)`);
     }
 
@@ -53,14 +58,20 @@ class CartManager {
       }
       existingItem.quantity = newQuantity;
     } else {
-      this.cart.push({
+      const cartItem = {
         id: product.id || this.generateId(),
         name: product.name,
         price: parseFloat(product.price),
         quantity: product.quantity || 1,
         image: product.image || product.img,
         category: product.category || 'perfume'
-      });
+      };
+      
+      this.cart.push(cartItem);
+      
+      // Debug log for troubleshooting
+      console.log('Added to cart:', cartItem);
+      console.log('Cart now contains:', this.cart.length, 'items');
     }
 
     this.saveCart();
@@ -101,6 +112,31 @@ class CartManager {
     this.showNotification('Cart cleared', 'info');
   }
 
+  // Fix cart items with incorrect image paths
+  fixCartImages() {
+    const imageMap = {
+      'soleil': 'images/grace.webp',
+      'nuit': 'images/blackbottle.webp', 
+      'blush': 'images/blush.webp',
+      'sensation-oil': 'images/perfume_oil2.webp'
+    };
+
+    let fixed = false;
+    this.cart.forEach(item => {
+      const correctImage = imageMap[item.id];
+      if (correctImage && item.image !== correctImage) {
+        console.log(`Fixing ${item.name}: ${item.image} → ${correctImage}`);
+        item.image = correctImage;
+        fixed = true;
+      }
+    });
+
+    if (fixed) {
+      this.saveCart();
+      console.log('Cart images fixed');
+    }
+  }
+
   getCart() {
     return [...this.cart];
   }
@@ -118,10 +154,27 @@ class CartManager {
   }
 
   validateProduct(product) {
-    return product && 
-           product.name && 
-           typeof product.price === 'number' && 
-           product.price > 0;
+    console.log('Validating product:', product);
+    
+    if (!product) {
+      console.error('Product is null or undefined');
+      return false;
+    }
+    
+    if (!product.name) {
+      console.error('Product name is missing');
+      return false;
+    }
+    
+    // Handle both number and string prices
+    const price = parseFloat(product.price);
+    if (isNaN(price) || price <= 0) {
+      console.error('Invalid product price:', product.price);
+      return false;
+    }
+    
+    console.log('Product validation passed');
+    return true;
   }
 
   generateId() {
@@ -151,6 +204,12 @@ class CartManager {
 
     if (!cartContainer) return;
 
+    // Debug cart items
+    console.log('Rendering cart page. Cart items:', this.cart);
+    this.cart.forEach(item => {
+      console.log(`Item: ${item.name}, Image: ${item.image || item.img || 'NOT SET'}`);
+    });
+
     if (this.isEmpty()) {
       cartContainer.innerHTML = '';
       if (emptyMessage) emptyMessage.style.display = 'block';
@@ -166,10 +225,11 @@ class CartManager {
       <div class="cart-item p-3 mb-3" data-id="${item.id}">
         <div class="row align-items-center">
           <div class="col-md-2">
-            <img src="${item.image}" alt="${this.escapeHtml(item.name)}" 
+            <img src="${item.image || item.img}" alt="${this.escapeHtml(item.name)}" 
                  class="img-fluid rounded"
                  style="width: 80px; height: 80px; object-fit: cover;"
-                 onerror="this.src='https://via.placeholder.com/80x80?text=Error'">
+                 onerror="console.log('Image failed to load:', '${item.image || item.img}'); this.style.display='none';"
+                 onload="console.log('Image loaded successfully:', this.src)">
           </div>
           <div class="col-md-4">
             <h5 class="mb-1 text-white">${this.escapeHtml(item.name)}</h5>
