@@ -25,6 +25,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
     }
 
     .header-logo {
@@ -367,6 +368,23 @@
       transform: translateY(-1px);
     }
 
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      border: none;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #20c997, #28a745);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      color: #fff;
+    }
+
     /* Filters */
     .filter-section {
       background: rgba(35, 32, 28, 0.8);
@@ -389,6 +407,72 @@
       padding: 1.5rem;
       margin-bottom: 2rem;
       height: 300px;
+    }
+
+    /* Analytics Summary Cards */
+    .analytics-summary-card {
+      background: rgba(35, 32, 28, 0.8);
+      border: 1px solid rgba(139, 92, 42, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .analytics-summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(139, 92, 42, 0.2);
+    }
+
+    .analytics-summary-card h6 {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .analytics-summary-card p {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    /* Chart Loading State */
+    .chart-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+    }
+
+    .chart-loading i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .chart-container canvas {
+      display: none;
+    }
+
+    .chart-container.charts-loaded canvas {
+      display: block;
+    }
+
+    .chart-container.charts-loaded .chart-loading {
+      display: none;
     }
 
     /* User Management */
@@ -470,6 +554,8 @@
       width: 100%;
       margin-top: 1rem;
     }
+    
+    /* Scrolling handled by main CSS file */
   </style>
 </head>
 <body>
@@ -536,6 +622,11 @@
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contacts" type="button" role="tab">
               <i class="bi bi-envelope"></i> Contacts
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery" type="button" role="tab">
+              <i class="bi bi-truck"></i> Delivery Addresses
             </button>
           </li>
           <li class="nav-item" role="presentation">
@@ -663,18 +754,57 @@
 
       <!-- Analytics Tab -->
       <div class="tab-pane fade" id="analytics" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
         <h3><i class="bi bi-graph-up"></i> Business Analytics</h3>
+          <button class="btn btn-admin" id="refreshAnalytics" onclick="refreshAnalytics()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Charts
+          </button>
+        </div>
+        
+        <!-- Analytics Summary -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Total Orders</h6>
+              <p id="analyticsTotalOrders">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Total Revenue</h6>
+              <p id="analyticsTotalRevenue">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Avg Order Value</h6>
+              <p id="analyticsAvgOrder">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Top Product</h6>
+              <p id="analyticsTopProduct">-</p>
+            </div>
+          </div>
+        </div>
         
         <div class="row">
           <div class="col-md-6">
             <div class="chart-container">
               <h5>Sales Trend (Last 30 Days)</h5>
+              <div id="salesChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
               <canvas id="salesChart"></canvas>
             </div>
           </div>
           <div class="col-md-6">
             <div class="chart-container">
               <h5>Top Products</h5>
+              <div id="productsChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
               <canvas id="productsChart"></canvas>
             </div>
           </div>
@@ -684,12 +814,18 @@
           <div class="col-md-6">
             <div class="chart-container">
               <h5>Order Status Distribution</h5>
+              <div id="statusChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
               <canvas id="statusChart"></canvas>
             </div>
           </div>
           <div class="col-md-6">
             <div class="chart-container">
               <h5>Revenue by Month</h5>
+              <div id="revenueChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
               <canvas id="revenueChart"></canvas>
             </div>
           </div>
@@ -847,6 +983,128 @@
         </div>
       </div>
 
+      <!-- Delivery Addresses Tab -->
+      <div class="tab-pane fade" id="delivery" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-truck"></i> Live Delivery Locations</h3>
+          <div class="d-flex gap-2">
+            <button class="btn btn-admin" id="refreshDeliveryMap">
+              <i class="bi bi-arrow-clockwise"></i> Refresh Map
+            </button>
+            <button class="btn btn-admin" id="exportDeliveryRoutes">
+              <i class="bi bi-download"></i> Export Routes
+            </button>
+          </div>
+        </div>
+
+        <!-- Delivery Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-truck"></i></div>
+              <div class="card-value" id="pendingDeliveries">0</div>
+              <div class="card-label">Pending Deliveries</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-geo-alt"></i></div>
+              <div class="card-value" id="gpsOrders">0</div>
+              <div class="card-label">GPS Locations</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-clock"></i></div>
+              <div class="card-value" id="avgDeliveryTime">--</div>
+              <div class="card-label">Avg Delivery Time</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-check-circle"></i></div>
+              <div class="card-value" id="completedToday">0</div>
+              <div class="card-label">Completed Today</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Map Container -->
+        <div class="mb-4">
+          <div class="dashboard-card">
+            <h5 class="mb-3"><i class="bi bi-map"></i> Live Delivery Map</h5>
+            <div id="deliveryMapContainer" style="height: 400px; border-radius: 8px; background: #2a2a2a; border: 1px solid rgba(139, 92, 42, 0.3); position: relative;">
+              <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                <div class="text-center">
+                  <i class="bi bi-map" style="font-size: 3rem; color: #8B5C2A;"></i>
+                  <p class="mt-2">Interactive map will load here<br><small>Click "Load Map" to display delivery locations</small></p>
+                  <button class="btn btn-admin mt-2" id="loadMapBtn">
+                    <i class="bi bi-geo-alt"></i> Load Map
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delivery Orders Table -->
+        <div class="table-responsive">
+          <table class="table admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Phone</th>
+                <th>GPS Location</th>
+                <th>Delivery Address</th>
+                <th>Status</th>
+                <th>Distance</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="deliveryOrdersList">
+              <tr>
+                <td colspan="8" class="text-center text-muted py-4">
+                  <i class="bi bi-truck" style="font-size: 2rem; color: #8B5C2A;"></i>
+                  <p class="mt-2">Loading delivery orders...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Quick Actions for Drivers -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="dashboard-card">
+              <h6><i class="bi bi-phone"></i> Quick Driver Tools</h6>
+              <div class="d-flex gap-2 flex-wrap mt-3">
+                <button class="btn btn-sm btn-admin" id="callAllCustomers">
+                  <i class="bi bi-telephone"></i> Notify All Customers
+                </button>
+                <button class="btn btn-sm btn-admin" id="generateRoutes">
+                  <i class="bi bi-map"></i> Optimize Routes
+                </button>
+                <button class="btn btn-sm btn-admin" id="exportGPSList">
+                  <i class="bi bi-list"></i> Export GPS List
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="dashboard-card">
+              <h6><i class="bi bi-info-circle"></i> Delivery Instructions</h6>
+              <ul class="list-unstyled mt-3 small text-muted">
+                <li><i class="bi bi-1-circle"></i> Click GPS coordinates to open navigation</li>
+                <li><i class="bi bi-2-circle"></i> Use "Call Customer" for direct contact</li>
+                <li><i class="bi bi-3-circle"></i> Update status after delivery completion</li>
+                <li><i class="bi bi-4-circle"></i> Red pins = Urgent deliveries</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Settings Tab -->
       <div class="tab-pane fade" id="settings" role="tabpanel">
         <h3><i class="bi bi-gear"></i> System Settings</h3>
@@ -973,6 +1231,7 @@
   <script src="js/shared-utils.js"></script>
   <script src="js/location-utils.js"></script>
   <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
   <script>
     // Initialize Vanta.js background using shared function
     if (window.AnimationUtils) {

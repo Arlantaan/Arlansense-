@@ -96,28 +96,47 @@ p {
 .hero {
   height: 100vh;
   position: relative;
-  background-image: url('../images/2151839595.webp');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   color: var(--white);
-  overflow: hidden;
+  /* Vanta.js will handle the background */
+  background: transparent;
+  min-height: 100vh;
+  width: 100%;
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(139, 92, 42, 0.8), rgba(0, 0, 0, 0.6));
+/* Ensure Vanta.js waves are visible */
+.hero canvas {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+  pointer-events: none;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+/* Additional Vanta.js canvas styling */
+.hero canvas:first-child {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 0 !important;
+}
+
+.hero > div {
+  position: relative;
   z-index: 1;
 }
+
+
 
 .hero-content {
   position: relative;
@@ -516,4 +535,978 @@ p {
 
 #contactSubmitBtn .btn-spinner:not(.d-none) {
   opacity: 1;
+}
+
+/* ===== MOBILE CART TOAST NOTIFICATIONS ===== */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 350px;
+}
+
+.toast {
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transform: translateX(100%);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast-success {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.toast-error {
+  background: linear-gradient(135deg, #dc3545, #e74c3c);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.toast-info {
+  background: linear-gradient(135deg, #17a2b8, #20c997);
+  border: 1px solid rgba(23, 162, 184, 0.3);
+}
+
+/* Mobile toast optimizations */
+@media (max-width: 768px) {
+  .toast-container {
+    top: 80px;
+    right: 15px;
+    left: 15px;
+    max-width: none;
+    width: auto;
+  }
+  
+  .toast {
+    width: 100%;
+    padding: 20px;
+    font-size: 16px;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(-100%);
+  }
+  
+  .toast.show {
+    transform: translateY(0);
+  }
+  
+  .toast-body {
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    top: 70px;
+    right: 10px;
+    left: 10px;
+  }
+  
+  .toast {
+    padding: 18px;
+    font-size: 15px;
+    border-radius: 14px;
+  }
+}
+
+/* ===== COMPREHENSIVE SCROLLING FIXES ===== */
+
+/* Global scrolling behavior */
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 80px; /* Account for fixed navbar */
+}
+
+body {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Prevent horizontal scrolling on all elements */
+* {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Back to top button - REMOVED */
+
+/* GPS Location Button Styling */
+#useLocationBtn {
+  background: linear-gradient(45deg, #007bff, #0056b3) !important;
+  border: none !important;
+  font-size: 1.1rem !important;
+  padding: 15px !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 15px rgba(0,123,255,0.3) !important;
+  transition: all 0.3s ease !important;
+  font-weight: 600 !important;
+}
+
+#useLocationBtn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0,123,255,0.4) !important;
+}
+
+#useLocationBtn:disabled {
+  opacity: 0.7 !important;
+  transform: none !important;
+}
+
+#useLocationBtn.btn-success {
+  background: linear-gradient(45deg, #28a745, #20c997) !important;
+  box-shadow: 0 4px 15px rgba(40,167,69,0.3) !important;
+}
+
+/* GPS Status Display */
+#gpsStatus {
+  border-left: 4px solid #28a745 !important;
+  background: rgba(40,167,69,0.1) !important;
+  border-color: #28a745 !important;
+}
+
+#gpsCoordinates a {
+  font-weight: 600 !important;
+  text-decoration: none !important;
+}
+
+#gpsCoordinates a:hover {
+  text-decoration: underline !important;
+}
+
+/* Manual Address Section */
+#manualAddressSection {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Payment Method Selection Styling */
+.payment-methods {
+  margin-top: 1rem;
+}
+
+.payment-option {
+  position: relative;
+}
+
+.payment-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+}
+
+.payment-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  border: 2px solid #e9ecef;
+  border-radius: 15px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 0;
+  position: relative;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+/* Available Payment Card (Cash) */
+.payment-card-available {
+  border: 2px solid #8B5C2A;
+  background: linear-gradient(135deg, #fff 0%, rgba(139,92,42,0.02) 100%);
+  box-shadow: 0 4px 20px rgba(139,92,42,0.15);
+}
+
+.payment-card-available:hover {
+  border-color: #6d4422;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 25px rgba(139,92,42,0.25);
+}
+
+.payment-option input[type="radio"]:checked + .payment-card-available {
+  border-color: #6d4422;
+  background: linear-gradient(135deg, rgba(139,92,42,0.08) 0%, rgba(139,92,42,0.03) 100%);
+  box-shadow: 0 6px 25px rgba(139,92,42,0.3);
+}
+
+/* Coming Soon Payment Cards */
+.payment-card-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.payment-card-disabled:hover {
+  transform: none;
+  border-color: #dee2e6;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.coming-soon-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.payment-icon {
+  font-size: 2rem;
+  margin-right: 1rem;
+  min-width: 60px;
+  text-align: center;
+}
+
+.payment-details {
+  flex: 1;
+}
+
+.payment-details h6 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.payment-details small {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.payment-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
+.payment-badge .badge {
+  font-size: 0.7rem;
+  padding: 0.25em 0.5em;
+}
+
+/* Payment card disabled state */
+.payment-option input[type="radio"]:disabled + .payment-card {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #f8f9fa;
+}
+
+.payment-option input[type="radio"]:disabled + .payment-card:hover {
+  transform: none;
+  border-color: #e9ecef;
+}
+
+/* Enhanced Payment Details */
+.payment-details h5 {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.payment-details h6 {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.payment-details p {
+  color: #6c757d;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.payment-details small.text-success {
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+/* Coming Soon Section Styling */
+.coming-soon-section h6 {
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
+}
+
+/* Mobile Payment Optimizations */
+@media (max-width: 768px) {
+  .payment-card {
+    padding: 1.25rem;
+    margin-bottom: 0.75rem;
+    border-radius: 12px;
+  }
+  
+  .payment-card-available {
+    padding: 1.5rem;
+  }
+  
+  .payment-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    min-width: 70px;
+  }
+  
+  .payment-details h5 {
+    font-size: 1.15rem;
+  }
+  
+  .payment-details h6 {
+    font-size: 0.9rem;
+  }
+  
+  .payment-details p {
+    font-size: 0.9rem;
+  }
+  
+  .payment-details small {
+    font-size: 0.8rem;
+  }
+  
+  .payment-badge {
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+  
+  .coming-soon-section {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+  
+  .coming-soon-section .payment-card {
+    padding: 1rem;
+  }
+  
+  .coming-soon-section .payment-icon {
+    font-size: 1.8rem;
+    min-width: 55px;
+  }
+}
+
+/* Mobile GPS Button Optimizations */
+@media (max-width: 768px) {
+  #useLocationBtn {
+    font-size: 1.2rem !important;
+    padding: 18px !important;
+    min-height: 60px !important;
+    border-radius: 12px !important;
+  }
+  
+  #gpsStatus {
+    font-size: 0.9rem !important;
+    padding: 12px !important;
+  }
+  
+  #manualAddressSection textarea {
+    min-height: 80px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Mobile scrolling optimizations */
+@media (max-width: 768px) {
+  html {
+    scroll-padding-top: 60px;
+  }
+
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: auto;
+  }
+
+  /* Fix for iOS Safari 100vh issues */
+  .hero, .main-content {
+    min-height: -webkit-fill-available;
+    min-height: 100vh;
+  }
+
+
+}
+
+/* Vanta.js background scrolling fixes */
+.vanta-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none !important;
+}
+
+.vanta-container canvas {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  pointer-events: none !important;
+}
+
+/* Mobile Vanta.js fix - simple pointer-events disable */
+@media (max-width: 768px) {
+  .vanta-container,
+  .vanta-container canvas,
+  .hero canvas {
+    pointer-events: none !important;
+  }
+
+  /* Track page Vanta.js fixes */
+  body.track-page .vanta-container,
+  body.track-page .vanta-container canvas,
+  body.track-page .hero canvas {
+    pointer-events: none !important;
+    touch-action: none !important;
+  }
+}
+
+/* Container scrolling fixes */
+.hero, .main-content, .track-container, .checkout-content,
+.order-status-container, .success-container, .admin-header {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Card and content scrolling */
+.card, .glass-effect, .dashboard-card, .order-card {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Smooth scrolling for all interactive elements */
+a[href^="#"], .btn, button {
+  scroll-behavior: smooth;
+}
+
+/* Fix for sticky elements */
+.sticky-top, .navbar {
+  z-index: 1030;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .btn, button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ===== PREMIUM MOBILE CART OPTIMIZATIONS ===== */
+
+/* Compact Mobile cart item layout */
+@media (max-width: 768px) {
+  .cart-item {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Compact row layout - keep items horizontal */
+  .cart-item .row {
+    flex-direction: row !important;
+    align-items: center !important;
+    text-align: left !important;
+  }
+  
+  .cart-item .col-md-2,
+  .cart-item .col-md-4,
+  .cart-item .col-md-3,
+  .cart-item .col-md-1 {
+    flex: none !important;
+    max-width: none !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Compact image */
+  .cart-item .col-md-2 {
+    flex: 0 0 60px !important;
+    width: 60px !important;
+  }
+  
+  .cart-item img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 8px !important;
+    object-fit: cover;
+  }
+  
+  /* Product info section */
+  .cart-item .col-md-4 {
+    flex: 1 !important;
+    padding-left: 12px !important;
+  }
+  
+  .cart-item h5 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2;
+  }
+  
+  .cart-item .text-muted {
+    font-size: 0.8rem !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    margin-bottom: 0 !important;
+  }
+  
+  /* Compact quantity controls */
+  .cart-item .col-md-3 {
+    flex: 0 0 90px !important;
+    width: 90px !important;
+  }
+  
+  .cart-item .d-flex.align-items-center {
+    justify-content: center !important;
+    gap: 8px !important;
+    margin: 0 !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+  
+  .cart-item .btn {
+    min-height: 32px !important;
+    min-width: 32px !important;
+    padding: 4px !important;
+    font-size: 14px !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+  }
+  
+  .cart-item .mx-3 {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    margin: 0 6px !important;
+    min-width: auto !important;
+    background: none !important;
+    padding: 0 !important;
+  }
+  
+  /* Price section */
+  .cart-item .col-md-2:last-of-type {
+    flex: 0 0 70px !important;
+    width: 70px !important;
+    text-align: right !important;
+  }
+  
+  .cart-item .text-warning.fw-bold {
+    font-size: 1rem !important;
+    color: #e6c98a !important;
+    background: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    display: block !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2;
+  }
+  
+  /* Delete button */
+  .cart-item .col-md-1 {
+    flex: 0 0 40px !important;
+    width: 40px !important;
+  }
+  
+  .cart-item .btn-outline-danger {
+    background: rgba(220, 53, 69, 0.1) !important;
+    border: 1px solid rgba(220, 53, 69, 0.3) !important;
+    color: #ff6b7d !important;
+    min-height: 32px !important;
+    min-width: 32px !important;
+    padding: 4px !important;
+    font-size: 12px !important;
+  }
+}
+
+/* Small mobile screens optimization */
+@media (max-width: 480px) {
+  .cart-item {
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+    border-radius: 10px !important;
+  }
+  
+  .cart-item img {
+    width: 45px !important;
+    height: 45px !important;
+  }
+  
+  .cart-item h5 {
+    font-size: 0.9rem !important;
+  }
+  
+  .cart-item .text-muted {
+    font-size: 0.75rem !important;
+  }
+  
+  .cart-item .text-warning.fw-bold {
+    font-size: 0.9rem !important;
+  }
+  
+  .cart-item .btn {
+    min-height: 28px !important;
+    min-width: 28px !important;
+    font-size: 12px !important;
+  }
+  
+  .cart-item .mx-3 {
+    font-size: 14px !important;
+  }
+}
+
+/* Mobile cart total styling */
+@media (max-width: 768px) {
+  #cart-total {
+    font-size: 2.2rem !important;
+    background: linear-gradient(135deg, rgba(230, 201, 138, 0.2), rgba(191, 167, 106, 0.2)) !important;
+    padding: 20px !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(230, 201, 138, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    color: #e6c98a !important;
+    font-weight: 800 !important;
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  /* Cart action buttons */
+  .btn-custom,
+  .btn-outline-custom {
+    width: 100% !important;
+    padding: 18px 24px !important;
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    border-radius: 20px !important;
+    margin: 10px 0 !important;
+    min-height: 56px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .btn-custom {
+    background: linear-gradient(135deg, #e6c98a, #bfa76a) !important;
+    color: #23201c !important;
+    box-shadow: 0 6px 20px rgba(230, 201, 138, 0.4);
+  }
+  
+  .btn-custom:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 15px rgba(230, 201, 138, 0.3);
+  }
+  
+  .btn-outline-custom {
+    background: rgba(230, 201, 138, 0.1) !important;
+    border: 2px solid rgba(230, 201, 138, 0.5) !important;
+    color: #e6c98a !important;
+  }
+  
+  .btn-outline-custom:active {
+    background: rgba(230, 201, 138, 0.2) !important;
+    transform: translateY(1px);
+  }
+}
+
+/* ===== INDUSTRY STANDARD MOBILE CART (Amazon/Shopify Style) ===== */
+@media (max-width: 768px) {
+  /* Simple full-screen cart layout */
+  body.cart-page {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Perfect track page scrolling - Same as cart */
+  body.track-page {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Track page hero optimizations */
+  body.track-page .hero {
+    min-height: 100vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 2rem 0 !important;
+  }
+
+  body.track-page .track-container {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: calc(100vh - 120px) !important;
+    border-radius: 15px !important;
+    margin: 1rem !important;
+  }
+
+  body.track-page .main-content {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    height: 100vh !important;
+  }
+
+  body.cart-page .hero {
+    height: 100vh !important;
+    min-height: 100vh !important;
+    max-height: 100vh !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  
+  /* Cart header - remove if not needed, let navbar handle it */
+  .cart-header {
+    display: none !important;
+  }
+  
+  /* Main cart content - scrollable middle section */
+  .cart-container {
+    position: fixed !important;
+    top: 80px !important;
+    bottom: 160px !important;
+    left: 0 !important;
+    right: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding: 20px !important;
+    margin: 0 !important;
+    background: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Cart items - natural scrolling */
+  #cart-items {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+    z-index: auto !important;
+    background: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Cart footer - fixed at absolute bottom */
+  #cart-actions-footer {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100vw !important;
+    background: rgba(35, 32, 28, 0.98) !important;
+    backdrop-filter: blur(15px) !important;
+    padding: 20px !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    z-index: 9999 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4) !important;
+    min-height: 140px !important;
+  }
+  
+  /* Total and buttons styling */
+  .d-flex.justify-content-between {
+    flex-direction: column !important;
+    gap: 15px !important;
+    align-items: stretch !important;
+  }
+  
+  .d-flex.justify-content-between > div {
+    width: 100% !important;
+    flex: none !important;
+    text-align: center !important;
+  }
+  
+  #cart-total {
+    font-size: 1.8rem !important;
+    font-weight: 700 !important;
+    color: #e6c98a !important;
+    background: none !important;
+    padding: 0 !important;
+    border: none !important;
+    margin: 0 !important;
+  }
+  
+  /* Footer buttons styling */
+  #cart-actions-footer .btn-custom,
+  #cart-actions-footer .btn-outline-custom {
+    width: 100% !important;
+    min-height: 50px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+}
+
+/* ===== MOBILE ADD TO CART BUTTON ENHANCEMENTS ===== */
+@media (max-width: 768px) {
+  .btn-add-to-cart {
+    min-height: 50px !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    border-radius: 16px !important;
+    padding: 14px 20px !important;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .btn-add-to-cart:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .btn-add-to-cart.loading {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .btn-add-to-cart.success {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+    border-color: #28a745 !important;
+    color: white !important;
+  }
+  
+  /* Product cards mobile spacing */
+  .card {
+    margin-bottom: 25px !important;
+    border-radius: 20px !important;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .card-body {
+    padding: 20px !important;
+  }
+  
+  .card-title {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 12px !important;
+  }
+  
+  .card-price {
+    font-size: 1.4rem !important;
+    color: #e6c98a !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-add-to-cart {
+    min-height: 48px !important;
+    font-size: 1rem !important;
+    padding: 12px 18px !important;
+    border-radius: 14px !important;
+  }
+  
+  .card-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .card-price {
+    font-size: 1.3rem !important;
+  }
+}
+
+/* Performance optimizations */
+.hero, .main-content, .track-container {
+  will-change: scroll-position;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Fix for momentum scrolling on iOS */
+@supports (-webkit-overflow-scrolling: touch) {
+  .hero, .main-content, .track-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: auto;
+  }
+}
+
+/* Ensure proper scrolling on all devices */
+.main-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: calc(100vh - 80px);
+}
+
+/* Fix for admin panel scrolling */
+.admin-header, .admin-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+.tab-content {
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for scroll-up on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  html {
+    scroll-behavior: auto; /* Disable smooth scroll on touch devices for better performance */
+  }
+  
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Responsive scrolling adjustments */
+@media (max-width: 576px) {
+  html {
+    scroll-padding-top: 50px;
+  }
+  
+  .hero {
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  .main-content {
+    min-height: calc(100vh - 60px);
+  }
 }

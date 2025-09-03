@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Track Order - Sensation by Sanu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
+
+  <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .main-content {
+      flex: 1;
+    }
+    
+    /* Vanta.js background container */
+    .vanta-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    /* Ensure Vanta.js canvas is visible */
+    .vanta-container canvas {
+      opacity: 1 !important;
+      visibility: visible !important;
+      display: block !important;
+    }
+    
+    /* Override any conflicting background */
+    .hero {
+      background: transparent !important;
+    }
+    
+    .hero::before {
+      display: none !important;
+    }
+    
+    .hero {
+      color: white;
+      padding: 4rem 0;
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* Vanta.js will handle the background */
+    }
+    
+    .track-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin: 1rem auto;
+      max-width: 100%;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+    
+    @media (min-width: 768px) {
+      .track-container {
+        padding: 2rem;
+        margin: 2rem auto;
+        max-width: 800px;
+      }
+    }
+    
+    .search-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid #e9ecef;
+    }
+    
+    .btn-track {
+      background: linear-gradient(135deg, #e6c98a, #d4b06a);
+      border: none;
+      color: #23201c;
+      font-weight: bold;
+      padding: 12px 30px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-track:hover {
+      background: linear-gradient(135deg, #d4b06a, #e6c98a);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 176, 106, 0.4);
+    }
+    
+    .order-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(233, 236, 239, 0.5);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (max-width: 767px) {
+      .order-card {
+        padding: 1rem;
+        margin: 0.5rem;
+        border-radius: 10px;
+      }
+      
+      .order-card .row {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .order-card .col-md-6,
+      .order-card .col-md-4,
+      .order-card .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .order-card {
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+    
+    .order-card:hover {
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .order-header {
+      border-bottom: 1px solid #e9ecef;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+      .order-header {
+        padding-bottom: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+    }
+    
+    .order-id {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #23201c;
+    }
+    
+    .order-date {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+    
+
+    
+    /* Animated Progress Bar */
+    .animated-progress-container {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (min-width: 768px) {
+      .animated-progress-container {
+        border-radius: 25px;
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+    }
+    
+    .progress-bar-wrapper {
+      position: relative;
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+      z-index: 1;
+    }
+    
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FFD700 0%, #28a745 100%);
+      border-radius: 4px;
+      transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar-fill::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      animation: progressShine 2s infinite;
+    }
+    
+    @keyframes progressShine {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .progress-stages {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (min-width: 768px) {
+      .progress-stages {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+    }
+    
+    .progress-stage {
+      text-align: center;
+      position: relative;
+      padding: 0.5rem;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.5);
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (max-width: 767px) {
+      .progress-stage {
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .progress-stage {
+        flex: 1;
+        padding: 0 0.5rem;
+        min-width: 0;
+        background: transparent;
+      }
+    }
+    
+    .stage-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 0.75rem;
+      font-size: 1.2rem;
+      transition: all 0.5s ease;
+      border: 3px solid transparent;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .stage-icon.completed {
+      background: #28a745;
+      color: white;
+      border-color: #28a745;
+      animation: completedBounce 0.6s ease;
+    }
+    
+    .stage-icon.active {
+      background: #FFD700;
+      color: #23201c;
+      border-color: #FFD700;
+      animation: activePulse 1.5s infinite;
+    }
+    
+    .stage-icon.pending {
+      background: #e9ecef;
+      color: #6c757d;
+      border-color: #e9ecef;
+    }
+    
+    @keyframes completedBounce {
+      0%, 20%, 60%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      80% { transform: translateY(-5px); }
+    }
+    
+    @keyframes activePulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+      50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+    }
+    
+    .stage-label {
+      font-weight: bold;
+      color: #23201c;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+      min-height: 2.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .stage-time {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: 0.5rem;
+      line-height: 1.2;
+      min-height: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+
+    
+    .order-items {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (max-width: 767px) {
+      .order-items {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      
+      .item-row {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 6px;
+      }
+      
+      .item-row .col-md-6,
+      .item-row .col-md-3,
+      .item-row .col-md-2 {
+        flex: 0 0 100%;
+        max-width: 100%;
+        text-align: center;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .order-items {
+        padding: 2rem;
+        margin: 2rem 0;
+      }
+    }
+    
+    .item-row {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .item-row:last-child {
+      border-bottom: none;
+    }
+    
+    .item-row:hover {
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 8px;
+    }
+    
+    .item-image {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-right: 1rem;
+    }
+    
+    .item-details h6 {
+      margin: 0;
+      color: #23201c;
+      font-weight: 600;
+    }
+    
+    .item-details p {
+      margin: 0;
+      color: #495057;
+      font-size: 0.9rem;
+    }
+    
+    .item-price {
+      font-weight: bold;
+      color: #23201c;
+    }
+    
+    .item-quantity {
+      color: #495057;
+      font-size: 0.9rem;
+    }
+    
+    /* Override Bootstrap text-muted for better contrast */
+    .text-muted {
+      color: #495057 !important;
+    }
+    
+    /* Ensure order items text is readable */
+    .order-items h6 {
+      color: #23201c !important;
+      font-weight: 600;
+    }
+    
+    .order-items strong {
+      color: #23201c !important;
+      font-weight: 600;
+    }
+    
+    .order-items small {
+      color: #495057 !important;
+    }
+    
+    .total-section {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: right;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (max-width: 767px) {
+      .total-section {
+        padding: 1rem;
+        margin-top: 1rem;
+        text-align: center;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .total-section {
+        padding: 2rem;
+        margin-top: 2rem;
+      }
+    }
+    
+    .total-section h5 {
+      color: #23201c;
+      font-weight: bold;
+      margin: 0;
+    }
+    
+    .order-filter-section {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(233, 236, 239, 0.5);
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    @media (max-width: 767px) {
+      .order-filter-section {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+    }
+    
+    @media (min-width: 768px) {
+      .order-filter-section {
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+    }
+    
+    .form-check-input:checked {
+      background-color: #e6c98a;
+      border-color: #e6c98a;
+    }
+    
+    .completed-order-card {
+      background: rgba(248, 249, 250, 0.8);
+      border: 1px solid rgba(233, 236, 239, 0.5);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    .completed-order-card:hover {
+      opacity: 1;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .order-status-badge.delivered {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .order-status-badge.cancelled {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    /* Mobile-specific scrolling fixes */
+    @media (max-width: 767px) {
+      .hero {
+        min-height: auto;
+        padding: 2rem 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      
+      .track-container {
+        margin: 0.5rem;
+        padding: 1rem;
+        border-radius: 10px;
+      }
+      
+      .search-box {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .btn-track {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 1rem;
+      }
+    }
+    
+    /* Scrolling handled by main CSS file */
+  </style>
+</head>
+<body>
+  <!-- Vanta.js Background -->
+      <div class="vanta-container" id="vanta-bg"></div>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link active" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <!-- Hero Section -->
+    <section class="hero hero-responsive">
+      <div class="container text-center">
+        <h1 class="display-4 fw-bold mb-3 text-responsive">Track Your Order</h1>
+        <p class="lead text-responsive">Enter your order ID or email to check your order status</p>
+        
+        <!-- Search Section -->
+        <div class="track-container responsive-card">
+      <div class="search-box responsive-card">
+        <form id="trackingForm" class="form-responsive">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label for="orderIdInput" class="form-label fw-bold text-responsive">Order ID or Email</label>
+              <input type="text" id="orderIdInput" class="form-control form-control-lg" 
+                     placeholder="Enter Order ID (SBS-xxxxx) or Email Address" required>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+              <button type="submit" class="btn btn-track btn-lg w-100 btn-responsive">
+                <i class="bi bi-search me-2"></i>Track Order
+            </button>
+            </div>
+          </div>
+          </form>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+        <div class="spinner-border text-primary mb-3" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <h5>Searching for your order...</h5>
+        <p class="text-muted">Please wait while we fetch your tracking information</p>
+      </div>
+
+      <!-- No Results -->
+      <div id="noResults" class="no-results" style="display: none;">
+        <i class="bi bi-search" style="font-size: 3rem; color: #dee2e6;"></i>
+        <h4 class="mt-3">Order Not Found</h4>
+        <p>We couldn't find any orders matching your search. Please check your Order ID or email address and try again.</p>
+        <small class="text-muted">💡 Tip: Order IDs start with "SBS-" followed by numbers</small>
+      </div>
+      
+      <!-- Order Results -->
+      <div id="orderResults" style="display: none;">
+        <!-- Order Filter Toggle -->
+        <div class="order-filter-section mb-4 responsive-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 text-responsive">Order Status</h6>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" id="showCompletedOrders">
+              <label class="form-check-label text-responsive" for="showCompletedOrders">
+                Show completed orders
+              </label>
+            </div>
+          </div>
+          <small class="text-muted text-responsive">By default, only active orders are shown</small>
+        </div>
+        
+        <div id="orderDetails"></div>
+        
+        <!-- Completed Orders Section -->
+        <div id="completedOrdersSection" style="display: none;" class="responsive-card">
+          <hr class="my-4">
+          <h6 class="text-muted mb-3 text-responsive">
+            <i class="bi bi-archive me-2"></i>Completed Orders
+          </h6>
+          <div id="completedOrderDetails"></div>
+        </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4 footer-responsive">
+    <div class="container">
+      <p class="mb-0 text-responsive">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/location-utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
+
+  <script>
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('#vanta-bg', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getFirestore, collection, query, where, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    // Initialize Firebase
+    const app = initializeApp(CONFIG.firebase);
+    const db = getFirestore(app);
+
+    // DOM elements
+    const trackingForm = document.getElementById('trackingForm');
+    const orderIdInput = document.getElementById('orderIdInput');
+    const orderResults = document.getElementById('orderResults');
+    const orderDetails = document.getElementById('orderDetails');
+    const completedOrderDetails = document.getElementById('completedOrderDetails');
+    const completedOrdersSection = document.getElementById('completedOrdersSection');
+    const showCompletedOrders = document.getElementById('showCompletedOrders');
+    const noResults = document.getElementById('noResults');
+    const loadingSpinner = document.getElementById('loadingSpinner');
+
+    // Handle form submission
+    trackingForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      console.log('Form submitted');
+      
+      const searchTerm = orderIdInput.value.trim();
+      console.log('Search term:', searchTerm);
+      
+      if (!searchTerm) {
+        console.log('No search term provided');
+        return;
+      }
+
+      showLoading();
+      console.log('Showing loading state');
+      
+      try {
+        const orders = await searchOrders(searchTerm);
+        console.log('Search completed, orders found:', orders.length);
+        
+        if (orders.length > 0) {
+          console.log('Displaying orders');
+          displayOrders(orders);
+        } else {
+          console.log('No orders found, showing no results');
+          showNoResults();
+        }
+      } catch (error) {
+        console.error('Error searching orders:', error);
+        showNoResults();
+      }
+    });
+
+    // Handle completed orders toggle
+    showCompletedOrders.addEventListener('change', () => {
+      if (showCompletedOrders.checked) {
+        completedOrdersSection.style.display = 'block';
+      } else {
+        completedOrdersSection.style.display = 'none';
+      }
+    });
+
+    // Initialize: hide completed orders section by default
+    completedOrdersSection.style.display = 'none';
+
+    // Search orders in Firestore
+    async function searchOrders(searchTerm) {
+      console.log('Searching for:', searchTerm);
+      const ordersRef = collection(db, 'orders');
+      
+      try {
+        // Try to find by order ID first
+        let q = query(ordersRef, where('orderId', '==', searchTerm));
+        console.log('Searching by orderId:', searchTerm);
+        let snapshot = await getDocs(q);
+        console.log('OrderId search results:', snapshot.size);
+        
+        if (snapshot.empty) {
+          // If not found by order ID, try by email
+          console.log('OrderId not found, trying email:', searchTerm);
+          q = query(ordersRef, where('email', '==', searchTerm));
+          snapshot = await getDocs(q);
+          console.log('Email search results:', snapshot.size);
+        }
+        
+        const orders = [];
+        snapshot.forEach(doc => {
+          const orderData = doc.data();
+          console.log('Found order:', orderData.orderId, 'Status:', orderData.status);
+          orders.push({ id: doc.id, ...orderData });
+        });
+        
+        console.log('Total orders found:', orders.length);
+        return orders;
+      } catch (error) {
+        console.error('Error in searchOrders:', error);
+        throw error;
+      }
+    }
+
+    // Separate active and completed orders
+    function separateOrders(orders) {
+      const activeOrders = [];
+      const completedOrders = [];
+      
+      orders.forEach(order => {
+        if (order.status === 'delivered' || order.status === 'cancelled') {
+          completedOrders.push(order);
+        } else {
+          activeOrders.push(order);
+        }
+      });
+      
+      return { activeOrders, completedOrders };
+    }
+
+    // Display orders with clean design
+    let activeListeners = [];
+    
+    function displayOrders(orders) {
+      // Clear existing listeners
+      activeListeners.forEach(unsubscribe => unsubscribe());
+      activeListeners = [];
+      
+      // Separate active and completed orders
+      const { activeOrders, completedOrders } = separateOrders(orders);
+      
+      // Display active orders
+      if (activeOrders.length === 0) {
+        orderDetails.innerHTML = `
+          <div class="text-center py-4">
+            <i class="bi bi-check-circle text-success" style="font-size: 2rem;"></i>
+            <h5 class="mt-3">No Active Orders</h5>
+            <p class="text-muted">All your orders have been completed!</p>
+            ${completedOrders.length > 0 ? '<small class="text-muted">Toggle "Show completed orders" to view your order history</small>' : ''}
+          </div>
+        `;
+      } else {
+        orderDetails.innerHTML = activeOrders.map((order, index) => {
+        const status = order.status || 'pending';
+        
+        return `
+          <div class="order-card" id="order-card-${order.id}">
+            <div class="order-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="order-id">Order #${order.orderId}</div>
+                  <div class="order-date">Placed on ${formatDate(order.created)}</div>
+                </div>
+                <div class="live-indicator">
+                  <div class="live-dot"></div>
+                  Live tracking
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h6 class="mb-3">Customer Information</h6>
+                <p class="mb-2"><strong>Name:</strong> ${order.name}</p>
+                <p class="mb-2"><strong>Email:</strong> ${order.email}</p>
+                <p class="mb-2"><strong>Phone:</strong> ${order.phone}</p>
+              </div>
+              <div class="col-md-6">
+                <h6 class="mb-3">Delivery Address</h6>
+                <p class="mb-2">${order.address || 'Address not provided'}</p>
+              </div>
+            </div>
+
+            <!-- Animated Progress Bar -->
+            <div class="animated-progress-container" id="progress-container-${order.id}">
+              <h6 class="text-center mb-3">Order Progress</h6>
+              
+              <div class="progress-bar-wrapper">
+                <div class="progress-bar-fill" id="progress-bar-${order.id}" style="width: ${getProgressPercentage(status)}%"></div>
+              </div>
+              
+              <div class="progress-stages">
+                <div class="progress-stage">
+                  <div class="stage-icon completed" id="stage-icon-pending-${order.id}">
+                    <i class="bi bi-check-lg"></i>
+                  </div>
+                  <div class="stage-label">Order Received</div>
+                  <div class="stage-time">${formatDate(order.created)}</div>
+                </div>
+                
+                <div class="progress-stage">
+                  <div class="stage-icon ${getStageIconClass(status, 'processing')}" id="stage-icon-processing-${order.id}">
+                    <i class="bi bi-gear-fill"></i>
+                  </div>
+                  <div class="stage-label">Processing</div>
+                  <div class="stage-time" id="stage-time-processing-${order.id}">${getStageTime(status, 'processing')}</div>
+                </div>
+                
+                <div class="progress-stage ${order.deliveryType === 'local' ? 'd-none' : ''}" data-shipping-step>
+                  <div class="stage-icon ${getStageIconClass(status, 'shipped', order.deliveryType !== 'local')}" id="stage-icon-shipped-${order.id}">
+                    <i class="bi bi-truck"></i>
+                  </div>
+                  <div class="stage-label">Shipped</div>
+                  <div class="stage-time" id="stage-time-shipped-${order.id}">${getStageTime(status, 'shipped', order.deliveryType !== 'local')}</div>
+                </div>
+                
+                <div class="progress-stage">
+                  <div class="stage-icon ${getStageIconClass(status, 'delivered')}" id="stage-icon-delivered-${order.id}">
+                    <i class="bi bi-house-check-fill"></i>
+                  </div>
+                  <div class="stage-label">Delivered</div>
+                  <div class="stage-time" id="stage-time-delivered-${order.id}">${getStageTime(status, 'delivered')}</div>
+                </div>
+              </div>
+            </div>
+
+
+
+            <!-- Order Items -->
+            <div class="order-items mb-4">
+              <h6 class="mb-3">Order Items</h6>
+              ${order.cart?.map(item => `
+                <div class="item-row mb-3">
+                  <div>
+                    <strong>${item.name}</strong>
+                    <small class="text-muted d-block">Quantity: ${item.qty}</small>
+                  </div>
+                  <div class="text-end">
+                    <strong>D${item.price?.toLocaleString()}</strong>
+                  </div>
+                </div>
+              `).join('') || '<p class="text-muted">No items found</p>'}
+              
+              <div class="total-section">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">Order Total</h6>
+                  <h5 class="mb-0">D${order.subtotal?.toLocaleString() || '0'}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        }).join('');
+      }
+      
+      // Display completed orders (if any)
+      if (completedOrders.length > 0) {
+        completedOrderDetails.innerHTML = completedOrders.map((order, index) => {
+          const status = order.status || 'pending';
+          
+          return `
+            <div class="order-card completed-order-card" id="completed-order-card-${order.id}">
+              <div class="order-header">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <div class="order-id">Order #${order.orderId}</div>
+                    <div class="order-date">Placed on ${formatDate(order.created)}</div>
+                  </div>
+                  <div class="order-status-badge">
+                    <span class="badge ${status === 'delivered' ? 'bg-success' : 'bg-secondary'}">
+                      ${status === 'delivered' ? 'Delivered' : 'Cancelled'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <h6>Customer Information</h6>
+                  <p><strong>Name:</strong> ${order.name}</p>
+                  <p><strong>Email:</strong> ${order.email}</p>
+                  <p><strong>Phone:</strong> ${order.phone}</p>
+                </div>
+                <div class="col-md-6">
+                  <h6>Delivery Address</h6>
+                  <p>${order.address || 'Address not provided'}</p>
+                </div>
+              </div>
+
+              <!-- Order Items -->
+              <div class="order-items">
+                <h6>Order Items</h6>
+                ${order.cart?.map(item => `
+                  <div class="item-row">
+                    <div>
+                      <strong>${item.name}</strong>
+                      <small class="text-muted d-block">Quantity: ${item.qty}</small>
+                    </div>
+                    <div class="text-end">
+                      <strong>D${item.price?.toLocaleString()}</strong>
+                    </div>
+                  </div>
+                `).join('') || '<p class="text-muted">No items found</p>'}
+                
+                <div class="total-section">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Order Total</h6>
+                    <h5 class="mb-0">D${order.subtotal?.toLocaleString() || '0'}</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        // Show completed orders section only if toggle is checked
+        if (showCompletedOrders.checked) {
+          completedOrdersSection.style.display = 'block';
+        } else {
+          completedOrdersSection.style.display = 'none';
+        }
+      } else {
+        completedOrdersSection.style.display = 'none';
+      }
+      
+      // Set up real-time listeners for active orders only
+      activeOrders.forEach(order => {
+        const orderRef = doc(db, 'orders', order.id);
+        const unsubscribe = onSnapshot(orderRef, (doc) => {
+          if (doc.exists()) {
+            const updatedOrder = doc.data();
+            updateOrderStatus(order.id, updatedOrder);
+          }
+        });
+        activeListeners.push(unsubscribe);
+      });
+      
+      orderResults.style.display = 'block';
+      noResults.style.display = 'none';
+      loadingSpinner.style.display = 'none';
+    }
+
+    // Update order status in real-time with animated progress
+    function updateOrderStatus(orderId, orderData) {
+      const status = orderData.status || 'pending';
+      
+      console.log(`Order ${orderData.orderId} status updated to: ${status}`);
+      
+      // Update animated progress bar
+      const progressBar = document.getElementById(`progress-bar-${orderId}`);
+      if (progressBar) {
+        progressBar.style.width = `${getProgressPercentage(status)}%`;
+      }
+      
+      // Update stage icons
+      const stages = ['processing', 'shipped', 'delivered'];
+      stages.forEach(stage => {
+        const stageIcon = document.getElementById(`stage-icon-${stage}-${orderId}`);
+        const stageTime = document.getElementById(`stage-time-${stage}-${orderId}`);
+        
+        if (stageIcon) {
+          stageIcon.className = `stage-icon ${getStageIconClass(status, stage)}`;
+        }
+        
+        if (stageTime) {
+          stageTime.textContent = getStageTime(status, stage);
+        }
+      });
+      
+
+      
+      // Show notification
+      showStatusNotification(orderData.orderId, status);
+    }
+    
+    // Show status change notification
+    function showStatusNotification(orderId, status) {
+      const messages = {
+        'pending': 'Order confirmed',
+        'processing': 'Order is being processed',
+        'shipped': 'Order has been shipped',
+        'delivered': 'Order delivered!'
+      };
+      
+      const notification = document.createElement('div');
+      notification.className = 'status-update-notification';
+      notification.innerHTML = `
+        <strong>${messages[status] || 'Status updated'}</strong><br>
+        <small>Order #${orderId}</small>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+
+    // Helper functions for animated progress with shipping logic
+    function getProgressPercentage(status, requiresShipping = false) {
+      if (requiresShipping) {
+        // International shipping: 4 stages
+        const progressMap = {
+          'pending': 25,
+          'processing': 50,
+          'shipped': 75,
+          'delivered': 100,
+          'cancelled': 25
+        };
+        return progressMap[status] || 25;
+      } else {
+        // Local delivery: 3 stages (no shipping)
+        const progressMap = {
+          'pending': 33,
+          'processing': 67,
+          'delivered': 100,
+          'cancelled': 33
+        };
+        return progressMap[status] || 33;
+      }
+    }
+    
+    function getStageIconClass(currentStatus, stage, requiresShipping = false) {
+      const statusOrder = requiresShipping ? 
+        ['pending', 'processing', 'shipped', 'delivered'] : 
+        ['pending', 'processing', 'delivered'];
+      
+      const currentIndex = statusOrder.indexOf(currentStatus);
+      const stageIndex = statusOrder.indexOf(stage);
+      
+      if (stageIndex < currentIndex) return 'completed';
+      if (stageIndex === currentIndex) return 'active';
+      return 'pending';
+    }
+    
+    function getStageTime(currentStatus, stage, requiresShipping = false) {
+      const statusOrder = requiresShipping ? 
+        ['pending', 'processing', 'shipped', 'delivered'] : 
+        ['pending', 'processing', 'delivered'];
+      
+      const currentIndex = statusOrder.indexOf(currentStatus);
+      const stageIndex = statusOrder.indexOf(stage);
+      
+      if (stageIndex < currentIndex) {
+        return '✓ Completed';
+      } else if (stageIndex === currentIndex) {
+        const messages = {
+          'processing': requiresShipping ? '⚙️ Preparing shipment...' : '⚙️ Preparing order...',
+          'shipped': '✈️ In transit...',
+          'delivered': requiresShipping ? '📦 Delivered!' : '🚚 Delivered!'
+        };
+        return messages[stage] || 'Active';
+      } else {
+        return '⏳ Pending';
+      }
+    }
+    
+
+    
+    function formatDate(timestamp) {
+      if (!timestamp) return 'N/A';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric',
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    function showLoading() {
+      orderResults.style.display = 'none';
+      noResults.style.display = 'none';
+      loadingSpinner.style.display = 'block';
+    }
+
+    function showNoResults() {
+      orderResults.style.display = 'none';
+      noResults.style.display = 'block';
+      loadingSpinner.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

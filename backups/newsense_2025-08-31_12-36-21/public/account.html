@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Sensation by Sanu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    /* Vanta.js background container */
+    .vanta-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    .main-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 0;
+    }
+    
+    .auth-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+      max-width: 500px;
+      width: 100%;
+      margin: 2rem;
+      position: relative;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .auth-header h2 {
+      color: #23201c;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .auth-header p {
+      color: #6c757d;
+      margin-bottom: 0;
+    }
+    
+    .form-floating label {
+      color: #6c757d;
+    }
+    
+    .form-control {
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+      border-color: #e6c98a;
+      box-shadow: 0 0 0 0.2rem rgba(230, 201, 138, 0.25);
+    }
+    
+    .btn-auth {
+      background: linear-gradient(135deg, #e6c98a, #d4b06a);
+      border: none;
+      color: #23201c;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    
+    .btn-auth:hover {
+      background: linear-gradient(135deg, #d4b06a, #e6c98a);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(212, 176, 106, 0.4);
+    }
+    
+    .btn-google {
+      background: #fff;
+      border: 2px solid #e9ecef;
+      color: #333;
+      font-weight: bold;
+      padding: 0.8rem 2rem;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .btn-google:hover {
+      background: #f8f9fa;
+      border-color: #dee2e6;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 1.5rem 0;
+      color: #6c757d;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e9ecef;
+    }
+    
+    .divider span {
+      padding: 0 1rem;
+      background: rgba(255, 255, 255, 0.95);
+    }
+    
+    .auth-toggle {
+      text-align: center;
+      margin-top: 2rem;
+      color: #6c757d;
+    }
+    
+    .auth-toggle a {
+      color: #e6c98a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    
+    .auth-toggle a:hover {
+      color: #d4b06a;
+    }
+    
+    .alert {
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    
+    .user-dashboard {
+      display: none;
+    }
+    
+    .dashboard-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-history {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .order-item {
+      border: 1px solid #e9ecef;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    
+    .order-item:hover {
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .status-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-processing { background: #ffeaa7; color: #b8860b; }
+    .status-shipped { background: #cce5ff; color: #004085; }
+    .status-delivered { background: #d4edda; color: #155724; }
+    
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
+    }
+    
+    /* Scrolling handled by main CSS file */
+  </style>
+</head>
+<body>
+  <!-- Vanta.js Background -->
+  <div class="vanta-container" id="vanta-background"></div>
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link active" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-content">
+    <!-- Authentication Forms -->
+    <div class="auth-container" id="authContainer">
+      <!-- Sign Up Form -->
+      <div id="signupForm">
+        <div class="auth-header">
+          <h2>Create Account</h2>
+          <p>Join Sensation by Sanu for easier order tracking</p>
+        </div>
+
+        <div id="authAlert" class="alert" style="display: none;"></div>
+
+        <form id="signupFormElement">
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="signupName" placeholder="Full Name" required>
+            <label for="signupName">Full Name</label>
+          </div>
+          
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="signupEmail" placeholder="Email Address" required>
+            <label for="signupEmail">Email Address</label>
+          </div>
+          
+          <div class="form-floating mb-3">
+            <input type="tel" class="form-control" id="signupPhone" placeholder="Phone Number">
+            <label for="signupPhone">Phone Number (Optional)</label>
+          </div>
+          
+          <div class="form-floating mb-4">
+            <input type="password" class="form-control" id="signupPassword" placeholder="Password" required minlength="6">
+            <label for="signupPassword">Password (min 6 characters)</label>
+          </div>
+          
+          <button type="submit" class="btn btn-auth">
+            <i class="bi bi-person-plus me-2"></i>Create Account
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <button class="btn btn-google" id="googleSignupBtn">
+          <i class="bi bi-google"></i>
+          Continue with Google
+        </button>
+
+        <div class="auth-toggle">
+          Already have an account? <a href="#" id="showLoginBtn">Sign In</a>
+        </div>
+      </div>
+
+      <!-- Sign In Form -->
+      <div id="loginForm" style="display: none;">
+        <div class="auth-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to your account</p>
+        </div>
+
+        <div id="loginAlert" class="alert" style="display: none;"></div>
+
+        <form id="loginFormElement">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="loginEmail" placeholder="Email Address" required>
+            <label for="loginEmail">Email Address</label>
+          </div>
+          
+          <div class="form-floating mb-4">
+            <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+            <label for="loginPassword">Password</label>
+          </div>
+          
+          <button type="submit" class="btn btn-auth">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+          </button>
+        </form>
+
+        <div class="divider">
+          <span>or</span>
+        </div>
+
+        <button class="btn btn-google" id="googleLoginBtn">
+          <i class="bi bi-google"></i>
+          Continue with Google
+        </button>
+
+        <div class="auth-toggle">
+          Don't have an account? <a href="#" id="showSignupBtn">Create Account</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Dashboard -->
+    <div class="container user-dashboard" id="userDashboard">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <!-- Welcome Card -->
+          <div class="dashboard-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <h3>Welcome back, <span id="userName">User</span>!</h3>
+                <p class="text-muted mb-0">Email: <span id="userEmail">user@example.com</span></p>
+              </div>
+              <button class="btn btn-outline-danger" id="logoutBtn">
+                <i class="bi bi-box-arrow-right me-2"></i>Logout
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="dashboard-card">
+            <h5 class="mb-3">Quick Actions</h5>
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <a href="index.html#catalog" class="btn btn-outline-primary w-100">
+                  <i class="bi bi-shop me-2"></i>Shop Fragrances
+                </a>
+              </div>
+              <div class="col-md-6 mb-2">
+                <a href="track.html" class="btn btn-outline-success w-100">
+                  <i class="bi bi-geo-alt me-2"></i>Track Orders
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Order History -->
+          <div class="dashboard-card">
+            <h5 class="mb-3">Your Order History</h5>
+            <div class="loading-spinner" id="ordersLoading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2">Loading your orders...</p>
+            </div>
+            <div class="order-history" id="orderHistory" style="display: none;">
+              <!-- Orders will be loaded here -->
+            </div>
+            <div id="noOrders" style="display: none;">
+              <div class="text-center text-muted py-4">
+                <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.5;"></i>
+                <h6 class="mt-3">No orders yet</h6>
+                <p>Start shopping to see your orders here!</p>
+                <a href="index.html#catalog" class="btn btn-auth">Browse Fragrances</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
+  
+  <script>
+    // Initialize Vanta.js background
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('#vanta-background', 'waves');
+    } else {
+      VANTA.WAVES({
+        el: "#vanta-background",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword,
+      signInWithPopup,
+      GoogleAuthProvider,
+      signOut,
+      onAuthStateChanged,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      doc, 
+      setDoc, 
+      getDoc, 
+      collection, 
+      query, 
+      where, 
+      orderBy, 
+      getDocs 
+    } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    // Initialize Firebase
+    const app = initializeApp(CONFIG.firebase);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // DOM elements
+    const authContainer = document.getElementById('authContainer');
+    const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
+    const userDashboard = document.getElementById('userDashboard');
+    const signupFormElement = document.getElementById('signupFormElement');
+    const loginFormElement = document.getElementById('loginFormElement');
+
+    // Toggle between forms
+    document.getElementById('showLoginBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      signupForm.style.display = 'none';
+      loginForm.style.display = 'block';
+    });
+
+    document.getElementById('showSignupBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      loginForm.style.display = 'none';
+      signupForm.style.display = 'block';
+    });
+
+    // Handle signup
+    signupFormElement.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const phone = document.getElementById('signupPhone').value;
+      const password = document.getElementById('signupPassword').value;
+
+      try {
+        showAlert('authAlert', 'Creating your account...', 'info');
+        
+        // Create user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Update profile
+        await updateProfile(user, { displayName: name });
+
+        // Save additional user data
+        await setDoc(doc(db, 'users', user.uid), {
+          name: name,
+          email: email,
+          phone: phone || '',
+          createdAt: new Date(),
+          lastLogin: new Date()
+        });
+
+        showAlert('authAlert', 'Account created successfully!', 'success');
+      } catch (error) {
+        showAlert('authAlert', error.message, 'danger');
+      }
+    });
+
+    // Handle login
+    loginFormElement.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        showAlert('loginAlert', 'Signing in...', 'info');
+        await signInWithEmailAndPassword(auth, email, password);
+        showAlert('loginAlert', 'Signed in successfully!', 'success');
+      } catch (error) {
+        showAlert('loginAlert', error.message, 'danger');
+      }
+    });
+
+    // Handle Google signup/login
+    document.getElementById('googleSignupBtn').addEventListener('click', handleGoogleAuth);
+    document.getElementById('googleLoginBtn').addEventListener('click', handleGoogleAuth);
+
+    async function handleGoogleAuth() {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Check if user document exists, create if not
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        if (!userDoc.exists()) {
+          await setDoc(doc(db, 'users', user.uid), {
+            name: user.displayName || 'User',
+            email: user.email,
+            phone: '',
+            createdAt: new Date(),
+            lastLogin: new Date()
+          });
+        } else {
+          // Update last login
+          await setDoc(doc(db, 'users', user.uid), {
+            lastLogin: new Date()
+          }, { merge: true });
+        }
+      } catch (error) {
+        showAlert('authAlert', error.message, 'danger');
+      }
+    }
+
+    // Handle logout
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    });
+
+    // Auth state listener
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        // User is signed in
+        authContainer.style.display = 'none';
+        userDashboard.style.display = 'block';
+        
+        // Update UI with user info
+        document.getElementById('userName').textContent = user.displayName || 'User';
+        document.getElementById('userEmail').textContent = user.email;
+        
+        // Update navbar with user name
+        if (window.SharedUtils) {
+          window.SharedUtils.updateNavbarUserName(user.displayName || user.email);
+        }
+        
+        // Store user info in localStorage for other pages
+        localStorage.setItem('sensation_user', JSON.stringify({
+          name: user.displayName,
+          email: user.email,
+          uid: user.uid
+        }));
+        
+        // Load user orders
+        await loadUserOrders(user.email);
+      } else {
+        // User is signed out
+        authContainer.style.display = 'block';
+        userDashboard.style.display = 'none';
+        
+        // Update navbar back to "Account"
+        if (window.SharedUtils) {
+          window.SharedUtils.updateNavbarUserName(null);
+        }
+        
+        // Remove user info from localStorage
+        localStorage.removeItem('sensation_user');
+      }
+    });
+
+    // Load user orders
+    async function loadUserOrders(userEmail) {
+      const ordersLoading = document.getElementById('ordersLoading');
+      const orderHistory = document.getElementById('orderHistory');
+      const noOrders = document.getElementById('noOrders');
+
+      try {
+        ordersLoading.style.display = 'block';
+        orderHistory.style.display = 'none';
+        noOrders.style.display = 'none';
+
+        const ordersRef = collection(db, 'orders');
+        const q = query(ordersRef, where('email', '==', userEmail), orderBy('created', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          ordersLoading.style.display = 'none';
+          noOrders.style.display = 'block';
+        } else {
+          const orders = [];
+          snapshot.forEach(doc => {
+            orders.push({ id: doc.id, ...doc.data() });
+          });
+
+          displayOrders(orders);
+          ordersLoading.style.display = 'none';
+          orderHistory.style.display = 'block';
+        }
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        ordersLoading.style.display = 'none';
+        noOrders.style.display = 'block';
+      }
+    }
+
+    // Display orders
+    function displayOrders(orders) {
+      const orderHistory = document.getElementById('orderHistory');
+      
+      orderHistory.innerHTML = orders.map(order => `
+        <div class="order-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h6 class="mb-1">Order #${order.orderId}</h6>
+              <p class="text-muted mb-2">${formatDate(order.created)}</p>
+              <div class="mb-2">
+                ${order.cart?.map(item => `
+                  <small class="text-muted d-block">${item.name} x${item.qty}</small>
+                `).join('') || 'No items'}
+              </div>
+            </div>
+            <div class="text-end">
+              <span class="status-badge status-${order.status || 'pending'}">
+                ${getStatusText(order.status)}
+              </span>
+              <div class="mt-2">
+                <strong>D${order.subtotal?.toLocaleString() || '0'}</strong>
+              </div>
+              <div class="mt-2">
+                <a href="track.html" class="btn btn-sm btn-outline-primary">Track</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Helper functions
+    function showAlert(elementId, message, type) {
+      const alert = document.getElementById(elementId);
+      alert.className = `alert alert-${type}`;
+      alert.textContent = message;
+      alert.style.display = 'block';
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          alert.style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp) return 'N/A';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric'
+      });
+    }
+
+    function getStatusText(status) {
+      const statusMap = {
+        'pending': 'Pending',
+        'processing': 'Processing',
+        'shipped': 'Shipped',
+        'delivered': 'Delivered',
+        'cancelled': 'Cancelled'
+      };
+      return statusMap[status] || 'Pending';
+    }
+  </script>
+</body>
+</html>

@@ -7,6 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
   <link rel="stylesheet" href="css/animations.css">
+
   <style>
     body.hero {
       min-height: 100vh;
@@ -15,6 +16,8 @@
       position: relative;
       overflow-x: hidden; /* Only hide horizontal overflow */
     }
+    
+    /* Scrolling handled by main CSS file */
     .checkout-content {
       position: relative;
       z-index: 1;
@@ -26,6 +29,7 @@
       border-radius: 20px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow-x: hidden; /* Prevent horizontal scrolling */
     }
     .btn {
       transition: all 0.3s ease;
@@ -321,12 +325,124 @@
             
             <div class="mb-3">
               <label for="address" class="form-label">Delivery Address</label>
-              <textarea class="form-control" id="address" rows="3" required placeholder="Enter your complete delivery address..."></textarea>
+              
+              <!-- GPS Location Button (Primary Option) -->
+              <button type="button" id="useLocationBtn" class="btn btn-primary btn-lg w-100 mb-3" style="background: linear-gradient(45deg, #007bff, #0056b3); border: none; font-size: 1.1rem; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,123,255,0.3);">
+                📍 Use My Location (Fastest & Most Accurate)
+              </button>
+              
+              <!-- GPS Status Display -->
+              <div id="gpsStatus" class="alert alert-success" style="display: none;">
+                <i class="bi bi-geo-alt-fill"></i> <strong>Location Captured!</strong>
+                <br><small id="gpsCoordinates" class="text-muted"></small>
+                <br><small id="gpsAddress" class="text-muted"></small>
+              </div>
+              
+              <!-- Manual Address Section (Hidden by default) -->
+              <div id="manualAddressSection" style="display: none;">
+                <textarea class="form-control" id="address" rows="3" placeholder="Enter your complete delivery address..."></textarea>
+                <small class="text-muted mt-1 d-block">
+                  <i class="bi bi-info-circle"></i> GPS location would be more accurate for delivery
+                </small>
+              </div>
+              
+              <!-- Manual Entry Toggle -->
+              <div class="text-center mt-2">
+                <button type="button" id="useManualBtn" class="btn btn-link text-muted btn-sm">
+                  <i class="bi bi-pencil"></i> Can't use GPS? Enter address manually
+                </button>
+              </div>
+            </div>
+            
+            <!-- Payment Method Selection -->
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="bi bi-credit-card me-2"></i>Payment Method
+              </label>
+              <div class="payment-methods">
+                <!-- Available Option: Cash on Delivery -->
+                <div class="row g-3 mb-3">
+                  <div class="col-12">
+                    <div class="payment-option">
+                      <input type="radio" class="form-check-input" id="cashOnDelivery" name="paymentMethod" value="cash" checked>
+                      <label class="payment-card payment-card-available" for="cashOnDelivery">
+                        <div class="payment-icon">💵</div>
+                        <div class="payment-details">
+                          <h5 class="mb-1">Cash on Delivery</h5>
+                          <p class="mb-0 text-muted">Pay when your order arrives at your doorstep</p>
+                          <small class="text-success"><i class="bi bi-check-circle me-1"></i>Most trusted & convenient</small>
+                        </div>
+                        <div class="payment-badge">
+                          <span class="badge bg-success">
+                            <i class="bi bi-star-fill me-1"></i>Recommended
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Coming Soon Options -->
+                <div class="coming-soon-section">
+                  <h6 class="text-muted mb-3">
+                    <i class="bi bi-clock me-2"></i>More Payment Options Coming Soon
+                  </h6>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="mobileMoney" name="paymentMethod" value="mobile" disabled>
+                        <label class="payment-card payment-card-disabled" for="mobileMoney">
+                          <div class="payment-icon">📱</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Mobile Money</h6>
+                            <small class="text-muted">Wave, QMoney, Orange</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="bankTransfer" name="paymentMethod" value="bank" disabled>
+                        <label class="payment-card payment-card-disabled" for="bankTransfer">
+                          <div class="payment-icon">🏦</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Bank Transfer</h6>
+                            <small class="text-muted">Direct payment</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="cardPayment" name="paymentMethod" value="card" disabled>
+                        <label class="payment-card payment-card-disabled" for="cardPayment">
+                          <div class="payment-icon">💳</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Credit Cards</h6>
+                            <small class="text-muted">Visa, Mastercard</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div id="checkoutMsg" class="text-danger small mb-2"></div>
             <div class="text-end">
-              <button type="submit" class="btn btn-dark btn-lg">Place Order</button>
+              <button type="submit" class="btn btn-dark btn-lg">
+                <i class="bi bi-credit-card me-2"></i>Place Order & Pay
+              </button>
             </div>
           </form>
         </div>
@@ -372,6 +488,8 @@
   </script>
   <script src="js/analytics.js"></script>
   <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
+
   
   <script>
     // Location-based shipping logic
@@ -1119,11 +1237,12 @@
     if (window.AnimationUtils) {
       window.AnimationUtils.initializeVantaBackground('body.hero', 'waves');
     } else {
-      // Fallback to direct initialization
+      // Fallback to direct initialization using working code from admin
       VANTA.WAVES({
         el: "body.hero",
         mouseControls: true,
         touchControls: true,
+        gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.0,
@@ -1282,13 +1401,192 @@
       return true;
     }
 
-    // Enhanced form validation with location
+    // =======================================
+    // GPS LOCATION FUNCTIONALITY
+    // =======================================
+    
+    let userLocation = null;
+    let addressMethod = 'gps'; // 'gps' or 'manual'
+
+    // Initialize GPS functionality
+    function initGPSFeature() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      if (useLocationBtn) {
+        useLocationBtn.addEventListener('click', requestLocation);
+      }
+      
+      if (useManualBtn) {
+        useManualBtn.addEventListener('click', showManualEntry);
+      }
+    }
+
+    // Request user's GPS location
+    function requestLocation() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      
+      // Check if geolocation is supported
+      if (!navigator.geolocation) {
+        showNotification('GPS not supported on this device. Please enter address manually.', 'warning');
+        showManualEntry();
+        return;
+      }
+
+      // Update button to show loading
+      useLocationBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Getting your location...';
+      useLocationBtn.disabled = true;
+
+      // Request location with high accuracy
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Success - location captured
+          userLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date().toISOString()
+          };
+          
+          console.log('📍 GPS location captured:', userLocation);
+          showLocationSuccess();
+          addressMethod = 'gps';
+        },
+        (error) => {
+          // Error - fallback to manual
+          console.error('GPS Error:', error);
+          handleLocationError(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000, // 10 seconds
+          maximumAge: 60000 // 1 minute cache
+        }
+      );
+    }
+
+    // Show location success
+    function showLocationSuccess() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      const gpsStatus = document.getElementById('gpsStatus');
+      const gpsCoordinates = document.getElementById('gpsCoordinates');
+      const gpsAddress = document.getElementById('gpsAddress');
+
+      // Update button
+      useLocationBtn.innerHTML = '✅ Location Captured! (Click to update)';
+      useLocationBtn.disabled = false;
+      useLocationBtn.classList.remove('btn-primary');
+      useLocationBtn.classList.add('btn-success');
+
+      // Show GPS status
+      gpsStatus.style.display = 'block';
+      gpsCoordinates.textContent = `Coordinates: ${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)}`;
+      gpsAddress.textContent = `Accuracy: ±${Math.round(userLocation.accuracy)}m | Click coordinates for Google Maps`;
+
+      // Make coordinates clickable for verification
+      gpsCoordinates.innerHTML = `Coordinates: <a href="https://maps.google.com/maps?q=${userLocation.latitude},${userLocation.longitude}" target="_blank" class="text-primary">${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)}</a>`;
+
+      // Optional: Reverse geocode to get address (would require Google Maps API)
+      // For now, we'll use GPS coordinates as the primary address method
+      
+      showNotification('📍 Location captured successfully! Your delivery will be precise.', 'success');
+    }
+
+    // Handle location errors
+    function handleLocationError(error) {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      
+      let errorMessage = 'Unable to get your location. ';
+      
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage += 'Please allow location access and try again.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage += 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          errorMessage += 'Location request timed out.';
+          break;
+        default:
+          errorMessage += 'An unknown error occurred.';
+          break;
+      }
+
+      console.error('Location error:', errorMessage);
+      showNotification(errorMessage, 'warning');
+      
+      // Reset button and show manual entry
+      useLocationBtn.innerHTML = '📍 Try Location Again';
+      useLocationBtn.disabled = false;
+      showManualEntry();
+    }
+
+    // Show manual address entry
+    function showManualEntry() {
+      const manualSection = document.getElementById('manualAddressSection');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      manualSection.style.display = 'block';
+      useManualBtn.textContent = '📍 Use GPS instead';
+      useManualBtn.onclick = hideManualEntry;
+      
+      addressMethod = 'manual';
+      
+      // Make address field required when manual
+      const addressField = document.getElementById('address');
+      if (addressField) {
+        addressField.required = true;
+        addressField.focus();
+      }
+    }
+
+    // Hide manual address entry
+    function hideManualEntry() {
+      const manualSection = document.getElementById('manualAddressSection');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      manualSection.style.display = 'none';
+      useManualBtn.innerHTML = '<i class="bi bi-pencil"></i> Can\'t use GPS? Enter address manually';
+      useManualBtn.onclick = showManualEntry;
+      
+      // Remove required from address field when using GPS
+      const addressField = document.getElementById('address');
+      if (addressField) {
+        addressField.required = false;
+        addressField.value = '';
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+      notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+      notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+
+    // Enhanced form validation with location and payment
     function validateForm() {
       const name = document.getElementById('name').value.trim();
       const email = document.getElementById('email').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const country = document.getElementById('country').value;
       const address = document.getElementById('address').value.trim();
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
 
       if (!name || name.length < 2) {
         throw new Error('Please enter a valid name (minimum 2 characters)');
@@ -1308,11 +1606,34 @@
         throw new Error('Please select your country/location');
       }
 
-      if (!address || address.length < 10) {
-        throw new Error('Please enter a complete delivery address');
+      // Payment method validation
+      if (!paymentMethod) {
+        throw new Error('Please select a payment method');
       }
 
-      return { name, email, phone, country, address };
+      // Address validation based on method
+      if (addressMethod === 'gps') {
+        if (!userLocation || !userLocation.latitude || !userLocation.longitude) {
+          throw new Error('Please capture your GPS location or enter address manually');
+        }
+        // For GPS, we'll use coordinates as address
+        const gpsAddress = `GPS: ${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)} (Accuracy: ±${Math.round(userLocation.accuracy)}m)`;
+        return { 
+          name, email, phone, country, address: gpsAddress, 
+          gpsLocation: userLocation, addressMethod: 'gps',
+          paymentMethod: paymentMethod.value
+        };
+      } else {
+        // Manual address validation
+        if (!address || address.length < 10) {
+          throw new Error('Please enter a complete delivery address');
+        }
+        return { 
+          name, email, phone, country, address, 
+          addressMethod: 'manual',
+          paymentMethod: paymentMethod.value
+        };
+      }
     }
 
     // Enhanced order processing
@@ -1396,6 +1717,13 @@
             phonePrefix: phonePrefix,
             country: formData.country,  // Customer's country
             address: formData.address,
+            // GPS Location Data (NEW!)
+            gpsLocation: formData.gpsLocation || null,  // GPS coordinates if available
+            addressMethod: formData.addressMethod || 'manual',  // How address was entered
+            locationAccuracy: formData.gpsLocation?.accuracy || null,  // GPS accuracy
+            // Payment Information (NEW!)
+            paymentMethod: formData.paymentMethod,  // Selected payment method
+            paymentStatus: formData.paymentMethod === 'cash' ? 'pending' : 'awaiting-payment',
             cart: cart.map(item => ({  // Admin expects 'cart' not 'items'
               name: item.name,
               price: item.price,
@@ -1456,6 +1784,12 @@
       }
       });
     }
+
+    // Initialize GPS feature when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🌍 Initializing GPS location feature...');
+      initGPSFeature();
+    });
   </script>
 </body>
 </html>

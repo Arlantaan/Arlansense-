@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sensation Admin Portal</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    /* Vanta.js background container */
+    .vanta-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    
+    body {
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+
+    .header-logo {
+      height: 70px;
+      width: auto;
+      vertical-align: middle;
+      margin-right: 18px;
+      margin-top: -10px;
+      margin-bottom: -10px;
+      filter: drop-shadow(0 2px 8px rgba(30,20,10,0.18));
+    }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      margin-left: 0;
+      background: rgba(139, 92, 42, 0.9);
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 2rem 0 1rem 0;
+      text-align: left;
+      letter-spacing: 2px;
+      font-size: 2.2rem;
+      font-weight: bold;
+      box-shadow: 0 2px 16px rgba(139,92,42,0.15);
+      position: relative;
+    }
+
+    /* Tab Navigation */
+    .admin-tabs {
+      background: rgba(35, 32, 28, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid rgba(139, 92, 42, 0.3);
+      padding: 0;
+    }
+
+    .nav-tabs {
+      border: none;
+      margin: 0;
+    }
+
+    .nav-tabs .nav-link {
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 1rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-radius: 0;
+      position: relative;
+    }
+
+    .nav-tabs .nav-link:hover {
+      color: #fff;
+      background: rgba(139, 92, 42, 0.1);
+    }
+
+    .nav-tabs .nav-link.active {
+      color: #fff;
+      background: rgba(139, 92, 42, 0.2);
+      border-bottom: 3px solid #8B5C2A;
+    }
+
+    .nav-tabs .nav-link i {
+      margin-right: 8px;
+    }
+
+    /* Tab Content */
+    .tab-content {
+      background: rgba(35, 32, 28, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      box-shadow: 0 4px 32px rgba(139,92,42,0.12);
+      margin: 2rem;
+      padding: 2rem;
+      min-height: 70vh;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+      background: rgba(139, 92, 42, 0.1);
+      border: 1px solid rgba(139, 92, 42, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(139, 92, 42, 0.15);
+    }
+
+    .dashboard-card .card-icon {
+      font-size: 2.5rem;
+      color: #8B5C2A;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-card .card-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-card .card-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    /* Recent Transactions */
+    .recent-transactions {
+      background: rgba(35, 32, 28, 0.8);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(139, 92, 42, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .transaction-item:hover {
+      background: rgba(139, 92, 42, 0.1);
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-info h6 {
+      margin: 0;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .transaction-info p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+    }
+
+    .transaction-amount {
+      font-weight: bold;
+      color: #8B5C2A;
+    }
+
+    /* Tables */
+    .admin-table {
+      background: rgba(35, 32, 28, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .admin-table th {
+      background: #8B5C2A;
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      padding: 1rem;
+    }
+
+    .admin-table td {
+      vertical-align: middle;
+      padding: 1rem;
+      border-bottom: 1px solid rgba(139, 92, 42, 0.1);
+      color: #fff;
+      background: rgba(35, 32, 28, 0.9);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      font-weight: 500;
+    }
+
+    .admin-table tbody tr:hover {
+      background: rgba(139, 92, 42, 0.2);
+    }
+
+    .admin-table tbody tr:nth-child(even) {
+      background: rgba(35, 32, 28, 0.95);
+    }
+
+    .admin-table tbody tr:nth-child(odd) {
+      background: rgba(35, 32, 28, 0.85);
+    }
+
+    /* Status Badges */
+    .status-badge {
+      border-radius: 12px;
+      padding: 0.3em 1em;
+      font-size: 0.95em;
+      font-weight: 500;
+    }
+
+    .status-pending {
+      background: #FFD700;
+      color: #8B5C2A;
+    }
+
+    .status-processing {
+      background: #17a2b8;
+      color: #fff;
+    }
+
+    .status-shipped {
+      background: #007bff;
+      color: #fff;
+    }
+
+    .status-delivered {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .status-cancelled {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .status-ready {
+      background: #fd7e14;
+      color: #fff;
+    }
+
+    .status-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Forms */
+    .admin-form {
+      background: rgba(35, 32, 28, 0.8);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-control, .form-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(139, 92, 42, 0.3);
+      color: #fff;
+      border-radius: 8px;
+    }
+
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #8B5C2A;
+      color: #fff;
+      box-shadow: 0 0 0 0.2rem rgba(139, 92, 42, 0.25);
+    }
+
+    .status-dropdown {
+      background: rgba(35, 32, 28, 0.9) !important;
+      border: 1px solid rgba(139, 92, 42, 0.5) !important;
+      color: #fff !important;
+      font-weight: 500;
+    }
+
+    .status-dropdown option {
+      background: rgba(35, 32, 28, 0.95);
+      color: #fff;
+    }
+    
+    /* Contacts table specific styling */
+    #contacts .admin-table td {
+      background: rgba(35, 32, 28, 0.9);
+      color: white;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      font-weight: 500;
+    }
+    
+    #contacts .admin-table tbody tr:nth-child(even) td {
+      background: rgba(35, 32, 28, 0.95);
+    }
+    
+    #contacts .admin-table tbody tr:nth-child(odd) td {
+      background: rgba(35, 32, 28, 0.85);
+    }
+    
+    #contacts .admin-table tbody tr:hover td {
+      background: rgba(139, 92, 42, 0.2);
+    }
+    
+    #contacts .status-dropdown {
+      background: #23201c;
+      color: white;
+      border: 1px solid rgba(139, 92, 42, 0.3);
+    }
+    
+    #contacts .status-dropdown:focus {
+      background: #23201c;
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(139, 92, 42, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Buttons */
+    .btn-admin {
+      background: linear-gradient(135deg, #8B5C2A, #BF8B3A);
+      border: none;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-admin:hover {
+      background: linear-gradient(135deg, #BF8B3A, #8B5C2A);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(139, 92, 42, 0.3);
+      color: #fff;
+    }
+
+    .btn-outline-admin {
+      background: transparent;
+      border: 2px solid #8B5C2A;
+      color: #8B5C2A;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-admin:hover {
+      background: #8B5C2A;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #20c997);
+      border: none;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #20c997, #28a745);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+      color: #fff;
+    }
+
+    /* Filters */
+    .filter-section {
+      background: rgba(35, 32, 28, 0.8);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Charts */
+    .chart-container {
+      background: rgba(35, 32, 28, 0.8);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      height: 300px;
+    }
+
+    /* Analytics Summary Cards */
+    .analytics-summary-card {
+      background: rgba(35, 32, 28, 0.8);
+      border: 1px solid rgba(139, 92, 42, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .analytics-summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(139, 92, 42, 0.2);
+    }
+
+    .analytics-summary-card h6 {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .analytics-summary-card p {
+      color: #fff;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    /* Chart Loading State */
+    .chart-loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1.1rem;
+    }
+
+    .chart-loading i {
+      margin-right: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .spin {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .chart-container canvas {
+      display: none;
+    }
+
+    .chart-container.charts-loaded canvas {
+      display: block;
+    }
+
+    .chart-container.charts-loaded .chart-loading {
+      display: none;
+    }
+
+    /* User Management */
+    .user-card {
+      background: rgba(35, 32, 28, 0.8);
+      border: 1px solid rgba(139, 92, 42, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #8B5C2A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-tabs .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .tab-content {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      
+      .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    /* Hidden class */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Login form */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: rgba(35, 32, 28, 0.9);
+    }
+
+    .login-form {
+      background: rgba(139, 92, 42, 0.1);
+      border: 1px solid rgba(139, 92, 42, 0.3);
+      border-radius: 18px;
+      padding: 3rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(139, 92, 42, 0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .login-form h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #8B5C2A;
+    }
+
+    .login-form .form-control {
+      margin-bottom: 1rem;
+    }
+
+    .login-form .btn {
+      width: 100%;
+      margin-top: 1rem;
+    }
+    
+    /* Scrolling handled by main CSS file */
+  </style>
+</head>
+<body>
+  <!-- Vanta.js Background -->
+  <div class="vanta-container" id="vanta-bg"></div>
+
+  <!-- Login Form -->
+  <div id="loginDiv" class="login-container">
+    <div class="login-form">
+      <h2><i class="bi bi-shield-lock"></i> Admin Login</h2>
+      <form id="emailLoginForm">
+        <input type="email" id="emailInput" class="form-control" placeholder="Email" required />
+        <input type="password" id="passwordInput" class="form-control" placeholder="Password" required />
+        <button type="submit" class="btn btn-admin">Login</button>
+        <div id="emailLoginError" class="text-danger mt-2" style="display: none;"></div>
+      </form>
+      <hr class="my-3">
+      <button id="googleLoginBtn" class="btn btn-outline-admin w-100">
+        <i class="bi bi-google"></i> Login with Google
+      </button>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminContainer" class="hidden">
+    <!-- Header -->
+    <header class="admin-header">
+      <img src="images/sbs.svg" alt="Sensation by Sanu" class="header-logo">
+      <div>
+        <h1>Sensation Admin Portal</h1>
+        <p style="margin: 0; font-size: 1rem; opacity: 0.9;">Manage orders, users, and business operations</p>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="admin-tabs">
+      <div class="container-fluid">
+        <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" data-bs-target="#dashboard" type="button" role="tab">
+              <i class="bi bi-speedometer2"></i> Dashboard
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="transactions-tab" data-bs-toggle="tab" data-bs-target="#transactions" type="button" role="tab">
+              <i class="bi bi-cart-check"></i> Transactions
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="analytics-tab" data-bs-toggle="tab" data-bs-target="#analytics" type="button" role="tab">
+              <i class="bi bi-graph-up"></i> Analytics
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+              <i class="bi bi-people"></i> Users
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="reports-tab" data-bs-toggle="tab" data-bs-target="#reports" type="button" role="tab">
+              <i class="bi bi-file-earmark-text"></i> Reports
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contacts" type="button" role="tab">
+              <i class="bi bi-envelope"></i> Contacts
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab">
+              <i class="bi bi-gear"></i> Settings
+            </button>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="adminTabContent">
+      <!-- Dashboard Tab -->
+      <div class="tab-pane fade show active" id="dashboard" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-speedometer2"></i> Dashboard Overview</h3>
+          <div class="text-muted">Last updated: <span id="dashboardLastUpdate"></span></div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row">
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-cart-check"></i></div>
+              <div class="card-value" id="totalOrders">0</div>
+              <div class="card-label">Total Orders</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-currency-dollar"></i></div>
+              <div class="card-value" id="totalRevenue">D0</div>
+              <div class="card-label">Total Revenue</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-clock"></i></div>
+              <div class="card-value" id="pendingOrders">0</div>
+              <div class="card-label">Pending Orders</div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="dashboard-card">
+              <div class="card-icon"><i class="bi bi-people"></i></div>
+              <div class="card-value" id="totalCustomers">0</div>
+              <div class="card-label">Total Customers</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions (72 hours) -->
+        <div class="recent-transactions">
+          <h5><i class="bi bi-clock-history"></i> Recent Transactions (Last 72 Hours)</h5>
+          <div id="recentTransactionsList">
+            <!-- Recent transactions will be populated here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Transactions Tab -->
+      <div class="tab-pane fade" id="transactions" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-cart-check"></i> All Transactions</h3>
+          <button class="btn btn-admin" id="exportCsv">
+            <i class="bi bi-download"></i> Export CSV
+          </button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-section">
+          <div class="filter-row">
+            <div class="form-group">
+              <label class="form-label">Date From:</label>
+              <input type="date" id="filterDateFrom" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date To:</label>
+              <input type="date" id="filterDateTo" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status:</label>
+              <select id="filterStatus" class="form-select">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="processing">Processing</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Search:</label>
+              <input type="text" id="searchInput" class="form-control" placeholder="Search orders...">
+            </div>
+            <div class="form-group">
+              <button class="btn btn-admin" id="applyFilters">
+                <i class="bi bi-funnel"></i> Apply Filters
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions Table -->
+        <div class="table-responsive">
+          <table class="table admin-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Products</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="purchaseList">
+              <!-- Transactions will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div class="tab-pane fade" id="analytics" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3><i class="bi bi-graph-up"></i> Business Analytics</h3>
+          <button class="btn btn-admin" id="refreshAnalytics" onclick="refreshAnalytics()">
+            <i class="bi bi-arrow-clockwise"></i> Refresh Charts
+          </button>
+        </div>
+        
+        <!-- Analytics Summary -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Total Orders</h6>
+              <p id="analyticsTotalOrders">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Total Revenue</h6>
+              <p id="analyticsTotalRevenue">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Avg Order Value</h6>
+              <p id="analyticsAvgOrder">-</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="analytics-summary-card">
+              <h6>Top Product</h6>
+              <p id="analyticsTopProduct">-</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Sales Trend (Last 30 Days)</h5>
+              <div id="salesChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Top Products</h5>
+              <div id="productsChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
+              <canvas id="productsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Order Status Distribution</h5>
+              <div id="statusChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="chart-container">
+              <h5>Revenue by Month</h5>
+              <div id="revenueChartLoading" class="chart-loading">
+                <i class="bi bi-arrow-clockwise spin"></i> Loading...
+              </div>
+              <canvas id="revenueChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Users Tab -->
+      <div class="tab-pane fade" id="users" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-people"></i> User Management</h3>
+          <button class="btn btn-admin" data-bs-toggle="modal" data-bs-target="#addUserModal">
+            <i class="bi bi-person-plus"></i> Add New User
+          </button>
+        </div>
+
+        <!-- Users Table -->
+        <div class="table-responsive">
+          <table class="table admin-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="usersList">
+              <!-- Users will be populated here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Reports Tab -->
+      <div class="tab-pane fade" id="reports" role="tabpanel">
+        <h3><i class="bi bi-file-earmark-text"></i> Reports & Insights</h3>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="dashboard-card">
+              <h5><i class="bi bi-calendar-check"></i> Generate Reports</h5>
+              <div class="mb-3">
+                <label class="form-label">Report Type:</label>
+                <select id="reportType" class="form-select">
+                  <option value="sales">Sales Report</option>
+                  <option value="inventory">Inventory Report</option>
+                  <option value="customers">Customer Report</option>
+                  <option value="performance">Performance Report</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Date Range:</label>
+                <select id="reportDateRange" class="form-select">
+                  <option value="7">Last 7 Days</option>
+                  <option value="30">Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                  <option value="365">Last Year</option>
+                  <option value="custom">Custom Range</option>
+                </select>
+              </div>
+              <button class="btn btn-admin" id="generateReport">
+                <i class="bi bi-file-earmark-pdf"></i> Generate Report
+              </button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="dashboard-card">
+              <h5><i class="bi bi-download"></i> Quick Downloads</h5>
+              <div class="d-grid gap-2">
+                <button class="btn btn-outline-admin">
+                  <i class="bi bi-file-earmark-excel"></i> Export All Orders
+                </button>
+                <button class="btn btn-outline-admin">
+                  <i class="bi bi-file-earmark-csv"></i> Customer Database
+                </button>
+                <button class="btn btn-outline-admin">
+                  <i class="bi bi-file-earmark-pdf"></i> Monthly Summary
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contacts Tab -->
+      <div class="tab-pane fade" id="contacts" role="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3><i class="bi bi-envelope"></i> Contact Submissions</h3>
+          <button class="btn btn-admin" id="exportContactsCsv">
+            <i class="bi bi-download"></i> Export CSV
+          </button>
+        </div>
+        
+        <!-- Contact Filters -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <input type="text" id="contactSearchInput" class="form-control" placeholder="Search contacts...">
+          </div>
+          <div class="col-md-3">
+            <select id="contactStatusFilter" class="form-select">
+              <option value="">All Status</option>
+              <option value="new">New</option>
+              <option value="read">Read</option>
+              <option value="replied">Replied</option>
+              <option value="archived">Archived</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <input type="date" id="contactDateFrom" class="form-control" placeholder="From Date">
+          </div>
+          <div class="col-md-3">
+            <input type="date" id="contactDateTo" class="form-control" placeholder="To Date">
+          </div>
+        </div>
+        
+        <!-- Contacts Table -->
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="contactsList">
+              <!-- Contacts will be populated here -->
+            </tbody>
+          </table>
+        </div>
+        
+        <!-- Contact Details Modal -->
+        <div class="modal fade" id="contactDetailsModal" tabindex="-1">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Contact Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body" id="contactDetailsContent">
+                <!-- Contact details will be populated here -->
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-admin" id="markAsReadBtn">Mark as Read</button>
+                <button type="button" class="btn btn-success" id="markAsRepliedBtn">Mark as Replied</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div class="tab-pane fade" id="settings" role="tabpanel">
+        <h3><i class="bi bi-gear"></i> System Settings</h3>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="admin-form">
+              <h5><i class="bi bi-shop"></i> Business Settings</h5>
+              <div class="mb-3">
+                <label class="form-label">Business Name:</label>
+                <input type="text" class="form-control" value="Sensation by Sanu">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Contact Email:</label>
+                <input type="email" class="form-control" value="admin@sensation.com">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone Number:</label>
+                <input type="tel" class="form-control" value="+220 123 4567">
+              </div>
+              <button class="btn btn-admin">Save Changes</button>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="admin-form">
+              <h5><i class="bi bi-bell"></i> Notification Settings</h5>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                <label class="form-check-label" for="emailNotifications">
+                  Email notifications for new orders
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="smsNotifications">
+                <label class="form-check-label" for="smsNotifications">
+                  SMS notifications for urgent orders
+                </label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" id="dashboardAlerts" checked>
+                <label class="form-check-label" for="dashboardAlerts">
+                  Dashboard alerts and reminders
+                </label>
+              </div>
+              <button class="btn btn-admin">Save Preferences</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add User Modal -->
+  <div class="modal fade" id="addUserModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New User</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addUserForm">
+            <div class="mb-3">
+              <label class="form-label">Full Name:</label>
+              <input type="text" class="form-control" id="newUserName" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email:</label>
+              <input type="email" class="form-control" id="newUserEmail" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Role:</label>
+              <select class="form-select" id="newUserRole" required>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="staff">Staff</option>
+                <option value="viewer">Viewer</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Permissions:</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="canViewOrders" checked>
+                <label class="form-check-label">View Orders</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="canEditOrders">
+                <label class="form-check-label">Edit Orders</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="canManageUsers">
+                <label class="form-check-label">Manage Users</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="canViewAnalytics" checked>
+                <label class="form-check-label">View Analytics</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-admin" id="saveNewUser">Add User</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/location-utils.js"></script>
+  <script src="js/config.js"></script>
+  <script src="admin.js"></script>
+  
+  <!-- Vanta.js Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/location-utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
+  <script>
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('#vanta-bg', 'waves');
+    } else {
+      // Fallback to direct initialization
+      VANTA.WAVES({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
+</body>
+</html>

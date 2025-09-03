@@ -21,6 +21,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
     }
 
     @keyframes bgShine {
@@ -38,6 +39,7 @@
       text-align: center;
       max-width: 600px;
       width: 90%;
+      overflow-x: hidden; /* Prevent horizontal scrolling */
     }
 
     .success-icon {
@@ -139,6 +141,8 @@
         font-size: 0.9rem;
       }
     }
+    
+    /* Scrolling handled by main CSS file */
   </style>
 </head>
 <body>
@@ -198,16 +202,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
   <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
   <script>
     // Initialize Vanta.js background
     if (window.AnimationUtils) {
       window.AnimationUtils.initializeVantaBackground('.success-container', 'waves');
     } else {
-      // Fallback to direct initialization
+      // Fallback to direct initialization using working code from admin
       VANTA.WAVES({
         el: ".success-container",
         mouseControls: true,
         touchControls: true,
+        gyroControls: false,
         minHeight: 200.00,
         minWidth: 200.00,
         scale: 1.0,

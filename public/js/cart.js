@@ -190,10 +190,251 @@ class CartManager {
       cartBadge.style.display = count > 0 ? 'block' : 'none';
     }
 
+    // Update mobile floating cart badge
+    this.updateMobileCartBadge();
+
     // Update cart page if on cart page
     if (window.location.pathname.includes('cart.html')) {
       this.renderCartPage();
+      this.updateCartFooter();
     }
+  }
+
+  // Show/hide cart footer based on cart content
+  updateCartFooter() {
+    const cartFooter = document.getElementById('cart-actions-footer');
+    if (cartFooter) {
+      if (this.isEmpty()) {
+        cartFooter.style.display = 'none';
+      } else {
+        cartFooter.style.display = 'block';
+      }
+    }
+  }
+
+  // Update mobile floating cart badge
+  updateMobileCartBadge() {
+    const mobileCartIcon = document.querySelector('.floating-cart-mobile .bi-cart3') || 
+                          document.querySelector('.floating-cart-mobile-inner .bi-cart3');
+    if (mobileCartIcon && this.isMobile()) {
+      const count = this.getItemCount();
+      
+      // Remove existing badge
+      const existingBadge = mobileCartIcon.parentNode.querySelector('.mobile-cart-badge');
+      if (existingBadge) {
+        existingBadge.remove();
+      }
+      
+      // Add new badge if there are items
+      if (count > 0) {
+        const badge = document.createElement('span');
+        badge.className = 'mobile-cart-badge';
+        badge.textContent = count;
+        badge.style.cssText = `
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: linear-gradient(135deg, #e6c98a, #bfa76a);
+          color: #23201c;
+          border-radius: 50%;
+          width: 24px;
+          height: 24px;
+          font-size: 12px;
+          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          border: 2px solid #fff;
+          z-index: 10;
+        `;
+        mobileCartIcon.parentNode.style.position = 'relative';
+        mobileCartIcon.parentNode.appendChild(badge);
+      }
+    }
+  }
+
+  // Show mobile cart preview
+  showMobileCartPreview() {
+    if (!this.isMobile()) return;
+
+    const preview = document.createElement('div');
+    preview.className = 'mobile-cart-preview';
+    preview.innerHTML = `
+      <div class="mobile-cart-overlay" onclick="this.parentNode.remove()"></div>
+      <div class="mobile-cart-content">
+        <div class="mobile-cart-header">
+          <h3>Shopping Cart</h3>
+          <button class="mobile-cart-close" onclick="this.closest('.mobile-cart-preview').remove()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <div class="mobile-cart-items">
+          ${this.renderMobileCartItems()}
+        </div>
+        <div class="mobile-cart-footer">
+          <div class="mobile-cart-total">
+            Total: D${this.getTotal().toLocaleString()}
+          </div>
+          <div class="mobile-cart-actions">
+            <button class="btn btn-outline-light" onclick="this.closest('.mobile-cart-preview').remove()">
+              Continue Shopping
+            </button>
+            <a href="cart.html" class="btn btn-custom">
+              View Cart
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add CSS styles for mobile preview
+    const style = document.createElement('style');
+    style.textContent = `
+      .mobile-cart-preview {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10000;
+        display: flex;
+        align-items: flex-end;
+      }
+      
+      .mobile-cart-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(5px);
+      }
+      
+      .mobile-cart-content {
+        position: relative;
+        background: linear-gradient(135deg, #23201c, #2a2520);
+        width: 100%;
+        max-height: 70vh;
+        border-radius: 20px 20px 0 0;
+        color: white;
+        transform: translateY(100%);
+        animation: slideUp 0.3s ease forwards;
+      }
+      
+      @keyframes slideUp {
+        to { transform: translateY(0); }
+      }
+      
+      .mobile-cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .mobile-cart-header h3 {
+        margin: 0;
+        font-size: 1.4rem;
+        font-weight: 700;
+      }
+      
+      .mobile-cart-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        padding: 8px;
+        cursor: pointer;
+      }
+      
+      .mobile-cart-items {
+        max-height: 40vh;
+        overflow-y: auto;
+        padding: 0 20px;
+      }
+      
+      .mobile-cart-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+      }
+      
+      .mobile-cart-item img {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        margin-right: 12px;
+        object-fit: cover;
+      }
+      
+      .mobile-cart-item-info {
+        flex: 1;
+      }
+      
+      .mobile-cart-item-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      
+      .mobile-cart-item-price {
+        color: #e6c98a;
+        font-size: 0.9rem;
+      }
+      
+      .mobile-cart-footer {
+        padding: 20px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      
+      .mobile-cart-total {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #e6c98a;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      
+      .mobile-cart-actions {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .mobile-cart-actions .btn {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+      }
+    `;
+    
+    if (!document.getElementById('mobile-cart-preview-styles')) {
+      style.id = 'mobile-cart-preview-styles';
+      document.head.appendChild(style);
+    }
+
+    document.body.appendChild(preview);
+  }
+
+  renderMobileCartItems() {
+    if (this.isEmpty()) {
+      return '<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Your cart is empty</div>';
+    }
+
+    return this.cart.map(item => `
+      <div class="mobile-cart-item">
+        <img src="${item.image || item.img}" alt="${this.escapeHtml(item.name)}">
+        <div class="mobile-cart-item-info">
+          <div class="mobile-cart-item-name">${this.escapeHtml(item.name)}</div>
+          <div class="mobile-cart-item-price">D${(item.price * item.quantity).toLocaleString()} (${item.quantity}x)</div>
+        </div>
+      </div>
+    `).join('');
   }
 
   renderCartPage() {
@@ -279,11 +520,20 @@ class CartManager {
   }
 
   showNotification(message, type = 'info') {
-    // Create toast notification
+    // Enhanced mobile-first notification system
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
+    
+    // Add icon based on type
+    const icons = {
+      success: '✅',
+      error: '❌', 
+      info: 'ℹ️'
+    };
+    
     toast.innerHTML = `
       <div class="toast-body">
+        <span style="font-size: 18px; margin-right: 8px;">${icons[type] || icons.info}</span>
         ${this.escapeHtml(message)}
       </div>
     `;
@@ -299,14 +549,45 @@ class CartManager {
 
     toastContainer.appendChild(toast);
 
-    // Show toast
+    // Mobile haptic feedback
+    if (navigator.vibrate && this.isMobile()) {
+      const vibrationPattern = {
+        success: [50, 30, 50],
+        error: [100, 50, 100, 50, 100],
+        info: [50]
+      };
+      navigator.vibrate(vibrationPattern[type] || vibrationPattern.info);
+    }
+
+    // Show toast with animation
     setTimeout(() => toast.classList.add('show'), 100);
 
-    // Remove toast after 3 seconds
+    // Auto-hide based on message length (longer messages = longer display)
+    const displayTime = Math.max(3000, message.length * 50);
     setTimeout(() => {
       toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.remove();
+        }
+      }, 300);
+    }, displayTime);
+
+    // Allow manual dismissal on tap
+    toast.addEventListener('click', () => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.remove();
+        }
+      }, 300);
+    });
+  }
+
+  // Mobile detection helper
+  isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+           window.innerWidth <= 768;
   }
 
   trackCartAnalytics() {

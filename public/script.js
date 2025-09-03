@@ -97,11 +97,8 @@ function setupEventListeners() {
     mobileMenuToggle.addEventListener('click', toggleMobileMenu);
   }
   
-  // Back to top button
-  const backToTopBtn = document.querySelector('.back-to-top');
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener('click', scrollToTop);
-  }
+
+  // Back to top button removed
 }
 
 function displayProducts(category = 'all') {
