@@ -1,0 +1,68 @@
+[
+  {
+    "id": "soleil",
+    "name": "Soleil",
+    "price": 5000,
+    "image": "/images/grace.webp",
+    "description": "A fruity-floral embrace with a golden glow of warmth and sophistication",
+    "tagline": "not just a scent, she's a moment.",
+    "fragrance_pyramid": {
+      "top_notes": [
+        "Pear",
+        "Strawberry",
+        "Vanilla"
+      ]
+    },
+    "in_stock": true,
+    "quantity": 50,
+    "category": "perfume",
+    "created_at": "2025-10-23T08:38:11.535823",
+    "updated_at": "2025-10-23T08:38:11.535823"
+  },
+  {
+    "id": "nuit",
+    "name": "Nuit",
+    "price": 5000,
+    "image": "/images/blackbottle.webp",
+    "description": "Deep, magnetic, and utterly sensual. A timeless evening scent",
+    "tagline": "a presence felt in silence.",
+    "fragrance_pyramid": {
+      "top_notes": [
+        "Bergamot",
+        "Juniperberry",
+        "Clary Sage",
+        "Mandarin"
+      ]
+    },
+    "in_stock": true,
+    "quantity": 30,
+    "category": "perfume",
+    "created_at": "2025-10-23T08:38:11.535823",
+    "updated_at": "2025-10-23T08:38:11.535823"
+  },
+  {
+    "id": "blush",
+    "name": "Blush",
+    "price": 500,
+    "image": "/images/blush.webp",
+    "description": "A soft floral with a bold undertone \u2014 confident, youthful, unforgettable",
+    "in_stock": true,
+    "quantity": 100,
+    "category": "oil",
+    "created_at": "2025-10-23T08:38:11.535823",
+    "updated_at": "2025-10-23T08:38:11.535823"
+  },
+  {
+    "id": "sensation-oil",
+    "name": "Sensation Oil",
+    "price": 500,
+    "image": "/images/perfume_oil2.webp",
+    "description": "An oil-based scent crafted for lasting allure \u2014 rich, mysterious, and seductive",
+    "tagline": "depth in every drop.",
+    "in_stock": true,
+    "quantity": 75,
+    "category": "oil",
+    "created_at": "2025-10-23T08:38:11.535823",
+    "updated_at": "2025-10-23T08:38:11.535823"
+  }
+]

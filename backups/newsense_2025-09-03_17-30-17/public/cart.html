@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Cart - Sensation by Sanu</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+   <link rel="icon" type="image/svg+xml" sizes="any" href="images/sbstab.svg">
+   <!-- Bootstrap Icons CDN -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      background: linear-gradient(135deg, #23201c 0%, #3d3530 50%, #23201c 100%);
+      overflow-x: hidden; /* Only hide horizontal overflow */
+    }
+
+    .cart-container {
+      background: rgba(230, 201, 138, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(230, 201, 138, 0.3);
+    }
+
+    .cart-item {
+      background: rgba(230, 201, 138, 0.08);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      border: 1px solid rgba(230, 201, 138, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .cart-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-custom {
+      background: linear-gradient(135deg, #e6c98a, #bfa76a);
+      border: none;
+      color: #23201c;
+      font-weight: 600;
+      border-radius: 25px;
+      padding: 12px 30px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(230, 201, 138, 0.4);
+      background: linear-gradient(135deg, #bfa76a, #e6c98a);
+    }
+
+    .btn-outline-custom {
+      background: transparent;
+      border: 2px solid #e6c98a;
+      color: #e6c98a;
+      border-radius: 25px;
+      padding: 10px 25px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-custom:hover {
+      background: #e6c98a;
+      color: #23201c;
+      transform: translateY(-2px);
+    }
+
+    .navbar-sbs-logo {
+      width: 44px;
+      height: auto;
+      opacity: 0.9;
+      min-width: 32px;
+      margin-right: 0.4rem;
+    }
+
+    /* Floating animation for cart items */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cart-item {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .cart-item:nth-child(2) { animation-delay: 1s; }
+    .cart-item:nth-child(3) { animation-delay: 2s; }
+    .cart-item:nth-child(4) { animation-delay: 3s; }
+
+    /* Glowing effect for total */
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 5px #e6c98a; }
+      50% { text-shadow: 0 0 20px #e6c98a, 0 0 30px #e6c98a; }
+    }
+
+    #cart-total {
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    /* Enhanced Mobile Responsive Design */
+    @media (max-width: 768px) {
+      .hero {
+        min-height: auto; /* Allow content to determine height */
+        overflow-x: hidden;
+        overflow-y: auto; /* Ensure vertical scrolling */
+        padding-top: 2rem;
+        padding-bottom: 2rem; /* Add bottom padding */
+      }
+      
+      .cart-container {
+        margin: 1rem;
+        padding: 1rem;
+        border-radius: 15px;
+        margin-bottom: 2rem; /* Ensure content doesn't touch bottom */
+      }
+      
+      .cart-item {
+        padding: 1rem !important;
+        margin-bottom: 1rem;
+        border-radius: 15px;
+      }
+      
+      /* Force cart items to stack vertically on mobile */
+      .cart-item .row {
+        flex-direction: column !important;
+        text-align: center;
+      }
+      
+      .cart-item .col-md-2,
+      .cart-item .col-md-4,
+      .cart-item .col-md-3,
+      .cart-item .col-md-1 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 1rem;
+      }
+      
+      .cart-item img {
+        width: 80px !important;
+        height: 80px !important;
+        margin: 0 auto;
+        display: block;
+      }
+      
+      .cart-item h5 {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+        color: #fff;
+      }
+      
+      .cart-item .text-muted {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .cart-item .d-flex.align-items-center {
+        justify-content: center;
+        gap: 1rem;
+      }
+      
+      .cart-item .btn-sm {
+        min-width: 40px;
+        padding: 0.5rem;
+      }
+      
+      .cart-item .mx-3 {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+      
+      .cart-item .text-warning.fw-bold {
+        font-size: 1.3rem;
+        margin-bottom: 1rem !important;
+      }
+      
+      /* Bottom buttons area */
+      .d-flex.justify-content-between {
+        flex-direction: column !important;
+        gap: 1rem;
+      }
+      
+      .d-flex.justify-content-between > div {
+        width: 100%;
+        text-align: center;
+      }
+      
+      #cart-total {
+        font-size: 2rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+      }
+      
+      .btn-custom,
+      .btn-outline-custom {
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.1rem;
+        border-radius: 15px;
+        margin: 0.5rem 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .hero {
+        padding-top: 1rem;
+        padding-bottom: 3rem; /* More bottom padding for small screens */
+      }
+      
+      .cart-container {
+        margin: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+        margin-bottom: 3rem;
+      }
+      
+      .cart-item {
+        padding: 0.75rem !important;
+        border-radius: 12px;
+      }
+      
+      .cart-item h5 {
+        font-size: 1rem;
+      }
+      
+      .cart-item .btn {
+        min-width: 35px;
+        padding: 0.375rem 0.625rem;
+        font-size: 0.9rem;
+      }
+      
+      #cart-total {
+        font-size: 1.6rem;
+        padding: 0.75rem;
+      }
+      
+      .btn-custom {
+        padding: 0.875rem;
+        font-size: 1rem;
+      }
+      
+      .btn-outline-custom {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body class="cart-page">
+  
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative active" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+            <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display:none; font-size:0.7rem;">0</span>
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Cart Section -->
+  <section class="hero text-white d-flex align-items-center justify-content-center">
+    <div class="container">
+      <div class="cart-container">
+        <h2 class="text-center mb-4">
+          <i class="bi bi-cart3 me-2"></i>Your Shopping Cart
+        </h2>
+        
+        <!-- Empty Cart Message -->
+        <div id="cart-empty" class="text-center" style="display: none;">
+          <div class="p-5">
+            <i class="bi bi-cart-x" style="font-size: 4rem; color: #e6c98a;"></i>
+            <h3 class="mt-3">Your cart is empty</h3>
+            <p class="text-muted">Add some fragrances to get started!</p>
+            <a href="index.html#catalog" class="btn btn-custom">
+              <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+
+        <!-- Cart Items -->
+        <div id="cart-container" style="display: none;">
+          <div id="cart-items">
+            <!-- Cart items will be rendered here -->
+          </div>
+          
+          <!-- Subtotal section - right above Continue Shopping -->
+          <div class="mt-4 pt-3 border-top border-light text-center">
+            <h5 class="mb-2">Subtotal:</h5>
+            <h4 id="cart-total" class="text-warning mb-3">D0</h4>
+            <a href="index.html#catalog" class="btn btn-outline-custom">
+              <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart Actions Footer - Fixed at bottom -->
+  <div class="d-flex justify-content-between align-items-center" id="cart-actions-footer">
+    <div class="w-100">
+      <button class="btn btn-outline-custom w-100 mb-2" onclick="if(confirm('Are you sure you want to clear your cart?')) { cartManager.clearCart(); }">
+        <i class="bi bi-trash me-2"></i>Clear Cart
+      </button>
+      <button class="btn btn-custom w-100" id="checkoutBtn" onclick="proceedToCheckout()">
+        <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+      </button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/analytics.js"></script>
+  
+
+  <script src="js/shared-utils.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    // Cart debugging for cart page
+    window.debugCartPage = function() {
+      console.log('=== CART PAGE DEBUG ===');
+      console.log('1. CartManager exists:', typeof window.cartManager);
+      console.log('2. cart-items element:', document.getElementById('cart-items'));
+      console.log('3. cart-total element:', document.getElementById('cart-total'));
+      console.log('4. cart-empty element:', document.getElementById('cart-empty'));
+      
+      if (window.cartManager) {
+        console.log('5. CartManager cart:', cartManager.cart);
+        console.log('6. Cart length:', cartManager.cart.length);
+        
+        // Debug each item's image property specifically
+        cartManager.cart.forEach((item, index) => {
+          console.log(`Item ${index + 1}:`, {
+            name: item.name,
+            image: item.image,
+            img: item.img,
+            allProperties: item
+          });
+        });
+        
+        console.log('7. Force render cart page...');
+        cartManager.renderCartPage();
+      }
+    };
+
+    // Auto-debug when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        console.log('=== AUTO CART DEBUG ===');
+        if (window.cartManager) {
+          console.log('Cart contents:', window.cartManager.cart);
+          window.cartManager.cart.forEach(item => {
+            console.log(`${item.name}: image = "${item.image}"`);
+          });
+        }
+      }, 1000);
+    });
+
+    // Test image accessibility
+    window.testBlushImage = function() {
+      const testImg = new Image();
+      testImg.onload = function() {
+        console.log('✅ blush.webp loaded successfully');
+      };
+      testImg.onerror = function() {
+        console.log('❌ blush.webp failed to load');
+      };
+      testImg.src = 'images/blush.webp';
+      console.log('Testing image: images/blush.webp');
+    };
+
+    // Auto-test image when page loads
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        window.testBlushImage();
+      }, 500);
+    });
+
+    // Debugging: Force clear cart and add fresh Blush item
+    window.testBlushAddToCart = function() {
+      console.log('=== TESTING BLUSH ADD TO CART ===');
+      
+      // Clear cart first
+      if (window.cartManager) {
+        window.cartManager.clearCart();
+        console.log('Cart cleared');
+        
+        // Add Blush with explicit image path
+        const blushProduct = {
+          id: 'blush',
+          name: 'Blush',
+          price: 500,
+          image: 'images/blush.webp'
+        };
+        
+        console.log('Adding Blush product:', blushProduct);
+        window.cartManager.addItem(blushProduct);
+        
+        // Check what was actually stored
+        setTimeout(() => {
+          console.log('Cart after adding Blush:', window.cartManager.cart);
+          window.cartManager.renderCartPage();
+        }, 100);
+      }
+    };
+    
+    // Initialize Vanta.js background using shared function
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('.hero', 'waves');
+    } else {
+      // Fallback to direct initialization  
+      VANTA.WAVES({
+        el: ".hero",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A, // Brand gold color
+        shininess: 50.0,
+        waveHeight: 15.0,
+        waveSpeed: 0.5,
+        zoom: 0.75,
+        backgroundAlpha: 0.8
+      });
+    }
+
+    // Initialize cart system
+    document.addEventListener('DOMContentLoaded', function() {
+      // Use the CartManager system that was working
+      if (window.cartManager) {
+        cartManager.updateCartDisplay();
+      }
+      
+      // Track page view
+      if (window.analytics) {
+        window.analytics.track('page_view', {
+          page: 'cart',
+          title: 'Shopping Cart'
+        });
+      }
+    });
+
+         // Cart display is now handled by CartManager in cart.js
+
+         // Cart rendering is now handled by CartManager.renderCartPage() in cart.js
+
+         // Cart quantity and removal functions are now provided globally by CartManager:
+         // - window.updateCartQuantity(productId, quantity) 
+         // - window.removeFromCart(productId)
+         // - window.clearCart()
+
+         // Proceed to checkout
+     function proceedToCheckout() {
+       const cart = JSON.parse(localStorage.getItem('sensation_cart')) || [];
+       
+       if (cart.length > 0) {
+         window.location.href = 'checkout.html';
+       } else {
+         alert('Your cart is empty. Please add some items before checkout.');
+       }
+     }
+
+    // Listen for cart updates from other pages
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'sensation_cart') {
+        updateCartDisplay();
+      }
+    });
+
+    // Update cart display when cart changes
+    window.addEventListener('cartUpdated', function() {
+      updateCartDisplay();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+﻿Backup created: 2025-09-03 17:30:17
+Project: Newsense
+Version: Latest
+Features:
+- Contact form with Firestore integration
+- Admin panel with contacts management
+- Product catalog and cart system
+- Firebase authentication
+- Responsive design and animations
+- Order management system
+- User management system
+
+Backup location: C:\xampp\htdocs\newsense\backups\newsense_2025-09-03_17-30-17

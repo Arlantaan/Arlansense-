@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout - Sensation by Sanu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    body.hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #23201c 0%, #3d3530 50%, #23201c 100%);
+      color: white;
+      position: relative;
+      overflow-x: hidden; /* Only hide horizontal overflow */
+    }
+    
+    /* Scrolling handled by main CSS file */
+    .checkout-content {
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow-x: hidden; /* Prevent horizontal scrolling */
+    }
+    .btn {
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Mobile Responsive Design */
+    @media (max-width: 768px) {
+      body.hero {
+        min-height: auto; /* Allow content to determine height */
+        overflow-x: hidden;
+        overflow-y: auto; /* Ensure vertical scrolling */
+        padding-bottom: 2rem; /* Add bottom padding */
+      }
+      
+      .checkout-content {
+        margin-top: 20px;
+        padding: 0 0.5rem;
+        margin-bottom: 2rem; /* Ensure content doesn't touch bottom */
+      }
+      
+      .card {
+        margin: 0.5rem;
+        padding: 1rem;
+        border-radius: 15px;
+      }
+      
+      .card-header {
+        padding: 1rem;
+        border-radius: 15px 15px 0 0 !important;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      /* Order Summary Mobile Improvements - Target actual structure */
+      #orderSummary .d-flex.align-items-center {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+      }
+      
+      #orderSummary img {
+        width: 60px !important;
+        height: 60px !important;
+        margin: 0 auto 0.75rem auto !important;
+        border-radius: 8px;
+      }
+      
+      #orderSummary .flex-grow-1 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.75rem;
+      }
+      
+      #orderSummary .flex-grow-1 strong {
+        font-size: 1.1rem;
+        color: #fff;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      
+      #orderSummary .text-muted {
+        font-size: 1rem;
+        color: #e6c98a !important;
+        display: block;
+        margin-bottom: 0.25rem;
+      }
+      
+      #orderSummary .text-secondary {
+        font-size: 0.9rem;
+        color: #ccc !important;
+      }
+      
+      #orderSummary .fw-bold {
+        font-size: 1.2rem;
+        color: #e6c98a !important;
+        font-weight: bold;
+      }
+      
+      /* Form Field Improvements */
+      .form-control {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .form-control:focus {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #e6c98a;
+        box-shadow: 0 0 0 0.2rem rgba(230, 201, 138, 0.25);
+      }
+      
+      .form-label {
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+      }
+      
+      /* Button Improvements */
+      .btn-primary, .btn-dark, .btn-lg {
+        width: 100% !important;
+        padding: 1rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #e6c98a, #bfa76a) !important;
+        border: none !important;
+        color: #23201c !important;
+        margin-top: 1rem;
+      }
+      
+      .btn-primary:hover, .btn-dark:hover, .btn-lg:hover {
+        background: linear-gradient(135deg, #bfa76a, #e6c98a) !important;
+        color: #23201c !important;
+      }
+      
+      .text-end {
+        text-align: center !important;
+      }
+      
+      .btn-outline-secondary {
+        width: 100% !important;
+        padding: 0.875rem;
+        margin-top: 1rem;
+        border-radius: 12px;
+      }
+      
+      /* Subtotal Display */
+      .subtotal-display {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 1.5rem 0;
+        border: 2px solid rgba(230, 201, 138, 0.3);
+      }
+      
+      .subtotal-display h4 {
+        color: #e6c98a;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-shadow: 0 2px 10px rgba(230, 201, 138, 0.3);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body.hero {
+        padding-top: 1rem;
+        padding-bottom: 3rem; /* More bottom padding for small screens */
+      }
+      
+      .checkout-content {
+        margin-top: 10px;
+        padding: 0 0.25rem;
+        margin-bottom: 3rem;
+      }
+      
+      .card {
+        margin: 0.25rem;
+        padding: 0.75rem;
+        border-radius: 12px;
+      }
+      
+      .card-header {
+        padding: 0.75rem;
+        font-size: 1.1rem;
+      }
+      
+      .card-body {
+        padding: 0.75rem;
+      }
+      
+      .order-summary-item {
+        padding: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+      
+      .order-summary-item img {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .form-control {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+      }
+      
+      .btn-primary {
+        padding: 0.875rem;
+        font-size: 1rem;
+      }
+      
+      .subtotal-display {
+        padding: 1rem;
+        margin: 1rem 0;
+      }
+      
+      .subtotal-display h4 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+<body class="hero">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background-color: rgba(35, 32, 28, 0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="index.html">
+        <img src="images/sbs.svg" alt="SBS Logo" style="width: 32px; height: auto;">
+        Sensation by Sanu
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#catalog">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="track.html">Track Order</a></li>
+          <li class="nav-item"><a class="nav-link" href="account.html" id="nav-account-link">
+            <i class="bi bi-person me-1"></i><span id="nav-user-name">Account</span>
+          </a></li>
+          <li class="nav-item"><a class="nav-link position-relative" href="cart.html">
+            <i class="bi bi-cart3 me-1"></i>Cart
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="checkout-content container">
+    <h2 class="text-center mb-4">Checkout</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="card p-4 mb-4">
+          <h5>Order Summary</h5>
+          <div id="orderSummary"></div>
+          <hr>
+          <form id="checkoutForm">
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required />
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <div class="input-group">
+                <select class="form-select" id="phone-prefix" style="max-width: 120px;" onchange="updateCountryFromPhone()">
+                  <option value="+220">+220 🇬🇲</option>
+                </select>
+                <input type="tel" class="form-control" id="phone" placeholder="7123456" required />
+              </div>
+              <small class="form-text text-muted">Select country code and enter your phone number</small>
+            </div>
+            <div class="mb-3">
+              <label for="country" class="form-label">Country/Location</label>
+              <select class="form-control" id="country" required onchange="updateShippingInfo()">
+                <option value="">Select your country...</option>
+                <option value="gambia">🇬🇲 Gambia (Local Delivery)</option>
+                <option value="senegal">🇸🇳 Senegal</option>
+                <option value="guinea-bissau">🇬🇼 Guinea-Bissau</option>
+                <option value="guinea">🇬🇳 Guinea</option>
+                <option value="mali">🇲🇱 Mali</option>
+                <option value="mauritania">🇲🇷 Mauritania</option>
+                <option value="other-africa">🌍 Other African Country</option>
+                <option value="europe">🇪🇺 Europe</option>
+                <option value="north-america">🇺🇸 North America</option>
+                <option value="other">🌎 Other International</option>
+              </select>
+            </div>
+            
+            <div id="shippingInfo" class="alert alert-info" style="display: none;">
+              <!-- Shipping information will be displayed here -->
+            </div>
+            
+            <div class="mb-3">
+              <label for="address" class="form-label">Delivery Address</label>
+              
+              <!-- GPS Location Button (Primary Option) -->
+              <button type="button" id="useLocationBtn" class="btn btn-primary btn-lg w-100 mb-3" style="background: linear-gradient(45deg, #007bff, #0056b3); border: none; font-size: 1.1rem; padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,123,255,0.3);">
+                📍 Use My Location (Fastest & Most Accurate)
+              </button>
+              
+              <!-- GPS Status Display -->
+              <div id="gpsStatus" class="alert alert-success" style="display: none;">
+                <i class="bi bi-geo-alt-fill"></i> <strong>Location Captured!</strong>
+                <br><small id="gpsCoordinates" class="text-muted"></small>
+                <br><small id="gpsAddress" class="text-muted"></small>
+              </div>
+              
+              <!-- Manual Address Section (Hidden by default) -->
+              <div id="manualAddressSection" style="display: none;">
+                <textarea class="form-control" id="address" rows="3" placeholder="Enter your complete delivery address..."></textarea>
+                <small class="text-muted mt-1 d-block">
+                  <i class="bi bi-info-circle"></i> GPS location would be more accurate for delivery
+                </small>
+              </div>
+              
+              <!-- Manual Entry Toggle -->
+              <div class="text-center mt-2">
+                <button type="button" id="useManualBtn" class="btn btn-link text-muted btn-sm">
+                  <i class="bi bi-pencil"></i> Can't use GPS? Enter address manually
+                </button>
+              </div>
+            </div>
+            
+            <!-- Payment Method Selection -->
+            <div class="mb-4">
+              <label class="form-label fw-bold">
+                <i class="bi bi-credit-card me-2"></i>Payment Method
+              </label>
+              <div class="payment-methods">
+                <!-- Available Option: Cash on Delivery -->
+                <div class="row g-3 mb-3">
+                  <div class="col-12">
+                    <div class="payment-option">
+                      <input type="radio" class="form-check-input" id="cashOnDelivery" name="paymentMethod" value="cash" checked>
+                      <label class="payment-card payment-card-available" for="cashOnDelivery">
+                        <div class="payment-icon">💵</div>
+                        <div class="payment-details">
+                          <h5 class="mb-1">Cash on Delivery</h5>
+                          <p class="mb-0 text-muted">Pay when your order arrives at your doorstep</p>
+                          <small class="text-success"><i class="bi bi-check-circle me-1"></i>Most trusted & convenient</small>
+                        </div>
+                        <div class="payment-badge">
+                          <span class="badge bg-success">
+                            <i class="bi bi-star-fill me-1"></i>Recommended
+                          </span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Coming Soon Options -->
+                <div class="coming-soon-section">
+                  <h6 class="text-muted mb-3">
+                    <i class="bi bi-clock me-2"></i>More Payment Options Coming Soon
+                  </h6>
+                  <div class="row g-3">
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="mobileMoney" name="paymentMethod" value="mobile" disabled>
+                        <label class="payment-card payment-card-disabled" for="mobileMoney">
+                          <div class="payment-icon">📱</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Mobile Money</h6>
+                            <small class="text-muted">Wave, QMoney, Orange</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="bankTransfer" name="paymentMethod" value="bank" disabled>
+                        <label class="payment-card payment-card-disabled" for="bankTransfer">
+                          <div class="payment-icon">🏦</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Bank Transfer</h6>
+                            <small class="text-muted">Direct payment</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <div class="payment-option">
+                        <input type="radio" class="form-check-input" id="cardPayment" name="paymentMethod" value="card" disabled>
+                        <label class="payment-card payment-card-disabled" for="cardPayment">
+                          <div class="payment-icon">💳</div>
+                          <div class="payment-details">
+                            <h6 class="mb-1">Credit Cards</h6>
+                            <small class="text-muted">Visa, Mastercard</small>
+                          </div>
+                          <div class="payment-badge">
+                            <span class="badge bg-warning">Soon</span>
+                          </div>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="checkoutMsg" class="text-danger small mb-2"></div>
+            <div class="text-end">
+              <button type="submit" class="btn btn-dark btn-lg">
+                <i class="bi bi-credit-card me-2"></i>Place Order & Pay
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="text-center">
+          <a href="cart.html" class="btn btn-outline-secondary">Back to Cart</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Payment Integration -->
+  <div id="payment-element" class="mb-3"></div>
+  <div id="payment-error" class="alert alert-danger" style="display: none;"></div>
+  
+  <!-- Loading Spinner -->
+  <div id="payment-loader" class="text-center" style="display: none;">
+    <div class="spinner-border text-warning" role="status">
+      <span class="visually-hidden">Processing payment...</span>
+    </div>
+    <p class="mt-2">Processing your payment...</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white text-center py-4">
+    <div class="container">
+      <p class="mb-0">© 2025 Sensation by Sanu • All rights reserved • Powered by Octopus Tech</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/shared-utils.js"></script>
+  <script src="js/location-utils.js"></script>
+  <script>
+    // Test if CONFIG loads
+    console.log('After loading config.js, CONFIG is:', typeof CONFIG);
+    if (typeof CONFIG === 'undefined') {
+      console.error('CONFIG still not defined after loading config.js');
+    } else {
+      console.log('CONFIG loaded successfully:', CONFIG);
+    }
+  </script>
+  <script src="js/analytics.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/scroll-fixes.js"></script>
+
+  
+  <script>
+    // Location-based shipping logic
+    function updateShippingInfo() {
+      const country = document.getElementById('country').value;
+      const shippingInfo = document.getElementById('shippingInfo');
+      
+      if (!country) {
+        shippingInfo.style.display = 'none';
+        return;
+      }
+      
+      shippingInfo.style.display = 'block';
+      
+      if (country === 'gambia') {
+        shippingInfo.className = 'alert alert-success';
+        shippingInfo.innerHTML = `
+          <i class="bi bi-truck me-2"></i>
+          <strong>Local Delivery</strong><br>
+          • Free delivery within Gambia<br>
+          • Delivered in 1-2 business days<br>
+          • No customs or import duties
+        `;
+      } else {
+        shippingInfo.className = 'alert alert-warning';
+        const isNeighbor = ['senegal', 'guinea-bissau', 'guinea', 'mali', 'mauritania'].includes(country);
+        const deliveryTime = isNeighbor ? '5-7 business days' : '7-14 business days';
+        const shippingCost = isNeighbor ? 'D250' : 'D500-750';
+        
+        shippingInfo.innerHTML = `
+          <i class="bi bi-airplane me-2"></i>
+          <strong>International Shipping</strong><br>
+          • Shipping cost: ${shippingCost}<br>
+          • Delivery time: ${deliveryTime}<br>
+          • Customs/duties may apply<br>
+          • Full tracking provided
+        `;
+      }
+    }
+    
+    // Determine if order needs shipping based on location
+    function needsShipping(country) {
+      return country !== 'gambia';
+    }
+    
+    // Ask for user location permission and detect automatically
+    async function detectLocationAndSetDefaults() {
+      // First check if geolocation is supported
+      if ("geolocation" in navigator) {
+        // Show location permission request
+        showLocationPermissionRequest();
+        
+        // Try to get precise GPS location
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          async position => {
+            console.log('GPS Location detected:', position);
+            hideLocationPermissionRequest();
+            // Use reverse geocoding to get country from coordinates
+            await reverseGeocode(position.coords.latitude, position.coords.longitude);
+          },
+          // Error callback
+          async error => {
+            console.log('GPS location denied or failed:', error);
+            hideLocationPermissionRequest();
+            
+            // Show fallback message
+            showLocationFallbackNotice();
+            
+            // Fallback to IP-based detection
+            await fallbackToIPDetection();
+          },
+          // Options
+          {
+            enableHighAccuracy: false,
+            timeout: 10000,
+            maximumAge: 300000 // 5 minutes cache
+          }
+        );
+      } else {
+        console.log('Geolocation not supported');
+        // Directly fallback to IP-based detection
+        await fallbackToIPDetection();
+      }
+    }
+    
+    // Show location permission request UI
+    function showLocationPermissionRequest() {
+      const notice = document.createElement('div');
+      notice.id = 'location-permission-notice';
+      notice.className = 'alert alert-info alert-dismissible fade show';
+      notice.innerHTML = `
+        <div class="d-flex align-items-center">
+          <i class="bi bi-geo-alt me-3 fs-4 text-info"></i>
+          <div class="flex-grow-1">
+            <strong>📍 Smart Location Detection</strong><br>
+            <small>We'd like to detect your exact location to automatically set your country and phone code. Please click "Allow" when your browser asks for location permission.</small>
+          </div>
+        </div>
+      `;
+      
+      const form = document.getElementById('checkoutForm');
+      form.insertBefore(notice, form.firstChild);
+    }
+    
+    // Hide location permission request UI
+    function hideLocationPermissionRequest() {
+      const notice = document.getElementById('location-permission-notice');
+      if (notice) {
+        notice.remove();
+      }
+    }
+    
+    // Show fallback message
+    function showLocationFallbackNotice() {
+      const notice = document.createElement('div');
+      notice.id = 'location-fallback-notice';
+      notice.className = 'alert alert-warning alert-dismissible fade show';
+      notice.innerHTML = `
+        <div class="d-flex align-items-center">
+          <i class="bi bi-info-circle me-3 fs-5 text-warning"></i>
+          <div class="flex-grow-1">
+            <strong>📍 Using Approximate Location</strong><br>
+            <small>Location permission denied. We'll detect your country using your internet connection instead.</small>
+          </div>
+        </div>
+      `;
+      
+      const form = document.getElementById('checkoutForm');
+      form.insertBefore(notice, form.firstChild);
+      
+      // Auto-dismiss after 4 seconds
+      setTimeout(() => {
+        if (notice && notice.parentNode) {
+          notice.remove();
+        }
+      }, 4000);
+    }
+    
+    // Reverse geocoding using coordinates
+    async function reverseGeocode(lat, lon) {
+      try {
+        // Using a free reverse geocoding service
+        const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+        const data = await response.json();
+        
+        console.log('Reverse geocoding result:', data);
+        
+        const countryCode = data.countryCode;
+        const countryName = data.countryName;
+        
+        if (countryCode) {
+          setCountryFromCode(countryCode, countryName, 'precise GPS location');
+        } else {
+          await fallbackToIPDetection();
+        }
+      } catch (error) {
+        console.log('Reverse geocoding failed:', error);
+        await fallbackToIPDetection();
+      }
+    }
+    
+    // Fallback to IP-based detection
+    async function fallbackToIPDetection() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        
+        console.log('IP Location detected:', data);
+        
+        if (data.country_code) {
+          setCountryFromCode(data.country_code, data.country_name, 'internet connection');
+        } else {
+          setDefaultCountry();
+        }
+      } catch (error) {
+        console.log('IP location detection failed:', error);
+        setDefaultCountry();
+      }
+    }
+    
+    // Set country from country code
+    function setCountryFromCode(countryCode, countryName, detectionMethod) {
+      const countrySelect = document.getElementById('country');
+      const phonePrefix = document.getElementById('phone-prefix');
+      
+      if (!window.countriesData) {
+        setDefaultCountry();
+        return;
+      }
+      
+      // Country code mapping to our country codes
+      const countryMapping = {
+        'gm': 'gambia', 'sn': 'senegal', 'gw': 'guinea-bissau', 'gn': 'guinea',
+        'ml': 'mali', 'mr': 'mauritania', 'sl': 'sierra-leone', 'lr': 'liberia',
+        'cv': 'cape-verde', 'ng': 'nigeria', 'gh': 'ghana', 'ci': 'ivory-coast',
+        'bf': 'burkina-faso', 'tg': 'togo', 'bj': 'benin', 'ne': 'niger',
+        'td': 'chad', 'cm': 'cameroon', 'cf': 'central-african-republic',
+        'gq': 'equatorial-guinea', 'ga': 'gabon', 'cg': 'congo', 'cd': 'democratic-republic-congo',
+        'ao': 'angola', 'za': 'south-africa', 'na': 'namibia', 'bw': 'botswana',
+        'zw': 'zimbabwe', 'zm': 'zambia', 'mw': 'malawi', 'mz': 'mozambique',
+        'mg': 'madagascar', 'mu': 'mauritius', 'sc': 'seychelles', 'et': 'ethiopia',
+        'ke': 'kenya', 'ug': 'uganda', 'tz': 'tanzania', 'rw': 'rwanda',
+        'bi': 'burundi', 'dj': 'djibouti', 'so': 'somalia', 'er': 'eritrea',
+        'sd': 'sudan', 'ss': 'south-sudan', 'eg': 'egypt', 'ly': 'libya',
+        'tn': 'tunisia', 'dz': 'algeria', 'ma': 'morocco', 'fr': 'france',
+        'es': 'spain', 'pt': 'portugal', 'it': 'italy', 'de': 'germany',
+        'gb': 'united-kingdom', 'ie': 'ireland', 'nl': 'netherlands', 'be': 'belgium',
+        'lu': 'luxembourg', 'ch': 'switzerland', 'at': 'austria', 'dk': 'denmark',
+        'se': 'sweden', 'no': 'norway', 'fi': 'finland', 'is': 'iceland',
+        'pl': 'poland', 'cz': 'czech-republic', 'sk': 'slovakia', 'hu': 'hungary',
+        'ro': 'romania', 'bg': 'bulgaria', 'gr': 'greece', 'cy': 'cyprus',
+        'mt': 'malta', 'hr': 'croatia', 'si': 'slovenia', 'ba': 'bosnia-herzegovina',
+        'rs': 'serbia', 'me': 'montenegro', 'mk': 'north-macedonia', 'al': 'albania',
+        'xk': 'kosovo', 'md': 'moldova', 'ua': 'ukraine', 'by': 'belarus',
+        'lt': 'lithuania', 'lv': 'latvia', 'ee': 'estonia', 'ru': 'russia',
+        'us': 'united-states', 'ca': 'canada', 'mx': 'mexico', 'br': 'brazil',
+        'ar': 'argentina', 'cl': 'chile', 'pe': 'peru', 'co': 'colombia',
+        've': 'venezuela', 'ec': 'ecuador', 'bo': 'bolivia', 'py': 'paraguay',
+        'uy': 'uruguay', 'gy': 'guyana', 'sr': 'suriname', 'cu': 'cuba',
+        'jm': 'jamaica', 'ht': 'haiti', 'do': 'dominican-republic', 'gt': 'guatemala',
+        'bz': 'belize', 'hn': 'honduras', 'sv': 'el-salvador', 'ni': 'nicaragua',
+        'cr': 'costa-rica', 'pa': 'panama', 'cn': 'china', 'in': 'india',
+        'jp': 'japan', 'kr': 'south-korea', 'th': 'thailand', 'vn': 'vietnam',
+        'my': 'malaysia', 'sg': 'singapore', 'id': 'indonesia', 'ph': 'philippines',
+        'mm': 'myanmar', 'kh': 'cambodia', 'la': 'laos', 'bn': 'brunei',
+        'bd': 'bangladesh', 'lk': 'sri-lanka', 'mv': 'maldives', 'np': 'nepal',
+        'bt': 'bhutan', 'pk': 'pakistan', 'af': 'afghanistan', 'ir': 'iran',
+        'iq': 'iraq', 'tr': 'turkey', 'sy': 'syria', 'lb': 'lebanon',
+        'jo': 'jordan', 'il': 'israel', 'ps': 'palestine', 'sa': 'saudi-arabia',
+        'ye': 'yemen', 'om': 'oman', 'ae': 'uae', 'qa': 'qatar',
+        'bh': 'bahrain', 'kw': 'kuwait', 'kz': 'kazakhstan', 'kg': 'kyrgyzstan',
+        'tj': 'tajikistan', 'tm': 'turkmenistan', 'uz': 'uzbekistan', 'mn': 'mongolia',
+        'au': 'australia', 'nz': 'new-zealand', 'pg': 'papua-new-guinea', 'fj': 'fiji',
+        'sb': 'solomon-islands', 'vu': 'vanuatu', 'ws': 'samoa', 'to': 'tonga'
+      };
+      
+      const mappedCountry = countryMapping[countryCode.toLowerCase()];
+      if (mappedCountry) {
+        // Find the country data
+        const countryData = window.countriesData.find(c => c.code === mappedCountry);
+        if (countryData) {
+          countrySelect.value = mappedCountry;
+          phonePrefix.value = countryData.phone;
+          
+          // Trigger shipping info update
+          updateShippingInfo();
+          
+          // Show success notice
+          showLocationDetectionSuccess(countryName || countryData.name, detectionMethod);
+        }
+      } else {
+        // Fallback to Gambia for unmapped countries
+        setDefaultCountry();
+        showLocationDetectionSuccess(countryName || 'Unknown location', detectionMethod);
+      }
+    }
+    
+    // Set default country (Gambia)
+    function setDefaultCountry() {
+      const countrySelect = document.getElementById('country');
+      const phonePrefix = document.getElementById('phone-prefix');
+      
+      if (countrySelect) {
+        countrySelect.value = 'gambia';
+      }
+      if (phonePrefix) {
+        phonePrefix.value = '+220';
+      }
+      updateShippingInfo();
+    }
+    
+    // Show location detection success
+    function showLocationDetectionSuccess(countryName, method) {
+      const notice = document.createElement('div');
+      notice.className = 'alert alert-success alert-dismissible fade show';
+      notice.innerHTML = `
+        <div class="d-flex align-items-center">
+          <i class="bi bi-check-circle me-3 text-success fs-5"></i>
+          <div class="flex-grow-1">
+            <strong>📍 Location Detected Successfully</strong><br>
+            <small>We detected you're in <strong>${countryName}</strong> via ${method}. Your country and phone code have been set automatically.</small>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+      
+      const form = document.getElementById('checkoutForm');
+      form.insertBefore(notice, form.firstChild);
+      
+      // Auto-dismiss after 6 seconds
+      setTimeout(() => {
+        if (notice && notice.parentNode) {
+          notice.remove();
+        }
+      }, 6000);
+    }
+    
+    // Show location detection notification
+    function showLocationNotice(countryName) {
+      const notice = document.createElement('div');
+      notice.className = 'alert alert-info alert-dismissible fade show mt-2';
+      notice.innerHTML = `
+        <i class="bi bi-geo-alt me-2"></i>
+        <strong>Location detected:</strong> ${countryName}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      const countryField = document.getElementById('country').parentNode;
+      countryField.appendChild(notice);
+      
+      // Auto-dismiss after 5 seconds
+      setTimeout(() => {
+        if (notice && notice.parentNode) {
+          notice.remove();
+        }
+      }, 5000);
+    }
+    
+    // Populate phone prefix dropdown with all country codes
+    function populatePhonePrefixes() {
+      const phonePrefix = document.getElementById('phone-prefix');
+      
+      if (!window.countriesData) return;
+      
+      // Clear existing options
+      phonePrefix.innerHTML = '';
+      
+      // Create options from countries data
+      window.countriesData.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.phone;
+        option.textContent = `${country.phone} ${country.flag}`;
+        option.setAttribute('data-country', country.code);
+        phonePrefix.appendChild(option);
+      });
+    }
+    
+    // Update phone prefix when country changes
+    function updatePhonePrefix(country) {
+      const phonePrefix = document.getElementById('phone-prefix');
+      
+      if (!window.countriesData) return;
+      
+      const countryData = window.countriesData.find(c => c.code === country);
+      if (countryData) {
+        phonePrefix.value = countryData.phone;
+      }
+    }
+    
+    // Update country when phone prefix changes
+    function updateCountryFromPhone() {
+      const phonePrefix = document.getElementById('phone-prefix');
+      const countrySelect = document.getElementById('country');
+      const selectedOption = phonePrefix.options[phonePrefix.selectedIndex];
+      
+      if (selectedOption && selectedOption.getAttribute('data-country')) {
+        const countryCode = selectedOption.getAttribute('data-country');
+        countrySelect.value = countryCode;
+        updateShippingInfo();
+      }
+    }
+    
+    // Enhanced updateShippingInfo to also update phone prefix and placeholder
+    const originalUpdateShippingInfo = updateShippingInfo;
+    updateShippingInfo = function() {
+      const country = document.getElementById('country').value;
+      updatePhonePrefix(country);
+      updatePhonePlaceholder(country);
+      originalUpdateShippingInfo();
+    };
+    
+    // Update phone placeholder based on country
+    function updatePhonePlaceholder(country) {
+      const phoneInput = document.getElementById('phone');
+      const placeholders = {
+        'gambia': '7123456',
+        'senegal': '771234567',
+        'guinea-bissau': '1234567',
+        'guinea': '621234567',
+        'mali': '71234567',
+        'mauritania': '22123456',
+        'united-kingdom': '7700900123',
+        'france': '123456789',
+        'germany': '1234567890',
+        'spain': '612345678',
+        'italy': '3123456789',
+        'portugal': '912345678',
+        'netherlands': '612345678',
+        'united-states': '2025551234',
+        'canada': '4165551234',
+        'china': '13812345678',
+        'india': '9876543210',
+        'japan': '9012345678',
+        'australia': '412345678',
+        'brazil': '11987654321',
+        'nigeria': '8012345678',
+        'south-africa': '721234567'
+      };
+      
+      phoneInput.placeholder = placeholders[country] || '1234567890';
+    }
+    
+    // Smart phone number parsing - detects country code in full number
+    function parsePhoneNumber(phoneInput) {
+      // Remove all non-digit characters
+      const digits = phoneInput.replace(/\D/g, '');
+      
+      // If it starts with +, remove the +
+      let cleanInput = phoneInput.replace(/^\+/, '');
+      cleanInput = cleanInput.replace(/\D/g, '');
+      
+      if (!window.countriesData) return null;
+      
+      // Try to match country codes (longest first to avoid conflicts)
+      const sortedCountries = [...window.countriesData].sort((a, b) => 
+        b.phone.replace('+', '').length - a.phone.replace('+', '').length
+      );
+      
+      for (const country of sortedCountries) {
+        const countryCode = country.phone.replace('+', '');
+        if (cleanInput.startsWith(countryCode)) {
+          return {
+            countryCode: country.phone,
+            countryKey: country.code,
+            localNumber: cleanInput.substring(countryCode.length),
+            fullNumber: cleanInput
+          };
+        }
+      }
+      
+      return null;
+    }
+    
+    // Add smart phone input handler
+    function addSmartPhoneHandler() {
+      const phoneInput = document.getElementById('phone');
+      
+      phoneInput.addEventListener('input', function() {
+        const value = this.value;
+        
+        // Only parse if it looks like a full international number
+        if (value.startsWith('+') || (value.replace(/\D/g, '').length > 10)) {
+          const parsed = parsePhoneNumber(value);
+          
+          if (parsed) {
+            // Update country code dropdown
+            const phonePrefix = document.getElementById('phone-prefix');
+            phonePrefix.value = parsed.countryCode;
+            
+            // Update country selection
+            const countrySelect = document.getElementById('country');
+            countrySelect.value = parsed.countryKey;
+            
+            // Set local number only
+            this.value = parsed.localNumber;
+            
+            // Update shipping info and placeholder
+            updateShippingInfo();
+            
+            // Show helpful message
+            showSmartDetectionNotice(parsed.countryCode);
+          }
+        }
+      });
+      
+      phoneInput.addEventListener('paste', function(e) {
+        // Small delay to let paste complete
+        setTimeout(() => {
+          const value = this.value;
+          const parsed = parsePhoneNumber(value);
+          
+          if (parsed) {
+            const phonePrefix = document.getElementById('phone-prefix');
+            phonePrefix.value = parsed.countryCode;
+            
+            const countrySelect = document.getElementById('country');
+            countrySelect.value = parsed.countryKey;
+            
+            this.value = parsed.localNumber;
+            updateShippingInfo();
+            showSmartDetectionNotice(parsed.countryCode);
+          }
+        }, 100);
+      });
+    }
+    
+    // Show smart detection notification
+    function showSmartDetectionNotice(countryCode) {
+      const notice = document.createElement('div');
+      notice.className = 'alert alert-success alert-dismissible fade show mt-2';
+      notice.innerHTML = `
+        <i class="bi bi-check-circle me-2"></i>
+        <strong>Smart detection:</strong> Country code ${countryCode} detected and selected
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      const phoneField = document.getElementById('phone').parentNode.parentNode;
+      phoneField.appendChild(notice);
+      
+      // Auto-dismiss after 4 seconds
+      setTimeout(() => {
+        if (notice && notice.parentNode) {
+          notice.remove();
+        }
+      }, 4000);
+    }
+    
+    // Populate all world countries
+    function populateCountries() {
+      const countries = [
+        // Local delivery
+        { code: 'gambia', name: 'Gambia (Local Delivery)', flag: '🇬🇲', phone: '+220', shipping: 'local' },
+        
+        // West Africa - Regional shipping
+        { code: 'senegal', name: 'Senegal', flag: '🇸🇳', phone: '+221', shipping: 'regional' },
+        { code: 'guinea-bissau', name: 'Guinea-Bissau', flag: '🇬🇼', phone: '+245', shipping: 'regional' },
+        { code: 'guinea', name: 'Guinea', flag: '🇬🇳', phone: '+224', shipping: 'regional' },
+        { code: 'mali', name: 'Mali', flag: '🇲🇱', phone: '+223', shipping: 'regional' },
+        { code: 'mauritania', name: 'Mauritania', flag: '🇲🇷', phone: '+222', shipping: 'regional' },
+        { code: 'sierra-leone', name: 'Sierra Leone', flag: '🇸🇱', phone: '+232', shipping: 'regional' },
+        { code: 'liberia', name: 'Liberia', flag: '🇱🇷', phone: '+231', shipping: 'regional' },
+        { code: 'cape-verde', name: 'Cape Verde', flag: '🇨🇻', phone: '+238', shipping: 'regional' },
+        
+        // Africa
+        { code: 'nigeria', name: 'Nigeria', flag: '🇳🇬', phone: '+234', shipping: 'international' },
+        { code: 'ghana', name: 'Ghana', flag: '🇬🇭', phone: '+233', shipping: 'international' },
+        { code: 'ivory-coast', name: 'Ivory Coast', flag: '🇨🇮', phone: '+225', shipping: 'international' },
+        { code: 'burkina-faso', name: 'Burkina Faso', flag: '🇧🇫', phone: '+226', shipping: 'international' },
+        { code: 'togo', name: 'Togo', flag: '🇹🇬', phone: '+228', shipping: 'international' },
+        { code: 'benin', name: 'Benin', flag: '🇧🇯', phone: '+229', shipping: 'international' },
+        { code: 'niger', name: 'Niger', flag: '🇳🇪', phone: '+227', shipping: 'international' },
+        { code: 'chad', name: 'Chad', flag: '🇹🇩', phone: '+235', shipping: 'international' },
+        { code: 'cameroon', name: 'Cameroon', flag: '🇨🇲', phone: '+237', shipping: 'international' },
+        { code: 'central-african-republic', name: 'Central African Republic', flag: '🇨🇫', phone: '+236', shipping: 'international' },
+        { code: 'equatorial-guinea', name: 'Equatorial Guinea', flag: '🇬🇶', phone: '+240', shipping: 'international' },
+        { code: 'gabon', name: 'Gabon', flag: '🇬🇦', phone: '+241', shipping: 'international' },
+        { code: 'congo', name: 'Congo', flag: '🇨🇬', phone: '+242', shipping: 'international' },
+        { code: 'democratic-republic-congo', name: 'DR Congo', flag: '🇨🇩', phone: '+243', shipping: 'international' },
+        { code: 'angola', name: 'Angola', flag: '🇦🇴', phone: '+244', shipping: 'international' },
+        { code: 'south-africa', name: 'South Africa', flag: '🇿🇦', phone: '+27', shipping: 'international' },
+        { code: 'namibia', name: 'Namibia', flag: '🇳🇦', phone: '+264', shipping: 'international' },
+        { code: 'botswana', name: 'Botswana', flag: '🇧🇼', phone: '+267', shipping: 'international' },
+        { code: 'zimbabwe', name: 'Zimbabwe', flag: '🇿🇼', phone: '+263', shipping: 'international' },
+        { code: 'zambia', name: 'Zambia', flag: '🇿🇲', phone: '+260', shipping: 'international' },
+        { code: 'malawi', name: 'Malawi', flag: '🇲🇼', phone: '+265', shipping: 'international' },
+        { code: 'mozambique', name: 'Mozambique', flag: '🇲🇿', phone: '+258', shipping: 'international' },
+        { code: 'madagascar', name: 'Madagascar', flag: '🇲🇬', phone: '+261', shipping: 'international' },
+        { code: 'mauritius', name: 'Mauritius', flag: '🇲🇺', phone: '+230', shipping: 'international' },
+        { code: 'seychelles', name: 'Seychelles', flag: '🇸🇨', phone: '+248', shipping: 'international' },
+        { code: 'ethiopia', name: 'Ethiopia', flag: '🇪🇹', phone: '+251', shipping: 'international' },
+        { code: 'kenya', name: 'Kenya', flag: '🇰🇪', phone: '+254', shipping: 'international' },
+        { code: 'uganda', name: 'Uganda', flag: '🇺🇬', phone: '+256', shipping: 'international' },
+        { code: 'tanzania', name: 'Tanzania', flag: '🇹🇿', phone: '+255', shipping: 'international' },
+        { code: 'rwanda', name: 'Rwanda', flag: '🇷🇼', phone: '+250', shipping: 'international' },
+        { code: 'burundi', name: 'Burundi', flag: '🇧🇮', phone: '+257', shipping: 'international' },
+        { code: 'djibouti', name: 'Djibouti', flag: '🇩🇯', phone: '+253', shipping: 'international' },
+        { code: 'somalia', name: 'Somalia', flag: '🇸🇴', phone: '+252', shipping: 'international' },
+        { code: 'eritrea', name: 'Eritrea', flag: '🇪🇷', phone: '+291', shipping: 'international' },
+        { code: 'sudan', name: 'Sudan', flag: '🇸🇩', phone: '+249', shipping: 'international' },
+        { code: 'south-sudan', name: 'South Sudan', flag: '🇸🇸', phone: '+211', shipping: 'international' },
+        { code: 'egypt', name: 'Egypt', flag: '🇪🇬', phone: '+20', shipping: 'international' },
+        { code: 'libya', name: 'Libya', flag: '🇱🇾', phone: '+218', shipping: 'international' },
+        { code: 'tunisia', name: 'Tunisia', flag: '🇹🇳', phone: '+216', shipping: 'international' },
+        { code: 'algeria', name: 'Algeria', flag: '🇩🇿', phone: '+213', shipping: 'international' },
+        { code: 'morocco', name: 'Morocco', flag: '🇲🇦', phone: '+212', shipping: 'international' },
+        
+        // Europe
+        { code: 'france', name: 'France', flag: '🇫🇷', phone: '+33', shipping: 'international' },
+        { code: 'spain', name: 'Spain', flag: '🇪🇸', phone: '+34', shipping: 'international' },
+        { code: 'portugal', name: 'Portugal', flag: '🇵🇹', phone: '+351', shipping: 'international' },
+        { code: 'italy', name: 'Italy', flag: '🇮🇹', phone: '+39', shipping: 'international' },
+        { code: 'germany', name: 'Germany', flag: '🇩🇪', phone: '+49', shipping: 'international' },
+        { code: 'united-kingdom', name: 'United Kingdom', flag: '🇬🇧', phone: '+44', shipping: 'international' },
+        { code: 'ireland', name: 'Ireland', flag: '🇮🇪', phone: '+353', shipping: 'international' },
+        { code: 'netherlands', name: 'Netherlands', flag: '🇳🇱', phone: '+31', shipping: 'international' },
+        { code: 'belgium', name: 'Belgium', flag: '🇧🇪', phone: '+32', shipping: 'international' },
+        { code: 'luxembourg', name: 'Luxembourg', flag: '🇱🇺', phone: '+352', shipping: 'international' },
+        { code: 'switzerland', name: 'Switzerland', flag: '🇨🇭', phone: '+41', shipping: 'international' },
+        { code: 'austria', name: 'Austria', flag: '🇦🇹', phone: '+43', shipping: 'international' },
+        { code: 'denmark', name: 'Denmark', flag: '🇩🇰', phone: '+45', shipping: 'international' },
+        { code: 'sweden', name: 'Sweden', flag: '🇸🇪', phone: '+46', shipping: 'international' },
+        { code: 'norway', name: 'Norway', flag: '🇳🇴', phone: '+47', shipping: 'international' },
+        { code: 'finland', name: 'Finland', flag: '🇫🇮', phone: '+358', shipping: 'international' },
+        { code: 'iceland', name: 'Iceland', flag: '🇮🇸', phone: '+354', shipping: 'international' },
+        { code: 'poland', name: 'Poland', flag: '🇵🇱', phone: '+48', shipping: 'international' },
+        { code: 'czech-republic', name: 'Czech Republic', flag: '🇨🇿', phone: '+420', shipping: 'international' },
+        { code: 'slovakia', name: 'Slovakia', flag: '🇸🇰', phone: '+421', shipping: 'international' },
+        { code: 'hungary', name: 'Hungary', flag: '🇭🇺', phone: '+36', shipping: 'international' },
+        { code: 'romania', name: 'Romania', flag: '🇷🇴', phone: '+40', shipping: 'international' },
+        { code: 'bulgaria', name: 'Bulgaria', flag: '🇧🇬', phone: '+359', shipping: 'international' },
+        { code: 'greece', name: 'Greece', flag: '🇬🇷', phone: '+30', shipping: 'international' },
+        { code: 'cyprus', name: 'Cyprus', flag: '🇨🇾', phone: '+357', shipping: 'international' },
+        { code: 'malta', name: 'Malta', flag: '🇲🇹', phone: '+356', shipping: 'international' },
+        { code: 'croatia', name: 'Croatia', flag: '🇭🇷', phone: '+385', shipping: 'international' },
+        { code: 'slovenia', name: 'Slovenia', flag: '🇸🇮', phone: '+386', shipping: 'international' },
+        { code: 'bosnia-herzegovina', name: 'Bosnia and Herzegovina', flag: '🇧🇦', phone: '+387', shipping: 'international' },
+        { code: 'serbia', name: 'Serbia', flag: '🇷🇸', phone: '+381', shipping: 'international' },
+        { code: 'montenegro', name: 'Montenegro', flag: '🇲🇪', phone: '+382', shipping: 'international' },
+        { code: 'north-macedonia', name: 'North Macedonia', flag: '🇲🇰', phone: '+389', shipping: 'international' },
+        { code: 'albania', name: 'Albania', flag: '🇦🇱', phone: '+355', shipping: 'international' },
+        { code: 'kosovo', name: 'Kosovo', flag: '🇽🇰', phone: '+383', shipping: 'international' },
+        { code: 'moldova', name: 'Moldova', flag: '🇲🇩', phone: '+373', shipping: 'international' },
+        { code: 'ukraine', name: 'Ukraine', flag: '🇺🇦', phone: '+380', shipping: 'international' },
+        { code: 'belarus', name: 'Belarus', flag: '🇧🇾', phone: '+375', shipping: 'international' },
+        { code: 'lithuania', name: 'Lithuania', flag: '🇱🇹', phone: '+370', shipping: 'international' },
+        { code: 'latvia', name: 'Latvia', flag: '🇱🇻', phone: '+371', shipping: 'international' },
+        { code: 'estonia', name: 'Estonia', flag: '🇪🇪', phone: '+372', shipping: 'international' },
+        { code: 'russia', name: 'Russia', flag: '🇷🇺', phone: '+7', shipping: 'international' },
+        
+        // Americas
+        { code: 'united-states', name: 'United States', flag: '🇺🇸', phone: '+1', shipping: 'international' },
+        { code: 'canada', name: 'Canada', flag: '🇨🇦', phone: '+1', shipping: 'international' },
+        { code: 'mexico', name: 'Mexico', flag: '🇲🇽', phone: '+52', shipping: 'international' },
+        { code: 'brazil', name: 'Brazil', flag: '🇧🇷', phone: '+55', shipping: 'international' },
+        { code: 'argentina', name: 'Argentina', flag: '🇦🇷', phone: '+54', shipping: 'international' },
+        { code: 'chile', name: 'Chile', flag: '🇨🇱', phone: '+56', shipping: 'international' },
+        { code: 'peru', name: 'Peru', flag: '🇵🇪', phone: '+51', shipping: 'international' },
+        { code: 'colombia', name: 'Colombia', flag: '🇨🇴', phone: '+57', shipping: 'international' },
+        { code: 'venezuela', name: 'Venezuela', flag: '🇻🇪', phone: '+58', shipping: 'international' },
+        { code: 'ecuador', name: 'Ecuador', flag: '🇪🇨', phone: '+593', shipping: 'international' },
+        { code: 'bolivia', name: 'Bolivia', flag: '🇧🇴', phone: '+591', shipping: 'international' },
+        { code: 'paraguay', name: 'Paraguay', flag: '🇵🇾', phone: '+595', shipping: 'international' },
+        { code: 'uruguay', name: 'Uruguay', flag: '🇺🇾', phone: '+598', shipping: 'international' },
+        { code: 'guyana', name: 'Guyana', flag: '🇬🇾', phone: '+592', shipping: 'international' },
+        { code: 'suriname', name: 'Suriname', flag: '🇸🇷', phone: '+597', shipping: 'international' },
+        { code: 'cuba', name: 'Cuba', flag: '🇨🇺', phone: '+53', shipping: 'international' },
+        { code: 'jamaica', name: 'Jamaica', flag: '🇯🇲', phone: '+1876', shipping: 'international' },
+        { code: 'haiti', name: 'Haiti', flag: '🇭🇹', phone: '+509', shipping: 'international' },
+        { code: 'dominican-republic', name: 'Dominican Republic', flag: '🇩🇴', phone: '+1809', shipping: 'international' },
+        { code: 'guatemala', name: 'Guatemala', flag: '🇬🇹', phone: '+502', shipping: 'international' },
+        { code: 'belize', name: 'Belize', flag: '🇧🇿', phone: '+501', shipping: 'international' },
+        { code: 'honduras', name: 'Honduras', flag: '🇭🇳', phone: '+504', shipping: 'international' },
+        { code: 'el-salvador', name: 'El Salvador', flag: '🇸🇻', phone: '+503', shipping: 'international' },
+        { code: 'nicaragua', name: 'Nicaragua', flag: '🇳🇮', phone: '+505', shipping: 'international' },
+        { code: 'costa-rica', name: 'Costa Rica', flag: '🇨🇷', phone: '+506', shipping: 'international' },
+        { code: 'panama', name: 'Panama', flag: '🇵🇦', phone: '+507', shipping: 'international' },
+        
+        // Asia
+        { code: 'china', name: 'China', flag: '🇨🇳', phone: '+86', shipping: 'international' },
+        { code: 'india', name: 'India', flag: '🇮🇳', phone: '+91', shipping: 'international' },
+        { code: 'japan', name: 'Japan', flag: '🇯🇵', phone: '+81', shipping: 'international' },
+        { code: 'south-korea', name: 'South Korea', flag: '🇰🇷', phone: '+82', shipping: 'international' },
+        { code: 'thailand', name: 'Thailand', flag: '🇹🇭', phone: '+66', shipping: 'international' },
+        { code: 'vietnam', name: 'Vietnam', flag: '🇻🇳', phone: '+84', shipping: 'international' },
+        { code: 'malaysia', name: 'Malaysia', flag: '🇲🇾', phone: '+60', shipping: 'international' },
+        { code: 'singapore', name: 'Singapore', flag: '🇸🇬', phone: '+65', shipping: 'international' },
+        { code: 'indonesia', name: 'Indonesia', flag: '🇮🇩', phone: '+62', shipping: 'international' },
+        { code: 'philippines', name: 'Philippines', flag: '🇵🇭', phone: '+63', shipping: 'international' },
+        { code: 'myanmar', name: 'Myanmar', flag: '🇲🇲', phone: '+95', shipping: 'international' },
+        { code: 'cambodia', name: 'Cambodia', flag: '🇰🇭', phone: '+855', shipping: 'international' },
+        { code: 'laos', name: 'Laos', flag: '🇱🇦', phone: '+856', shipping: 'international' },
+        { code: 'brunei', name: 'Brunei', flag: '🇧🇳', phone: '+673', shipping: 'international' },
+        { code: 'bangladesh', name: 'Bangladesh', flag: '🇧🇩', phone: '+880', shipping: 'international' },
+        { code: 'sri-lanka', name: 'Sri Lanka', flag: '🇱🇰', phone: '+94', shipping: 'international' },
+        { code: 'maldives', name: 'Maldives', flag: '🇲🇻', phone: '+960', shipping: 'international' },
+        { code: 'nepal', name: 'Nepal', flag: '🇳🇵', phone: '+977', shipping: 'international' },
+        { code: 'bhutan', name: 'Bhutan', flag: '🇧🇹', phone: '+975', shipping: 'international' },
+        { code: 'pakistan', name: 'Pakistan', flag: '🇵🇰', phone: '+92', shipping: 'international' },
+        { code: 'afghanistan', name: 'Afghanistan', flag: '🇦🇫', phone: '+93', shipping: 'international' },
+        { code: 'iran', name: 'Iran', flag: '🇮🇷', phone: '+98', shipping: 'international' },
+        { code: 'iraq', name: 'Iraq', flag: '🇮🇶', phone: '+964', shipping: 'international' },
+        { code: 'turkey', name: 'Turkey', flag: '🇹🇷', phone: '+90', shipping: 'international' },
+        { code: 'syria', name: 'Syria', flag: '🇸🇾', phone: '+963', shipping: 'international' },
+        { code: 'lebanon', name: 'Lebanon', flag: '🇱🇧', phone: '+961', shipping: 'international' },
+        { code: 'jordan', name: 'Jordan', flag: '🇯🇴', phone: '+962', shipping: 'international' },
+        { code: 'israel', name: 'Israel', flag: '🇮🇱', phone: '+972', shipping: 'international' },
+        { code: 'palestine', name: 'Palestine', flag: '🇵🇸', phone: '+970', shipping: 'international' },
+        { code: 'saudi-arabia', name: 'Saudi Arabia', flag: '🇸🇦', phone: '+966', shipping: 'international' },
+        { code: 'yemen', name: 'Yemen', flag: '🇾🇪', phone: '+967', shipping: 'international' },
+        { code: 'oman', name: 'Oman', flag: '🇴🇲', phone: '+968', shipping: 'international' },
+        { code: 'uae', name: 'United Arab Emirates', flag: '🇦🇪', phone: '+971', shipping: 'international' },
+        { code: 'qatar', name: 'Qatar', flag: '🇶🇦', phone: '+974', shipping: 'international' },
+        { code: 'bahrain', name: 'Bahrain', flag: '🇧🇭', phone: '+973', shipping: 'international' },
+        { code: 'kuwait', name: 'Kuwait', flag: '🇰🇼', phone: '+965', shipping: 'international' },
+        { code: 'kazakhstan', name: 'Kazakhstan', flag: '🇰🇿', phone: '+7', shipping: 'international' },
+        { code: 'kyrgyzstan', name: 'Kyrgyzstan', flag: '🇰🇬', phone: '+996', shipping: 'international' },
+        { code: 'tajikistan', name: 'Tajikistan', flag: '🇹🇯', phone: '+992', shipping: 'international' },
+        { code: 'turkmenistan', name: 'Turkmenistan', flag: '🇹🇲', phone: '+993', shipping: 'international' },
+        { code: 'uzbekistan', name: 'Uzbekistan', flag: '🇺🇿', phone: '+998', shipping: 'international' },
+        { code: 'mongolia', name: 'Mongolia', flag: '🇲🇳', phone: '+976', shipping: 'international' },
+        
+        // Oceania
+        { code: 'australia', name: 'Australia', flag: '🇦🇺', phone: '+61', shipping: 'international' },
+        { code: 'new-zealand', name: 'New Zealand', flag: '🇳🇿', phone: '+64', shipping: 'international' },
+        { code: 'papua-new-guinea', name: 'Papua New Guinea', flag: '🇵🇬', phone: '+675', shipping: 'international' },
+        { code: 'fiji', name: 'Fiji', flag: '🇫🇯', phone: '+679', shipping: 'international' },
+        { code: 'solomon-islands', name: 'Solomon Islands', flag: '🇸🇧', phone: '+677', shipping: 'international' },
+        { code: 'vanuatu', name: 'Vanuatu', flag: '🇻🇺', phone: '+678', shipping: 'international' },
+        { code: 'samoa', name: 'Samoa', flag: '🇼🇸', phone: '+685', shipping: 'international' },
+        { code: 'tonga', name: 'Tonga', flag: '🇹🇴', phone: '+676', shipping: 'international' }
+      ];
+      
+      const countrySelect = document.getElementById('country');
+      
+      // Clear existing options except the first one
+      countrySelect.innerHTML = '<option value="">Select your country...</option>';
+      
+      // Add all countries
+      countries.forEach(country => {
+        const option = document.createElement('option');
+        option.value = country.code;
+        option.textContent = `${country.flag} ${country.name}`;
+        option.setAttribute('data-phone', country.phone);
+        option.setAttribute('data-shipping', country.shipping);
+        countrySelect.appendChild(option);
+      });
+      
+      // Store countries data globally for easy access
+      window.countriesData = countries;
+    }
+    
+    // Initialize location detection and country population
+    function initializeCheckout() {
+      populateCountries();
+      populatePhonePrefixes();
+      addSmartPhoneHandler();
+      detectLocationAndSetDefaults();
+    }
+    
+    // Location-based order processing
+    window.locationManager.onLocationDetected((isGambia, location) => {
+      console.log('🌍 Location detected in checkout:', { isGambia, location });
+      
+      // Apply location-based UI changes
+      window.orderFlowManager.applyLocationBasedUI(isGambia);
+      
+      // Store location info for order
+      window.orderLocation = { isGambia, location };
+      
+      // Update order processing flow
+      if (isGambia) {
+        console.log('🇬🇲 Local delivery mode activated');
+        document.body.classList.add('local-delivery');
+      } else {
+        console.log('🌍 International shipping mode activated');
+        document.body.classList.add('international-shipping');
+      }
+    });
+
+    // Call initialization when page loads
+    document.addEventListener('DOMContentLoaded', initializeCheckout);
+    
+    // Initialize Vanta.js background
+    if (window.AnimationUtils) {
+      window.AnimationUtils.initializeVantaBackground('body.hero', 'waves');
+    } else {
+      // Fallback to direct initialization using working code from admin
+      VANTA.WAVES({
+        el: "body.hero",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        color: 0x8B5C2A,
+        shininess: 50.0,
+        waveHeight: 20.0,
+        waveSpeed: 0.7,
+        zoom: 0.85
+      });
+    }
+  </script>
+  <script type="module">
+    // Add error handling for debugging
+    window.addEventListener('error', (e) => {
+      console.error('JavaScript Error:', e.error);
+      alert('JavaScript Error: ' + e.message);
+    });
+
+    console.log('Starting checkout initialization...');
+    
+    // Backup Firebase config in case config.js fails to load
+    const FIREBASE_CONFIG = {
+      apiKey: "AIzaSyBIFg1ZFGZ2k34Bc8hhhLKSf9ArnesiNhg",
+      authDomain: "newsense-27a7a.firebaseapp.com",
+      projectId: "newsense-27a7a",
+      storageBucket: "newsense-27a7a.firebasestorage.app",
+      messagingSenderId: "348185741664",
+      appId: "1:348185741664:web:a2ff7676deec0cecaa3605",
+      measurementId: "G-SZ18TF0YHW"
+    };
+    
+    // Check if CONFIG is available, use backup if not
+    let firebaseConfig;
+    if (typeof CONFIG === 'undefined') {
+      console.error('CONFIG is not defined! Using backup configuration.');
+      firebaseConfig = FIREBASE_CONFIG;
+    } else {
+      console.log('CONFIG found:', CONFIG);
+      firebaseConfig = CONFIG.firebase;
+    }
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    let app, db;
+    
+    try {
+      // Initialize Firebase
+      console.log('Initializing Firebase with config:', firebaseConfig);
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      console.log('Firebase initialized successfully');
+      console.log('Database instance:', db);
+    } catch (error) {
+      console.error('Firebase initialization error:', error);
+      alert('Firebase initialization failed: ' + error.message);
+    }
+
+
+
+    // Get cart from localStorage
+    const cart = JSON.parse(localStorage.getItem('sensation_cart')) || [];
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const orderSummary = document.getElementById('orderSummary');
+    if (cart.length === 0) {
+      orderSummary.innerHTML = '<div class="alert alert-warning">Your cart is empty.</div>';
+      document.getElementById('checkoutForm').style.display = 'none';
+    } else {
+      orderSummary.innerHTML = cart.map(item => `
+        <div class="d-flex align-items-center mb-2">
+          <img src="${item.image || 'images/fallback.png'}" alt="${item.name}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;margin-right:10px;" onerror="this.src='images/fallback.png'">
+          <div class="flex-grow-1">
+            <strong>${item.name}</strong> <span class="text-muted">x${item.quantity}</span><br>
+            <span class="text-secondary">D${item.price.toLocaleString()}</span>
+          </div>
+          <div class="fw-bold">D${(item.price * item.quantity).toLocaleString()}</div>
+        </div>
+      `).join('') + `<hr><div class="text-end fw-bold">Subtotal: D${subtotal.toLocaleString()}</div>`;
+    }
+
+    // Smart phone validation for different countries
+    function validatePhoneForCountry(phone, country) {
+      // Remove all non-digit characters for validation
+      const cleanPhone = phone.replace(/\D/g, '');
+      
+      // Different countries have different phone number formats
+      const phoneRules = {
+        // Gambia: 7 digits (e.g., 7123456)
+        'gambia': { min: 7, max: 8, pattern: /^[567]\d{6,7}$/ },
+        
+        // West Africa - Regional
+        'senegal': { min: 8, max: 9, pattern: /^[67]\d{7,8}$/ },
+        'guinea-bissau': { min: 7, max: 7, pattern: /^\d{7}$/ },
+        'guinea': { min: 8, max: 9, pattern: /^[567]\d{7,8}$/ },
+        'mali': { min: 8, max: 8, pattern: /^[567]\d{7}$/ },
+        'mauritania': { min: 8, max: 8, pattern: /^[234567]\d{7}$/ },
+        'sierra-leone': { min: 8, max: 8, pattern: /^[2378]\d{7}$/ },
+        'liberia': { min: 7, max: 8, pattern: /^\d{7,8}$/ },
+        'cape-verde': { min: 7, max: 7, pattern: /^\d{7}$/ },
+        
+        // Europe
+        'united-kingdom': { min: 10, max: 11, pattern: /^[1-9]\d{8,10}$/ },
+        'france': { min: 9, max: 9, pattern: /^[1-9]\d{8}$/ },
+        'germany': { min: 10, max: 11, pattern: /^[1-9]\d{9,10}$/ },
+        'spain': { min: 9, max: 9, pattern: /^[6-9]\d{8}$/ },
+        'italy': { min: 9, max: 10, pattern: /^[3]\d{8,9}$/ },
+        'portugal': { min: 9, max: 9, pattern: /^[9]\d{8}$/ },
+        'netherlands': { min: 9, max: 9, pattern: /^[6]\d{8}$/ },
+        'belgium': { min: 9, max: 9, pattern: /^[4]\d{8}$/ },
+        'switzerland': { min: 9, max: 9, pattern: /^[7]\d{8}$/ },
+        'austria': { min: 10, max: 11, pattern: /^[6]\d{9,10}$/ },
+        'denmark': { min: 8, max: 8, pattern: /^[2-9]\d{7}$/ },
+        'sweden': { min: 9, max: 9, pattern: /^[7]\d{8}$/ },
+        'norway': { min: 8, max: 8, pattern: /^[4-9]\d{7}$/ },
+        'finland': { min: 9, max: 10, pattern: /^[4]\d{8,9}$/ },
+        
+        // Americas
+        'united-states': { min: 10, max: 10, pattern: /^[2-9]\d{9}$/ },
+        'canada': { min: 10, max: 10, pattern: /^[2-9]\d{9}$/ },
+        'brazil': { min: 10, max: 11, pattern: /^[1-9]\d{9,10}$/ },
+        'mexico': { min: 10, max: 10, pattern: /^[1-9]\d{9}$/ },
+        
+        // Asia
+        'china': { min: 11, max: 11, pattern: /^[1]\d{10}$/ },
+        'india': { min: 10, max: 10, pattern: /^[6-9]\d{9}$/ },
+        'japan': { min: 10, max: 11, pattern: /^[7-9]\d{9,10}$/ },
+        'south-korea': { min: 10, max: 11, pattern: /^[1]\d{9,10}$/ },
+        
+        // Africa
+        'nigeria': { min: 10, max: 11, pattern: /^[7-9]\d{9,10}$/ },
+        'ghana': { min: 9, max: 9, pattern: /^[2-5]\d{8}$/ },
+        'south-africa': { min: 9, max: 9, pattern: /^[6-8]\d{8}$/ },
+        'kenya': { min: 9, max: 9, pattern: /^[7]\d{8}$/ },
+        'egypt': { min: 10, max: 11, pattern: /^[1]\d{9,10}$/ },
+        
+        // Oceania
+        'australia': { min: 9, max: 9, pattern: /^[4]\d{8}$/ },
+        'new-zealand': { min: 8, max: 9, pattern: /^[2]\d{7,8}$/ }
+      };
+      
+      // Get validation rule for the country, or use default
+      const rule = phoneRules[country] || { min: 7, max: 15, pattern: /^\d{7,15}$/ };
+      
+      // Check length and pattern
+      if (cleanPhone.length < rule.min || cleanPhone.length > rule.max) {
+        return false;
+      }
+      
+      // Check pattern if provided
+      if (rule.pattern && !rule.pattern.test(cleanPhone)) {
+        return false;
+      }
+      
+      return true;
+    }
+
+    // =======================================
+    // GPS LOCATION FUNCTIONALITY
+    // =======================================
+    
+    let userLocation = null;
+    let addressMethod = 'gps'; // 'gps' or 'manual'
+
+    // Initialize GPS functionality
+    function initGPSFeature() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      if (useLocationBtn) {
+        useLocationBtn.addEventListener('click', requestLocation);
+      }
+      
+      if (useManualBtn) {
+        useManualBtn.addEventListener('click', showManualEntry);
+      }
+    }
+
+    // Request user's GPS location
+    function requestLocation() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      
+      // Check if geolocation is supported
+      if (!navigator.geolocation) {
+        showNotification('GPS not supported on this device. Please enter address manually.', 'warning');
+        showManualEntry();
+        return;
+      }
+
+      // Update button to show loading
+      useLocationBtn.innerHTML = '<i class="bi bi-geo-alt"></i> Getting your location...';
+      useLocationBtn.disabled = true;
+
+      // Request location with high accuracy
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // Success - location captured
+          userLocation = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+            accuracy: position.coords.accuracy,
+            timestamp: new Date().toISOString()
+          };
+          
+          console.log('📍 GPS location captured:', userLocation);
+          showLocationSuccess();
+          addressMethod = 'gps';
+        },
+        (error) => {
+          // Error - fallback to manual
+          console.error('GPS Error:', error);
+          handleLocationError(error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000, // 10 seconds
+          maximumAge: 60000 // 1 minute cache
+        }
+      );
+    }
+
+    // Show location success
+    function showLocationSuccess() {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      const gpsStatus = document.getElementById('gpsStatus');
+      const gpsCoordinates = document.getElementById('gpsCoordinates');
+      const gpsAddress = document.getElementById('gpsAddress');
+
+      // Update button
+      useLocationBtn.innerHTML = '✅ Location Captured! (Click to update)';
+      useLocationBtn.disabled = false;
+      useLocationBtn.classList.remove('btn-primary');
+      useLocationBtn.classList.add('btn-success');
+
+      // Show GPS status
+      gpsStatus.style.display = 'block';
+      gpsCoordinates.textContent = `Coordinates: ${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)}`;
+      gpsAddress.textContent = `Accuracy: ±${Math.round(userLocation.accuracy)}m | Click coordinates for Google Maps`;
+
+      // Make coordinates clickable for verification
+      gpsCoordinates.innerHTML = `Coordinates: <a href="https://maps.google.com/maps?q=${userLocation.latitude},${userLocation.longitude}" target="_blank" class="text-primary">${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)}</a>`;
+
+      // Optional: Reverse geocode to get address (would require Google Maps API)
+      // For now, we'll use GPS coordinates as the primary address method
+      
+      showNotification('📍 Location captured successfully! Your delivery will be precise.', 'success');
+    }
+
+    // Handle location errors
+    function handleLocationError(error) {
+      const useLocationBtn = document.getElementById('useLocationBtn');
+      
+      let errorMessage = 'Unable to get your location. ';
+      
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage += 'Please allow location access and try again.';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage += 'Location information is unavailable.';
+          break;
+        case error.TIMEOUT:
+          errorMessage += 'Location request timed out.';
+          break;
+        default:
+          errorMessage += 'An unknown error occurred.';
+          break;
+      }
+
+      console.error('Location error:', errorMessage);
+      showNotification(errorMessage, 'warning');
+      
+      // Reset button and show manual entry
+      useLocationBtn.innerHTML = '📍 Try Location Again';
+      useLocationBtn.disabled = false;
+      showManualEntry();
+    }
+
+    // Show manual address entry
+    function showManualEntry() {
+      const manualSection = document.getElementById('manualAddressSection');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      manualSection.style.display = 'block';
+      useManualBtn.textContent = '📍 Use GPS instead';
+      useManualBtn.onclick = hideManualEntry;
+      
+      addressMethod = 'manual';
+      
+      // Make address field required when manual
+      const addressField = document.getElementById('address');
+      if (addressField) {
+        addressField.required = true;
+        addressField.focus();
+      }
+    }
+
+    // Hide manual address entry
+    function hideManualEntry() {
+      const manualSection = document.getElementById('manualAddressSection');
+      const useManualBtn = document.getElementById('useManualBtn');
+      
+      manualSection.style.display = 'none';
+      useManualBtn.innerHTML = '<i class="bi bi-pencil"></i> Can\'t use GPS? Enter address manually';
+      useManualBtn.onclick = showManualEntry;
+      
+      // Remove required from address field when using GPS
+      const addressField = document.getElementById('address');
+      if (addressField) {
+        addressField.required = false;
+        addressField.value = '';
+      }
+    }
+
+    // Show notification
+    function showNotification(message, type = 'info') {
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+      notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; max-width: 400px;';
+      notification.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 5 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.remove();
+        }
+      }, 5000);
+    }
+
+    // Enhanced form validation with location and payment
+    function validateForm() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const country = document.getElementById('country').value;
+      const address = document.getElementById('address').value.trim();
+      const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+
+      if (!name || name.length < 2) {
+        throw new Error('Please enter a valid name (minimum 2 characters)');
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      // Smart phone validation based on country
+      if (!phone || !validatePhoneForCountry(phone, country)) {
+        const phonePrefix = document.getElementById('phone-prefix').textContent;
+        throw new Error(`Please enter a valid phone number for ${phonePrefix}. Enter only the local number without country code.`);
+      }
+
+      if (!country) {
+        throw new Error('Please select your country/location');
+      }
+
+      // Payment method validation
+      if (!paymentMethod) {
+        throw new Error('Please select a payment method');
+      }
+
+      // Address validation based on method
+      if (addressMethod === 'gps') {
+        if (!userLocation || !userLocation.latitude || !userLocation.longitude) {
+          throw new Error('Please capture your GPS location or enter address manually');
+        }
+        // For GPS, we'll use coordinates as address
+        const gpsAddress = `GPS: ${userLocation.latitude.toFixed(6)}, ${userLocation.longitude.toFixed(6)} (Accuracy: ±${Math.round(userLocation.accuracy)}m)`;
+        return { 
+          name, email, phone, country, address: gpsAddress, 
+          gpsLocation: userLocation, addressMethod: 'gps',
+          paymentMethod: paymentMethod.value
+        };
+      } else {
+        // Manual address validation
+        if (!address || address.length < 10) {
+          throw new Error('Please enter a complete delivery address');
+        }
+        return { 
+          name, email, phone, country, address, 
+          addressMethod: 'manual',
+          paymentMethod: paymentMethod.value
+        };
+      }
+    }
+
+    // Enhanced order processing
+    const checkoutForm = document.getElementById('checkoutForm');
+    const checkoutMsg = document.getElementById('checkoutMsg');
+    
+    console.log('Checkout form element:', checkoutForm);
+    console.log('Checkout message element:', checkoutMsg);
+    
+    if (!checkoutForm) {
+      console.error('Checkout form not found!');
+      alert('Error: Checkout form not found on page');
+    } else {
+      console.log('Adding submit event listener to form...');
+      
+      checkoutForm.addEventListener('submit', async e => {
+        console.log('Form submit event triggered!');
+        e.preventDefault();
+        
+        console.log('Form submission prevented, starting validation...');
+        
+        try {
+          // Validate form
+          console.log('Starting form validation...');
+          const formData = validateForm();
+          console.log('Form validation passed:', formData);
+        
+        // Show loading state
+        checkoutMsg.innerHTML = '<span class="text-info">Processing your order...</span>';
+
+        // Generate order ID
+        const orderId = 'SBS-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        
+        // Create order data with shipping information
+        const requiresShipping = needsShipping(formData.country);
+        const phonePrefix = document.getElementById('phone-prefix').value;
+        const fullPhoneNumber = `${phonePrefix}${formData.phone}`;
+        
+        const orderData = {
+          orderId: orderId,
+          name: formData.name,
+          email: formData.email,
+          phone: fullPhoneNumber,
+          localPhone: formData.phone,
+          phonePrefix: phonePrefix,
+          country: formData.country,
+          address: formData.address,
+          cart: cart.map(item => ({ 
+            name: item.name, 
+            price: item.price, 
+            quantity: item.quantity,
+            image: item.image 
+          })),
+          subtotal: subtotal,
+          status: 'pending',
+          paymentStatus: 'pending',
+          requiresShipping: requiresShipping,
+          isInternational: requiresShipping,
+          deliveryType: requiresShipping ? 'international' : 'local',
+          createdAt: new Date().toISOString()
+        };
+
+        // Save order to Firestore
+        try {
+          console.log('Attempting to save order to Firestore...');
+          console.log('Database instance check:', db);
+          console.log('Order data to save:', {
+            orderId: orderData.orderId,
+            name: formData.name,
+            email: formData.email,
+            cart: cart,
+            subtotal: subtotal
+          });
+          
+          const orderRef = await addDoc(collection(db, "orders"), {
+            orderId: orderData.orderId,
+            name: formData.name,  // Admin expects 'name' not 'customerName'
+            email: formData.email,  // Admin expects 'email' not 'customerEmail'
+            phone: fullPhoneNumber,
+            localPhone: formData.phone,
+            phonePrefix: phonePrefix,
+            country: formData.country,  // Customer's country
+            address: formData.address,
+            // GPS Location Data (NEW!)
+            gpsLocation: formData.gpsLocation || null,  // GPS coordinates if available
+            addressMethod: formData.addressMethod || 'manual',  // How address was entered
+            locationAccuracy: formData.gpsLocation?.accuracy || null,  // GPS accuracy
+            // Payment Information (NEW!)
+            paymentMethod: formData.paymentMethod,  // Selected payment method
+            paymentStatus: formData.paymentMethod === 'cash' ? 'pending' : 'awaiting-payment',
+            cart: cart.map(item => ({  // Admin expects 'cart' not 'items'
+              name: item.name,
+              price: item.price,
+              qty: item.quantity,  // Admin expects 'qty' not 'quantity'
+              image: item.image
+            })),
+            subtotal: subtotal,
+            status: 'pending',
+            location: window.orderLocation || { isGambia: false },
+            deliveryType: window.orderLocation?.isGambia ? 'local' : 'international',
+            requiresShipping: !window.orderLocation?.isGambia,
+            paymentStatus: 'pending',
+            created: serverTimestamp(),  // Admin expects 'created' not 'createdAt'
+            updated: serverTimestamp()
+          });
+          
+          console.log('✅ Order saved to Firestore successfully with ID:', orderRef.id);
+          alert('✅ Order saved successfully! ID: ' + orderRef.id);
+          console.log('Order data saved:', {
+            orderId: orderData.orderId,
+            name: formData.name,
+            email: formData.email,
+            cart: cart.map(item => ({ name: item.name, qty: item.quantity })),
+            subtotal: subtotal
+          });
+        } catch (firestoreError) {
+          console.error('Error saving to Firestore:', firestoreError);
+          // Fallback to localStorage if Firestore fails
+          const orders = JSON.parse(localStorage.getItem('sensation_orders') || '[]');
+          orders.push(orderData);
+          localStorage.setItem('sensation_orders', JSON.stringify(orders));
+        }
+        
+        // Clear cart
+        localStorage.removeItem('sensation_cart');
+        
+        // Track purchase
+        if (window.analytics) {
+          window.analytics.track('purchase', {
+            orderId: orderData.orderId,
+            subtotal: subtotal,
+            cart: cart
+          });
+        }
+
+        // Show success message
+        checkoutMsg.innerHTML = '<span class="text-success">Thank you! Your order has been placed successfully.</span>';
+        
+        // Redirect to success page
+        setTimeout(() => {
+          window.location.href = `payment-success.html?order=${orderData.orderId}`;
+        }, 1500);
+        
+      } catch (error) {
+        console.error('Error placing order:', error);
+        checkoutMsg.innerHTML = `<span class="text-danger">${error.message || 'Order failed. Please try again.'}</span>`;
+        alert('❌ Order failed: ' + error.message);
+      }
+      });
+    }
+
+    // Initialize GPS feature when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🌍 Initializing GPS location feature...');
+      initGPSFeature();
+    });
+  </script>
+</body>
+</html>
