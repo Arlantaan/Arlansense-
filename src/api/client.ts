@@ -1,6 +1,6 @@
-"""
-API client for connecting frontend to Python backend
-"""
+/**
+ * API client for connecting frontend to Python backend
+ */
 
 import axios from 'axios';
 
@@ -164,4 +164,4 @@ export const api = {
   },
 };
 
-export default api;
+export { api as apiClient };

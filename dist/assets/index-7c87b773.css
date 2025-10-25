@@ -1,1 +1,0 @@
-@tailwind base;@tailwind components;@tailwind utilities;body{font-family:Segoe UI,Tahoma,sans-serif;margin:0;padding:0;background-color:#f9f9f9;overflow-x:hidden}@keyframes typewriterCenterOut{0%{clip-path:inset(0 50% 0 50%)}to{clip-path:inset(0 0% 0 0%)}}
