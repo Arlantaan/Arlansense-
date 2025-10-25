@@ -105,6 +105,26 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=8, max_length=100)
 
 
+class UserLogin(BaseModel):
+    """User login model"""
+    email: EmailStr
+    password: str
+
+
+class Token(BaseModel):
+    """JWT token model"""
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+    user: User
+
+
+class PasswordChange(BaseModel):
+    """Password change model"""
+    current_password: str
+    new_password: str = Field(..., min_length=8, max_length=100)
+
+
 class UserUpdate(BaseModel):
     """User update model"""
     name: Optional[str] = Field(None, min_length=2, max_length=100)
@@ -133,6 +153,33 @@ class AdminStats(BaseModel):
     total_products: int = Field(..., ge=0)
     active_users: int = Field(..., ge=0)
     monthly_revenue: int = Field(..., ge=0)
+    low_stock_products: int = Field(..., ge=0)
+    recent_orders: List[Order] = Field(default_factory=list)
+
+
+class ProductCreate(BaseModel):
+    """Product creation model"""
+    name: str = Field(..., min_length=1, max_length=100)
+    price: int = Field(..., gt=0)
+    image: str = Field(..., description="Product image URL")
+    description: str = Field(..., min_length=10, max_length=500)
+    tagline: Optional[str] = Field(None, max_length=200)
+    fragrance_pyramid: Optional[FragrancePyramid] = None
+    quantity: int = Field(..., ge=0)
+    category: Optional[str] = Field(None, max_length=50)
+
+
+class ProductUpdate(BaseModel):
+    """Product update model"""
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    price: Optional[int] = Field(None, gt=0)
+    image: Optional[str] = None
+    description: Optional[str] = Field(None, min_length=10, max_length=500)
+    tagline: Optional[str] = Field(None, max_length=200)
+    fragrance_pyramid: Optional[FragrancePyramid] = None
+    in_stock: Optional[bool] = None
+    quantity: Optional[int] = Field(None, ge=0)
+    category: Optional[str] = Field(None, max_length=50)
 
 
 class APIResponse(BaseModel):
