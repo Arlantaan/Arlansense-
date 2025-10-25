@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import sbsLogo from '@/assets/images/sbs.svg'
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,13 +52,73 @@ const Navbar = () => {
             </Link>
             
             {/* Mobile Menu Button */}
-            <button className="lg:hidden text-sensation-dark hover:text-sensation-gold transition-colors duration-300">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden text-sensation-dark hover:text-sensation-gold transition-colors duration-300"
+              aria-label="Toggle mobile menu"
+            >
+              {isMobileMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden border-t border-gray-100">
+            <div className="py-4 space-y-3">
+              <Link 
+                to="/" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                Home
+              </Link>
+              <Link 
+                to="/#catalog" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                Collection
+              </Link>
+              <Link 
+                to="/#about" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                About
+              </Link>
+              <Link 
+                to="/#contact" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                Contact
+              </Link>
+              <Link 
+                to="/track" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                Track
+              </Link>
+              <Link 
+                to="/account" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sensation-dark hover:text-sensation-gold transition-colors duration-300 font-light text-sm uppercase tracking-wide"
+              >
+                Account
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   )
