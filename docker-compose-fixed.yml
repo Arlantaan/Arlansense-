@@ -1,0 +1,106 @@
+version: '3.3'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: sensation_postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME:-sensation_db}
+      POSTGRES_USER: ${DB_USER:-sensation}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-sensation}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sensation_network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: sensation_redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sensation_network
+    restart: unless-stopped
+
+  # Python FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sensation_backend
+    environment:
+      DATABASE_URL: postgresql://${DB_USER:-sensation}:${DB_PASSWORD:-changeme123}@postgres:5432/${DB_NAME:-sensation_db}
+      REDIS_URL: redis://redis:6379
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-admin-secret-token}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost}
+      SECRET_KEY: ${SECRET_KEY:-your-secret-key-change-this}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    networks:
+      - sensation_network
+    restart: unless-stopped
+    command: uvicorn main_production:app --host 0.0.0.0 --port 8000 --reload
+
+  # React Frontend (Static Files)
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: sensation_frontend
+    ports:
+      - "3000:80"
+    networks:
+      - sensation_network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: sensation_nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - sensation_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  sensation_network:
+    driver: bridge
