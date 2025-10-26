@@ -13,7 +13,10 @@ const Checkout: React.FC = () => {
     address: '',
     city: '',
     country: '',
-    paymentMethod: 'cash'
+    paymentMethod: 'cash',
+    deliveryLat: '',
+    deliveryLng: '',
+    deliveryLocation: ''
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -142,6 +145,23 @@ const Checkout: React.FC = () => {
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Delivery Location Reference (Optional)
+              </label>
+              <input
+                type="text"
+                name="deliveryLocation"
+                placeholder="e.g., Near Independence Stadium, Landmark, etc."
+                value={formData.deliveryLocation}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Helpful landmarks or directions for delivery
+              </p>
             </div>
             
             <div>
