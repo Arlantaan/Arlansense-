@@ -83,9 +83,10 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({
   }, [effect])
 
   return (
-    <div ref={vantaRef} className={`relative ${className}`}>
-      {children}
-    </div>
+    <>
+      <div ref={vantaRef} className="fixed inset-0 z-0 pointer-events-none" />
+      <div className={className}>{children}</div>
+    </>
   )
 }
 

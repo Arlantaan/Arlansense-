@@ -8,6 +8,7 @@ body {
   padding: 0;
   background-color: #ffffff;
   overflow-x: hidden;
+  overscroll-behavior-y: none;
   scroll-behavior: smooth;
   /* Mobile-first optimizations */
   -webkit-text-size-adjust: 100%;

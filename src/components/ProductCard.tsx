@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { ShoppingCart, CheckCircle } from 'lucide-react'
 import { Product } from '@/types'
-import { useCart } from '@/hooks/useCart'
-import toast from 'react-hot-toast'
+import { useCart } from '@/contexts/CartContext'
 
 interface ProductCardProps {
   product: Product
@@ -54,6 +53,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   }
 
   const createFloatingCartIcon = (buttonElement: HTMLButtonElement) => {
+    // Only run animation if button element exists
+    if (!buttonElement) return
+    
     const buttonRect = buttonElement.getBoundingClientRect()
     const cartIcon = document.querySelector('[href="/cart"]')
     
@@ -85,7 +87,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   }
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-white/70 backdrop-blur-sm border border-white/20 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all h-full flex flex-col">
       {/* Product Image */}
       <div className="aspect-square bg-gray-50 p-4">
         <img 
@@ -96,7 +98,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       
       {/* Product Info */}
-      <div className="p-4">
+      <div className="p-4 flex-1 flex flex-col">
         <h3 className="text-lg font-medium text-gray-900 mb-2">
           {product.name}
         </h3>
@@ -111,7 +113,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.description}
         </p>
         
-        <div className="flex items-center justify-between">
+        <div className="mt-auto flex items-center justify-between">
           <span className="text-lg font-semibold text-gray-900">
             {product.price.toLocaleString()} GMD
           </span>

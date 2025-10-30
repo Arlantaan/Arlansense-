@@ -1,10 +1,23 @@
-import { useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { CartItem, Product } from '@/types'
 import toast from 'react-hot-toast'
 
 const CART_STORAGE_KEY = 'sensation_cart'
 
-export const useCart = () => {
+interface CartContextType {
+  cartItems: CartItem[]
+  addToCart: (product: Product, quantity?: number) => boolean
+  removeFromCart: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
+  clearCart: () => void
+  getTotalPrice: () => number
+  getTotalItems: () => number
+  isInCart: (productId: string) => boolean
+}
+
+const CartContext = createContext<CartContextType | undefined>(undefined)
+
+export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
   // Load cart from localStorage on mount
@@ -26,22 +39,19 @@ export const useCart = () => {
 
   const addToCart = (product: Product, quantity: number = 1): boolean => {
     try {
-      let nextItems: CartItem[] = []
       setCartItems(prevItems => {
         const existingItem = prevItems.find(item => item.id === product.id)
         if (existingItem) {
-          nextItems = prevItems.map(item =>
+          const updated = prevItems.map(item =>
             item.id === product.id
               ? { ...item, quantity: item.quantity + quantity }
               : item
           )
+          return updated
         } else {
           const newItem: CartItem = { ...product, quantity }
-          nextItems = [...prevItems, newItem]
+          return [...prevItems, newItem]
         }
-        // write-through so other components immediately see it after navigation
-        try { localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(nextItems)) } catch {}
-        return nextItems
       })
 
       toast.success(`${product.name} added to cart!`)
@@ -88,14 +98,29 @@ export const useCart = () => {
     return cartItems.some(item => item.id === productId)
   }
 
-  return {
-    cartItems,
-    addToCart,
-    removeFromCart,
-    updateQuantity,
-    clearCart,
-    getTotalPrice,
-    getTotalItems,
-    isInCart
-  }
+  return (
+    <CartContext.Provider
+      value={{
+        cartItems,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        clearCart,
+        getTotalPrice,
+        getTotalItems,
+        isInCart
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
 }
+
+export const useCart = () => {
+  const context = useContext(CartContext)
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider')
+  }
+  return context
+}
+

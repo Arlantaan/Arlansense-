@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import sbsLogo from '@/assets/images/sbs.svg'
+import { useCart } from '@/contexts/CartContext'
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { getTotalItems } = useCart()
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
+    <nav className="fixed top-0 inset-x-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -46,9 +48,11 @@ const Navbar = () => {
                 </svg>
                 <span>Cart</span>
               </div>
-              <span className="absolute -top-2 -right-2 bg-sensation-gold text-sensation-dark text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium hidden">
-                0
-              </span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-2 -right-2 bg-sensation-gold text-sensation-dark text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                  {getTotalItems() > 99 ? '99+' : getTotalItems()}
+                </span>
+              )}
             </Link>
             
             {/* Mobile Menu Button */}

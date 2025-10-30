@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { useCart } from '@/hooks/useCart'
+import { useCart } from '@/contexts/CartContext'
 import { Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import api from '@/lib/api'
 
 const Checkout: React.FC = () => {
   const { cartItems, getTotalPrice, clearCart } = useCart()
@@ -12,6 +13,8 @@ const Checkout: React.FC = () => {
     phone: '',
     address: '',
     city: '',
+    state: '',
+    postalCode: '',
     country: '',
     paymentMethod: 'cash',
     deliveryLat: '',
@@ -21,16 +24,44 @@ const Checkout: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (cartItems.length === 0) return
     setIsProcessing(true)
 
-    // Simulate order processing
-    setTimeout(() => {
+    try {
+      // Map payment method to backend enum
+      const paymentMap: Record<string, 'cash_on_delivery' | 'credit_card' | 'bank_transfer'> = {
+        cash: 'cash_on_delivery',
+        card: 'credit_card',
+        mobile: 'bank_transfer'
+      }
+
+      // Build payload
+      const payload = {
+        items: cartItems.map((i) => ({ product_id: i.id, quantity: i.quantity })),
+        shipping_address: {
+          street: formData.address,
+          city: formData.city,
+          state: formData.state || formData.city,
+          postal_code: formData.postalCode || '00000',
+          country: formData.country
+        },
+        payment_method: paymentMap[formData.paymentMethod]
+      }
+
+      const res = await api.createOrder(payload)
+      if (res?.success !== false) {
+        toast.success('Order placed successfully!')
+        clearCart()
+        window.location.href = '/payment-success'
+      } else {
+        toast.error(res?.message || 'Failed to place order')
+      }
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || err?.message || 'Failed to place order'
+      toast.error(msg)
+    } finally {
       setIsProcessing(false)
-      toast.success('Order placed successfully!')
-      clearCart()
-      // Redirect to success page
-      window.location.href = '/payment-success'
-    }, 2000)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -117,6 +148,19 @@ const Checkout: React.FC = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  State/Region *
+                </label>
+                <input
+                  type="text"
+                  name="state"
+                  required
+                  value={formData.state}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                />
+              </div>
             </div>
             
             <div>
@@ -142,6 +186,19 @@ const Checkout: React.FC = () => {
                 name="country"
                 required
                 value={formData.country}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Postal Code *
+              </label>
+              <input
+                type="text"
+                name="postalCode"
+                required
+                value={formData.postalCode}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-gray-900 focus:border-transparent"
               />
